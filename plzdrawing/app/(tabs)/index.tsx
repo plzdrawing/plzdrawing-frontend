@@ -1,18 +1,18 @@
-import { StyleSheet } from "react-native";
+import { Button, StyleSheet } from "react-native";
 
-import EditScreenInfo from "@/src/components/EditScreenInfo";
 import { Text, View } from "@/src/components/Themed";
+import { useState } from "react";
 
 export default function TabOneScreen() {
+  const [count, setCount] = useState(0);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>{count}</Text>
+      <View style={{ flexDirection: "row", marginTop: 20 }}>
+        <Button title="-" onPress={() => setCount(count - 1)} />
+        <Button title="+" onPress={() => setCount(count + 1)} />
+      </View>
     </View>
   );
 }
