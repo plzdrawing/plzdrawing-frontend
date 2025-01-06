@@ -1,15 +1,11 @@
-import { StyleSheet } from "react-native";
-import { Text, View } from "@/src/components/Themed";
+import { StyleSheet, View } from "react-native";
+import { PrimaryButton } from "@/src/components/button/PrimaryButton";
+import colors from "@/src/constants/Colors";
 
-export default function TabTwoScreen() {
+export default function Profile() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
+      <PrimaryButton title="마이" />
     </View>
   );
 }
@@ -19,6 +15,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: `${colors.colors.background}`,
   },
   title: {
     fontSize: 20,
