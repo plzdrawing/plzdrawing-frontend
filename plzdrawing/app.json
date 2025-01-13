@@ -25,6 +25,12 @@
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
+    "fonts": [
+      {
+        "asset": "./assets/fonts/Ssurround.ttf",
+        "family": "Ssurround"
+      }
+    ],
     "entryPoint": "./App.tsx"
   }
 }

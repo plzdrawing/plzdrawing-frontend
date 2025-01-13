@@ -1,18 +1,21 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import Community from "@/src/screens/Community";
 import Home from "@/src/screens/Home";
 import Talk from "@/src/screens/Talk";
 import Profile from "@/src/screens/Profile";
+import Login from "@/src/screens/auth/Login";
 import colors from "@/src/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import Txt from "../components/text/Txt";
+import Txt from "../components/common/text/Txt";
 import { StyleSheet, View } from "react-native";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-export default function Navigation() {
+export default function MainNavigation() {
   return (
     <NavigationContainer>
       <Tab.Navigator
