@@ -11,16 +11,19 @@ interface PrimaryButtonProps extends TouchableOpacityProps {
   title: string;
   isBorder?: boolean;
   color?: keyof typeof colors.button;
+  onClick?: () => void;
 }
 
 export const PrimaryButton = ({
   title,
   color = "primaryBackground",
+  onClick,
   ...rest
 }: PrimaryButtonProps) => {
   return (
     <TouchableOpacity
       {...rest}
+      onPress={onClick}
       style={[styles.button, { backgroundColor: colors.button[color] }]}
     >
       <Txt style={styles.text} size={16}>
