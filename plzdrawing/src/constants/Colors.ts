@@ -11,6 +11,7 @@ export default {
     gray1: "#F9F9F9", // 연회색1
     gray2: "#D9D9D9", // 연회색2
     gray3: "#E0DFDF", // 연회색3
+    seperator: "#dcdfdf",
     grayDark1: "#A8A8A8", // 진회색01
     grayDark2: "#828282", // 진회색02
     black: "#000000", // Black
