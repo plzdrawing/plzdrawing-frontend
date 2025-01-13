@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { PrimaryButton } from "@/src/components/button/PrimaryButton";
+import { PrimaryButton } from "@/src/components/common/button/PrimaryButton";
 import colors from "@/src/constants/Colors";
 
 export default function Talk() {
