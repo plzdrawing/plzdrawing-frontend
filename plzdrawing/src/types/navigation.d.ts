@@ -3,6 +3,8 @@ export type RootStackParamList = {
   Main: undefined;
   LoginSplash: undefined;
   Login: { userId: string } | undefined;
+  Signup: undefined;
+  EmailSignup: undefined;
 };
 
 // 필요하다면 다른 네비게이션 타입도 정의
