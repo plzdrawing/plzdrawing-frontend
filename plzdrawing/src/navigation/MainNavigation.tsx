@@ -18,58 +18,57 @@ const Stack = createStackNavigator();
 
 export default function MainNavigation() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName: keyof typeof Ionicons.glyphMap = "home";
-            if (route.name === "커뮤니티") {
-              iconName = "people";
-            } else if (route.name === "그림홈") {
-              iconName = "home";
-            } else if (route.name === "그림톡") {
-              iconName = "chatbubble";
-            } else if (route.name === "마이") {
-              iconName = "person";
-            }
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName: keyof typeof Ionicons.glyphMap = "home";
+          if (route.name === "커뮤니티") {
+            iconName = "people";
+          } else if (route.name === "그림홈") {
+            iconName = "home";
+          } else if (route.name === "그림톡") {
+            iconName = "chatbubble";
+          } else if (route.name === "마이") {
+            iconName = "person";
+          }
 
-            return (
-              <IconContainer>
-                <Ionicons
-                  name={iconName as keyof typeof Ionicons.glyphMap}
-                  size={35}
-                  color={
-                    focused ? colors.tab.icon_selected : colors.tab.icon_default
-                  }
-                />
-                <Txt
-                  variant={focused ? "auxiliaryTextBold" : "auxiliaryTextLight"}
-                >
-                  {route.name}
-                </Txt>
-              </IconContainer>
-            );
-          },
-          tabBarShowLabel: false, // 기본 라벨 숨김
-          tabBarStyle: {
-            height: 70, // 탭 바 높이 조정
-            paddingTop: 14,
-            paddingBottom: 5,
-            backgroundColor: "#fff",
-          },
-        })}
-      >
-        <Tab.Screen
-          name="커뮤니티"
-          component={Community}
-          initialParams={{ screenType: "Community" }}
-        />
-        <Tab.Screen name="그림홈" component={Home} />
-        <Tab.Screen name="그림톡" component={Talk} />
-        <Tab.Screen name="마이" component={Profile} />
-      </Tab.Navigator>
-    </NavigationContainer>
+          return (
+            <IconContainer>
+              <Ionicons
+                name={iconName as keyof typeof Ionicons.glyphMap}
+                size={35}
+                color={
+                  focused ? colors.tab.icon_selected : colors.tab.icon_default
+                }
+              />
+              <Txt
+                variant={focused ? "auxiliaryTextBold" : "auxiliaryTextLight"}
+                style={{ width: "100%" }}
+              >
+                {route.name}
+              </Txt>
+            </IconContainer>
+          );
+        },
+        tabBarShowLabel: false, // 기본 라벨 숨김
+        tabBarStyle: {
+          height: 70, // 탭 바 높이 조정
+          paddingTop: 14,
+          paddingBottom: 5,
+          backgroundColor: "#fff",
+        },
+      })}
+    >
+      <Tab.Screen
+        name="커뮤니티"
+        component={Community}
+        initialParams={{ screenType: "Community" }}
+      />
+      <Tab.Screen name="그림홈" component={Home} />
+      <Tab.Screen name="그림톡" component={Talk} />
+      <Tab.Screen name="마이" component={Profile} />
+    </Tab.Navigator>
   );
 }
 

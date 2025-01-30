@@ -10,6 +10,9 @@ import MainNavigation from "@/src/navigation/MainNavigation";
 import { RootStackParamList } from "@/src/types/navigation";
 import Signup from "./src/screens/auth/signup/Signup";
 import EmailSignup from "./src/screens/auth/signup/EmailSignup";
+import EmailVerification from "./src/screens/auth/signup/EmailVerification";
+import VerificationComplete from "./src/screens/auth/signup/VerificationComplete";
+import PwdSetting from "./src/screens/auth/signup/PwdSetting";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -25,6 +28,12 @@ function AppNavigator() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="EmailSignup" component={EmailSignup} />
+        <Stack.Screen name="EmailVerification" component={EmailVerification} />
+        <Stack.Screen
+          name="VerificationComplete"
+          component={VerificationComplete}
+        />
+        <Stack.Screen name="PwdSetting" component={PwdSetting} />
       </Stack.Navigator>
     </NavigationContainer>
   );
