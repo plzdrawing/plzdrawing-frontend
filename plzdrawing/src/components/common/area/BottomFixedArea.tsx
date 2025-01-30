@@ -1,14 +1,13 @@
+import Colors from "@/src/constants/Colors";
 import React, { useMemo } from "react";
 import {
-  View,
-  StyleSheet,
   ViewStyle,
   StyleProp,
   Dimensions,
   Keyboard,
-  KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import styled from "styled-components/native";
 
 interface BottomFixedAreaProps {
   children: React.ReactNode;
@@ -42,39 +41,27 @@ export const BottomFixedArea: React.FC<BottomFixedAreaProps> = ({
     };
   }, []);
 
-  const style = useMemo(() => {
-    if (!detectIOS) {
-      return undefined;
-    }
-    return {
-      bottom: isKeypadOpen ? -keyboardHeight : 0,
-    };
-  }, [isKeypadOpen, keyboardHeight]);
-
   return (
-    <KeyboardAvoidingView
-      style={[styles.fixedAreaContainer, style, containerStyle]}
-      behavior={detectIOS ? "padding" : undefined}
-    >
-      <View style={styles.contentContainer}>{children}</View>
-    </KeyboardAvoidingView>
+    <FixedAreaContainer behavior={"padding"} isKeypadOpen={isKeypadOpen}>
+      <ContentContainer>{children}</ContentContainer>
+    </FixedAreaContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  fixedAreaContainer: {
-    position: "absolute",
-    left: width * 0.5,
-    right: "auto",
-    bottom: 0,
-    width: "100%",
-    transform: [{ translateX: -width * 0.5 }],
-    maxWidth: 840,
-    zIndex: 1000,
-    flexDirection: "column",
-    pointerEvents: "none",
-  },
-  contentContainer: {
-    pointerEvents: "auto",
-  },
-});
+const FixedAreaContainer = styled.KeyboardAvoidingView`
+  position: absolute;
+  left: ${width * 0.5}px;
+  right: auto;
+  bottom: 0;
+  width: 100%;
+  transform: translateX(${-width * 0.5}px);
+  max-width: 840px;
+  z-index: 100;
+  flex-direction: column;
+  border-top-width: ${(props: { isKeypadOpen: boolean }) =>
+    props.isKeypadOpen ? 1 : 0.5}px;
+  border-top-color: ${(props: { isKeypadOpen: boolean }) =>
+    props.isKeypadOpen ? Colors.colors.light_gray1 : Colors.colors.seperator};
+`;
+
+const ContentContainer = styled.SafeAreaView``;

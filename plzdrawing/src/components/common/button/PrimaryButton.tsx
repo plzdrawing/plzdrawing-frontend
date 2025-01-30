@@ -1,53 +1,45 @@
 import React from "react";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  TouchableOpacityProps,
-} from "react-native";
-import Txt from "../text/Txt";
-import colors from "@/src/constants/Colors";
+import styled from "styled-components/native";
+import { Pressable, TouchableOpacityProps } from "react-native";
+import Txt from "../text/Txt"; // Txt 컴포넌트 경로에 맞게 수정
+import Colors from "@/src/constants/Colors";
 
 interface PrimaryButtonProps extends TouchableOpacityProps {
   title: string;
-  isBorder?: boolean;
-  color?: keyof typeof colors.button;
+  color?: keyof typeof Colors.colors;
   onClick?: () => void;
 }
 
-export const PrimaryButton = ({
+const PrimaryButton = ({
   title,
-  color = "primaryBackground",
+  color = "main_yellow",
   onClick,
   ...rest
 }: PrimaryButtonProps) => {
   return (
-    <TouchableOpacity
+    <ButtonContainer
       {...rest}
       onPress={onClick}
-      style={[styles.button, { backgroundColor: colors.button[color] }]}
+      buttonColor={Colors.colors[color]}
     >
-      <Txt style={styles.text} size={16}>
+      <Txt variant="bodyText" color="black" align="center">
         {title}
       </Txt>
-    </TouchableOpacity>
+    </ButtonContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: "#FFE18D",
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  border: {
-    borderWidth: 2,
-    borderColor: "white",
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: "regular",
-    color: "black",
-  },
-});
+interface ButtonContainerProps {
+  buttonColor: string;
+}
+
+const ButtonContainer = styled(Pressable)<ButtonContainerProps>`
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 12px;
+  align-items: center;
+  background-color: ${(props: ButtonContainerProps) => props.buttonColor};
+  z-index: 200;
+`;
+
+export default PrimaryButton;

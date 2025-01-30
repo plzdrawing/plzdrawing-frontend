@@ -1,7 +1,9 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
-import Txt from "../text/Txt";
+import styled from "styled-components/native";
+import { TouchableOpacity } from "react-native";
 import { BackArrowIcon, CloseIcon } from "@/assets/images";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "@/src/types/navigation";
 
 interface HeaderProps {
   title?: string;
@@ -9,45 +11,49 @@ interface HeaderProps {
   onClick?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ type = "back", onClick }) => {
+const Header = ({ type = "back", onClick }: HeaderProps) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={onClick} style={styles.backButton}>
-        <View style={styles.iconContainer}>
+    <Container>
+      <BackButton
+        onPress={
+          onClick
+            ? onClick
+            : () => {
+                navigation.goBack();
+              }
+        }
+      >
+        <IconContainer>
           {type === "back" ? (
             <BackArrowIcon width={24} height={24} />
           ) : (
             <CloseIcon width={24} height={24} />
           )}
-        </View>
-      </TouchableOpacity>
-    </View>
+        </IconContainer>
+      </BackButton>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 30,
-    paddingVertical: 4,
-    backgroundColor: "#fff",
-  },
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  iconContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});
+const Container = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 30px;
+  background-color: #fff;
+`;
+
+const BackButton = styled(TouchableOpacity)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
+const IconContainer = styled.View`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 export default Header;

@@ -11,6 +11,7 @@ import colors from "@/src/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import Txt from "../components/common/text/Txt";
 import { StyleSheet, View } from "react-native";
+import styled from "styled-components/native";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -34,18 +35,20 @@ export default function MainNavigation() {
             }
 
             return (
-              <View style={styles.iconContainer}>
+              <IconContainer>
                 <Ionicons
                   name={iconName as keyof typeof Ionicons.glyphMap}
                   size={35}
                   color={
-                    focused ? colors.tab.iconSelected : colors.tab.iconDefault
+                    focused ? colors.tab.icon_selected : colors.tab.icon_default
                   }
                 />
-                <Txt size={12} weight={focused ? "bold" : "light"}>
+                <Txt
+                  variant={focused ? "auxiliaryTextBold" : "auxiliaryTextLight"}
+                >
                   {route.name}
                 </Txt>
-              </View>
+              </IconContainer>
             );
           },
           tabBarShowLabel: false, // 기본 라벨 숨김
@@ -70,10 +73,9 @@ export default function MainNavigation() {
   );
 }
 
-const styles = StyleSheet.create({
-  iconContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 4,
-  },
-});
+const IconContainer = styled.View`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4;
+`;
