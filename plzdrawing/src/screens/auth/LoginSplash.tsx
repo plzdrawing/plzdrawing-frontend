@@ -12,7 +12,6 @@ import styled from "styled-components/native";
 
 export default function LoginSplash() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [textLog, setTextLog] = React.useState("로그인이 필요해요.");
   const handleStartButtonOnClick = () => {
     navigation.navigate("Login");
   };
