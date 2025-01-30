@@ -5,19 +5,19 @@ import React, { useState } from "react";
 import Txt from "@/src/components/common/text/Txt";
 import { Container } from "@/src/components/common/container/Container";
 import { Col } from "@/src/components/common/flex/Flex";
-import TextField from "@/src/components/common/input/TextField";
 import AuthButton from "@/src/components/common/button/AuthButton";
 import styled from "styled-components/native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/src/types/navigation";
+import TextField from "@/src/components/common/input/TextField";
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [textFieldState, setTextFieldState] = useState<
-    "normal" | "focus" | "error"
-  >("normal");
+    "emtpy" | "filled" | "error"
+  >("emtpy");
 
   const handleSignupButtonOnClick = () => {
     console.log("회원가입 버튼 클릭");
@@ -37,12 +37,12 @@ export default function Login() {
           </Txt>
           <TextField
             placeholder="이메일"
-            state="normal"
+            state={textFieldState}
             setState={setTextFieldState}
           />
           <TextField
             placeholder="비밀번호"
-            state="normal"
+            state={textFieldState}
             setState={setTextFieldState}
           />
           <AuthButton title="로그인" type="login" />
