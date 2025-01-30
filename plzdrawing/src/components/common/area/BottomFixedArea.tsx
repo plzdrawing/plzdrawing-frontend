@@ -58,10 +58,6 @@ const FixedAreaContainer = styled.KeyboardAvoidingView`
   max-width: 840px;
   z-index: 100;
   flex-direction: column;
-  border-top-width: ${(props: { isKeypadOpen: boolean }) =>
-    props.isKeypadOpen ? 1 : 0.5}px;
-  border-top-color: ${(props: { isKeypadOpen: boolean }) =>
-    props.isKeypadOpen ? Colors.colors.light_gray1 : Colors.colors.seperator};
 `;
 
 const ContentContainer = styled.SafeAreaView``;

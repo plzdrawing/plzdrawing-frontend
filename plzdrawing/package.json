@@ -41,6 +41,7 @@
     "styled-components-react-native": "^1.0.0"
   },
   "devDependencies": {
+    "@react-native-community/cli": "latest",
     "@babel/core": "^7.25.2",
     "@types/react": "~18.3.12",
     "@types/react-native": "^0.73.0",

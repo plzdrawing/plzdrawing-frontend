@@ -8,8 +8,8 @@ interface TextFieldProps extends TextInputProps {
   id?: string;
   content?: string;
   type?: "text" | "password";
-  state?: "normal" | "focus" | "error";
-  setState: (state: "normal" | "focus" | "error") => void;
+  state?: "emtpy" | "filled" | "error";
+  setState: (state: "emtpy" | "filled" | "error") => void;
 }
 
 const TextField = (props: TextFieldProps) => {
@@ -26,7 +26,7 @@ const TextField = (props: TextFieldProps) => {
 
   const getBorderColor = () => {
     switch (state) {
-      case "focus":
+      case "filled":
         return colors.main_yellow;
       case "error":
         return colors.error_red;
@@ -37,13 +37,10 @@ const TextField = (props: TextFieldProps) => {
 
   const handleChange = (text: string) => {
     setValue(text);
-  };
-
-  useEffect(() => {
-    if (content) {
-      setValue(content);
+    if (text.length <= 0 || text === "") {
+      setState("emtpy");
     }
-  }, [content]);
+  };
 
   return (
     <StyledTextInput
@@ -51,9 +48,15 @@ const TextField = (props: TextFieldProps) => {
       placeholderTextColor={colors.dark_gray1}
       value={value}
       onChangeText={handleChange}
-      onFocus={() => setState("focus")}
-      onBlur={() => setState("normal")}
       borderColor={getBorderColor()}
+      onFocus={() => {
+        setState("filled");
+      }}
+      onBlur={() => {
+        if (value.length <= 0) {
+          setState("emtpy");
+        }
+      }}
       {...rest}
     />
   );

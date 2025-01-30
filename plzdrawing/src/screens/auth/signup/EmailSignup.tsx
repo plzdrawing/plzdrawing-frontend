@@ -12,8 +12,8 @@ import PrimaryButton from "@/src/components/common/button/PrimaryButton";
 
 export default function EmailSignup() {
   const [textFieldState, setTextFieldState] = useState<
-    "normal" | "focus" | "error"
-  >("normal");
+    "emtpy" | "filled" | "error"
+  >("emtpy");
   return (
     <Container>
       <Header type="back" />
@@ -27,7 +27,7 @@ export default function EmailSignup() {
           </Txt>
           <TextField
             placeholder="비밀번호"
-            state="normal"
+            state={textFieldState}
             setState={setTextFieldState}
           />
         </Col>
