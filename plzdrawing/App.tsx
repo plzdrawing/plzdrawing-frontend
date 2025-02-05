@@ -14,6 +14,9 @@ import ProfileMakingSplash from "@/src/screens/auth/signup/profileMaking/Profile
 import ProfileMakingDone from "@/src/screens/auth/signup/profileMaking/ProfileMakingDone";
 import ProfileMakingNickname from "@/src/screens/auth/signup/profileMaking/ProfileMakingNickname";
 import PasswordFind from "./src/screens/auth/password/PasswordFind";
+import EmailVerification from "./src/screens/auth/signup/EmailVerification";
+import VerificationComplete from "./src/screens/auth/signup/VerificationComplete";
+import PwdSetting from "./src/screens/auth/signup/PwdSetting";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -39,6 +42,12 @@ function AppNavigator() {
         />
         <Stack.Screen name="ProfileMakingDone" component={ProfileMakingDone} />
         <Stack.Screen name="PasswordFind" component={PasswordFind} />
+        <Stack.Screen name="EmailVerification" component={EmailVerification} />
+        <Stack.Screen
+          name="VerificationComplete"
+          component={VerificationComplete}
+        />
+        <Stack.Screen name="PwdSetting" component={PwdSetting} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -31,7 +31,6 @@ export default function Txt({
       style={[
         style,
         {
-          width: "100%",
           fontSize: variant
             ? FontStyles[variant].fontSize
             : FontStyles.default.fontSize,

@@ -9,6 +9,9 @@ export type RootStackParamList = {
   ProfileMakingNickname: undefined;
   ProfileMakingDone: undefined;
   PasswordFind: undefined;
+  EmailVerification: undefined;
+  VerificationComplete: undefined;
+  PwdSetting: undefined;
 };
 
 // 바텀네비게이션 타입 정의
