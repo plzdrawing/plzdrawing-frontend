@@ -23,6 +23,11 @@ export default function Login() {
     console.log("회원가입 버튼 클릭");
     navigation.navigate("Signup");
   };
+
+  const handlePasswordFindButtonOnClick = () => {
+    console.log("비밀번호찾기 버튼 클릭");
+    navigation.navigate("PasswordFind");
+  };
   return (
     <Container>
       <Header type="close" />
@@ -50,6 +55,7 @@ export default function Login() {
             variant="bodySubText"
             align="center"
             style={{ textDecorationLine: "underline" }}
+            onPress={handlePasswordFindButtonOnClick}
           >
             비밀번호 찾기
           </Txt>
