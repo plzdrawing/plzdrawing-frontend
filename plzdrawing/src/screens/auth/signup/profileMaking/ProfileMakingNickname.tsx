@@ -1,4 +1,3 @@
-import colors from "@/src/constants/Colors";
 import Header from "@/src/components/common/header/Header";
 import React, { useState } from "react";
 import Txt from "@/src/components/common/text/Txt";
@@ -7,35 +6,34 @@ import { Col } from "@/src/components/common/flex/Flex";
 import styled from "styled-components/native";
 import TextField from "@/src/components/common/input/TextField";
 import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
-import { StyleSheet, View } from "react-native";
 import PrimaryButton from "@/src/components/common/button/PrimaryButton";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 
-export default function EmailSignup() {
+export default function ProfileMakingNickname() {
   const [textFieldState, setTextFieldState] = useState<
     "emtpy" | "filled" | "error"
   >("emtpy");
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const handleCertificationButtonOnClick = () => {
-    console.log("인증하기 버튼 클릭");
-    navigation.navigate("ProfileMakingSplash");
+  const handleNextButtonOnClick = () => {
+    console.log("다음 버튼 클릭");
+    navigation.navigate("ProfileMakingDone");
   };
   return (
     <Container>
       <Header type="back" />
       <Col gap={98} padding="43px 32px">
         <Txt variant="headLineBold" align="left">
-          이메일을 입력해주세요 :) {"\n"}
+          사용할 별명을 입력해주세요. {"\n"}
         </Txt>
         <Col gap={17}>
           <Txt variant="bodySubText" align="left">
-            이메일
+            별명
           </Txt>
           <TextField
-            placeholder="비밀번호"
+            placeholder="별명은 이후에 변경할 수 있어요."
             state={textFieldState}
             setState={setTextFieldState}
           />
@@ -44,9 +42,9 @@ export default function EmailSignup() {
       <BottomFixedArea>
         <ButtonContainer>
           <PrimaryButton
-            title="인증하기"
+            title="다음"
             color="sub_yellow"
-            onClick={handleCertificationButtonOnClick}
+            onClick={handleNextButtonOnClick}
           />
         </ButtonContainer>
       </BottomFixedArea>
