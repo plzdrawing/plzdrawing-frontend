@@ -5,9 +5,13 @@ export type RootStackParamList = {
   Login: { userId: string } | undefined;
   Signup: undefined;
   EmailSignup: undefined;
+  ProfileMakingSplash: undefined;
+  ProfileMakingNickname: undefined;
+  ProfileMakingDone: undefined;
+  PasswordFind: undefined;
 };
 
-// 필요하다면 다른 네비게이션 타입도 정의
+// 바텀네비게이션 타입 정의
 export type BottomTabParamList = {
   Home: undefined;
   Community: undefined;
