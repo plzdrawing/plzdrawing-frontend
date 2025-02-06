@@ -8,11 +8,16 @@ import LoginSplash from "@/src/screens/auth/LoginSplash";
 import Login from "@/src/screens/auth/Login";
 import MainNavigation from "@/src/navigation/MainNavigation";
 import { RootStackParamList } from "@/src/types/navigation";
-import Signup from "./src/screens/auth/signup/Signup";
-import EmailSignup from "./src/screens/auth/signup/EmailSignup";
-import EmailVerification from "./src/screens/auth/signup/EmailVerification";
-import VerificationComplete from "./src/screens/auth/signup/VerificationComplete";
-import PwdSetting from "./src/screens/auth/signup/PwdSetting";
+import Signup from "@/src/screens/auth/signup/Signup";
+import EmailSignup from "@/src/screens/auth/signup/EmailSignup";
+import ProfileMakingSplash from "@/src/screens/auth/signup/profileMaking/ProfileMakingSplash";
+import ProfileMakingDone from "@/src/screens/auth/signup/profileMaking/ProfileMakingDone";
+import ProfileMakingNickname from "@/src/screens/auth/signup/profileMaking/ProfileMakingNickname";
+import PasswordFind from "@/src/screens/auth/password/PasswordFind";
+import EmailVerification from "@/src/screens/auth/signup/EmailVerification";
+import VerificationComplete from "@/src/screens/auth/signup/VerificationComplete";
+import PwdSetting from "@/src/screens/auth/signup/PwdSetting";
+import PasswordChange from "@/src/screens/auth/password/PasswordChange";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -28,6 +33,17 @@ function AppNavigator() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="EmailSignup" component={EmailSignup} />
+        <Stack.Screen
+          name="ProfileMakingSplash"
+          component={ProfileMakingSplash}
+        />
+        <Stack.Screen
+          name="ProfileMakingNickname"
+          component={ProfileMakingNickname}
+        />
+        <Stack.Screen name="ProfileMakingDone" component={ProfileMakingDone} />
+        <Stack.Screen name="PasswordFind" component={PasswordFind} />
+        <Stack.Screen name="PasswordChange" component={PasswordChange} />
         <Stack.Screen name="EmailVerification" component={EmailVerification} />
         <Stack.Screen
           name="VerificationComplete"

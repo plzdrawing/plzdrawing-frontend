@@ -2,14 +2,18 @@ import Colors from "@/src/constants/Colors";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, TextInput, TextInputProps } from "react-native";
 import styled from "styled-components/native";
+import Txt from "../text/Txt";
+import { Col } from "../flex/Flex";
 
 // Props 타입 정의
 interface TextFieldProps extends TextInputProps {
   id?: string;
   content?: string;
   type?: "text" | "password";
-  state?: "emtpy" | "filled" | "error";
-  setState: (state: "emtpy" | "filled" | "error") => void;
+  state?: "empty" | "filled" | "error";
+  setState: (state: "empty" | "filled" | "error") => void;
+  validation?: (text: string) => void;
+  errorMessage?: string;
 }
 
 const TextField = (props: TextFieldProps) => {
@@ -19,10 +23,13 @@ const TextField = (props: TextFieldProps) => {
     type,
     state = "normal",
     setState,
+    errorMessage,
+    validation,
     ...rest
   } = props;
   const colors = Colors.colors;
   const [value, setValue] = useState(content || "");
+  const [maskedValue, setMaskedValue] = useState(""); // 별 모양으로 표시할 텍스트
 
   const getBorderColor = () => {
     switch (state) {
@@ -38,33 +45,48 @@ const TextField = (props: TextFieldProps) => {
   const handleChange = (text: string) => {
     setValue(text);
     if (text.length <= 0 || text === "") {
-      setState("emtpy");
+      setState("empty");
+    } else {
+      setState("filled");
+    }
+
+    if (type === "password") {
+      setMaskedValue(text.replace(/./g, "*"));
     }
   };
 
   return (
-    <StyledTextInput
-      placeholder={placeholder}
-      placeholderTextColor={colors.dark_gray1}
-      value={value}
-      onChangeText={handleChange}
-      borderColor={getBorderColor()}
-      onFocus={() => {
-        setState("filled");
-      }}
-      onBlur={() => {
-        if (value.length <= 0) {
-          setState("emtpy");
-        }
-      }}
-      {...rest}
-    />
+    <Col gap={7}>
+      <StyledTextInput
+        placeholder={placeholder}
+        placeholderTextColor={colors.dark_gray1}
+        value={value}
+        secureTextEntry={type === "password"}
+        onChangeText={handleChange}
+        borderColor={getBorderColor()}
+        color={colors.black}
+        onFocus={() => {
+          setState("filled");
+        }}
+        onBlur={() => {
+          if (value.length <= 0) {
+            setState("empty");
+          }
+        }}
+        {...rest}
+      />
+      {state === "error" && (
+        <Txt variant="bodySubText" color="error_red">
+          {errorMessage}
+        </Txt>
+      )}
+    </Col>
   );
 };
 
 const StyledTextInput = styled(TextInput)`
   font-size: 14px;
-  color: ${Colors.colors.black};
+  color: ${(props: { color: string }) => props.color};
   background-color: ${Colors.colors.white};
   font-family: "SsurroundAir";
   outline: none;
