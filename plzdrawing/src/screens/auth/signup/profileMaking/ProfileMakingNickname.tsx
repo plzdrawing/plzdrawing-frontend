@@ -12,8 +12,8 @@ import { RootStackParamList } from "@/src/types/navigation";
 
 export default function ProfileMakingNickname() {
   const [textFieldState, setTextFieldState] = useState<
-    "emtpy" | "filled" | "error"
-  >("emtpy");
+    "empty" | "filled" | "error"
+  >("empty");
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 

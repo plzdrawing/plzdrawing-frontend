@@ -10,23 +10,23 @@ import PrimaryButton from "@/src/components/common/button/PrimaryButton";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 
-export default function PasswordFind() {
+export default function PasswordChange() {
   const [textFieldState, setTextFieldState] = useState<
-    "emtpy" | "filled" | "error"
-  >("emtpy");
+    "empty" | "filled" | "error"
+  >("empty");
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleNextButtonOnClick = () => {
     console.log("다음 버튼 클릭");
-    navigation.navigate("ProfileMakingDone");
+    navigation.navigate("PasswordChange");
   };
   return (
     <Container>
       <Header type="back" />
       <Col gap={98} padding="43px 32px">
         <Txt variant="headLineBold" align="left">
-          비밀번호 찾기 {"\n"}
+          비밀번호 찾기
         </Txt>
         <Col gap={17}>
           <Txt variant="bodySubText" align="left">

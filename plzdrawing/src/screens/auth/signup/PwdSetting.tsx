@@ -16,11 +16,11 @@ export default function PwdSetting() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordState, setPasswordState] = useState<
-    "emtpy" | "filled" | "error"
-  >("emtpy");
+    "empty" | "filled" | "error"
+  >("empty");
   const [confirmState, setConfirmState] = useState<
-    "emtpy" | "filled" | "error"
-  >("emtpy");
+    "empty" | "filled" | "error"
+  >("empty");
   const [passwordError, setPasswordError] = useState("");
   const [confirmError, setConfirmError] = useState("");
   const [isValid, setIsValid] = useState(false);
@@ -63,7 +63,7 @@ export default function PwdSetting() {
   useEffect(() => {
     const passwordResult = validatePassword(password);
     if (!password) {
-      setPasswordState("emtpy");
+      setPasswordState("empty");
     } else {
       setPasswordState(passwordResult.isValid ? "filled" : "error");
     }
@@ -71,7 +71,7 @@ export default function PwdSetting() {
 
     const confirmResult = validateConfirmPassword(password, confirmPassword);
     if (!confirmPassword) {
-      setConfirmState("emtpy");
+      setConfirmState("empty");
     } else {
       setConfirmState(confirmResult.isValid ? "filled" : "error");
     }

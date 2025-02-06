@@ -16,8 +16,8 @@ export default function Login() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [textFieldState, setTextFieldState] = useState<
-    "emtpy" | "filled" | "error"
-  >("emtpy");
+    "empty" | "filled" | "error"
+  >("empty");
 
   const handleSignupButtonOnClick = () => {
     console.log("회원가입 버튼 클릭");
@@ -27,6 +27,11 @@ export default function Login() {
   const handlePasswordFindButtonOnClick = () => {
     console.log("비밀번호찾기 버튼 클릭");
     navigation.navigate("PasswordFind");
+  };
+
+  const handleLoginButtonOnClick = () => {
+    console.log("로그인 버튼 클릭");
+    navigation.navigate("Main");
   };
   return (
     <Container>
@@ -50,11 +55,15 @@ export default function Login() {
             state={textFieldState}
             setState={setTextFieldState}
           />
-          <AuthButton title="로그인" type="login" />
+          <AuthButton
+            title="로그인"
+            type="login"
+            onClick={handleLoginButtonOnClick}
+          />
           <Txt
             variant="bodySubText"
             align="center"
-            style={{ textDecorationLine: "underline" }}
+            style={{ textDecorationLine: "underline", width: "100%" }}
             onPress={handlePasswordFindButtonOnClick}
           >
             비밀번호 찾기
