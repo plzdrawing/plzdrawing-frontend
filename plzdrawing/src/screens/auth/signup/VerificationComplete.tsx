@@ -45,6 +45,10 @@ export default function VerificationComplete() {
     });
   };
 
+  const handleNextButton = () => {  
+    navigation.navigate("PwdSetting");
+  }
+
   const isNextEnabled = agreements.terms && agreements.privacy;
 
   return (
@@ -105,6 +109,7 @@ export default function VerificationComplete() {
             title="다음"
             color="sub_yellow"
             disabled={!isNextEnabled}
+            onClick={handleNextButton}
           />
         </ButtonContainer>
       </BottomFixedArea>
