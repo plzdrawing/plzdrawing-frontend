@@ -49,9 +49,8 @@ const TextField = (props: TextFieldProps) => {
     } else {
       setState("filled");
     }
-
-    if (type === "password") {
-      setMaskedValue(text.replace(/./g, "*"));
+    if (validation) {
+      validation(text);
     }
   };
 
