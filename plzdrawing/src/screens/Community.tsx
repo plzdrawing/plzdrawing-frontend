@@ -1,22 +1,38 @@
 import { StyleSheet, View } from "react-native";
-import colors from "@/src/constants/Colors";
 import PrimaryButton from "../components/common/button/PrimaryButton";
+import StarRating from "../components/common/rating/StarRating";
+import { Col } from "../components/common/flex/Flex";
+import Card from "../components/common/card/Card";
+import React from "react";
 
 export default function Community() {
   return (
-    <View style={styles.container}>
+    <Col padding={"32px"}>
       <PrimaryButton title="커뮤니티" />
-    </View>
+      <StarRating />
+      <Col gap={10}>
+        <Card
+          variant="requestAccepted"
+          imageUrl="https://i.pinimg.com/474x/6b/cc/86/6bcc86e9c69199e841cd65de630c2758.jpg"
+          onPress={() => console.log("누름")}
+        />
+        <Card
+          variant="itemRegistered"
+          imageUrl="https://i.pinimg.com/474x/6b/cc/86/6bcc86e9c69199e841cd65de630c2758.jpg"
+          hashtags={["#기여움", "#스냅샷"]}
+          price="3,000"
+          onPress={() => console.log("누름")}
+        />
+        <Card
+          variant="requestCompleted"
+          imageUrl="https://i.pinimg.com/474x/6b/cc/86/6bcc86e9c69199e841cd65de630c2758.jpg"
+        />
+      </Col>
+    </Col>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: `${colors.colors.background}`,
-  },
   title: {
     fontSize: 20,
     fontWeight: "bold",

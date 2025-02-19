@@ -13,7 +13,7 @@ interface TextProps extends RNTextProps {
   style?: StyleProp<TextStyle>;
   variant?: keyof typeof FontStyles;
   align?: "center" | "left" | "right";
-  color?: keyof typeof colors.colors; // Colors 객체의 키를 타입으로
+  color?: keyof typeof colors["colors"] | keyof typeof colors["tab"];
   numberOfLines?: number;
 }
 
@@ -34,7 +34,7 @@ export default function Txt({
           fontSize: variant
             ? FontStyles[variant].fontSize
             : FontStyles.default.fontSize,
-          color: colors.colors[color], // Colors 객체에서 색상 가져오기
+          color: colors.colors[color as keyof typeof colors["colors"]] || colors.tab[color as keyof typeof colors["tab"]], // Colors 객체에서 색상 가져오기
           fontFamily: variant
             ? FontStyles[variant].fontFamily
             : FontStyles.default.fontFamily,

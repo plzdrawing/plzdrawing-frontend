@@ -27,7 +27,7 @@ const FontStyles = {
   subtitleBold: {
     fontFamily: "Ssurround",
     fontSize: 20,
-    lineHeight: 21,
+    lineHeight: 22,
   },
   //본문
   bodyText: {
@@ -58,6 +58,12 @@ const FontStyles = {
     fontFamily: "SsurroundAir",
     fontSize: 10,
     lineHeight: 13,
+  },
+  //이름 미정 텍스트
+  thirdText: {
+    fontFamily: "Ssurround",
+    fontSize: 16,
+    lineHeight: 18,
   },
 };
 
