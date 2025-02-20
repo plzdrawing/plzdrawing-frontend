@@ -13,6 +13,7 @@ export type RootStackParamList = {
   EmailVerification: undefined;
   VerificationComplete: undefined;
   PwdSetting: undefined;
+  Chatting: undefined;
 };
 
 // 바텀네비게이션 타입 정의
