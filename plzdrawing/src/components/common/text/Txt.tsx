@@ -14,6 +14,7 @@ interface TextProps extends RNTextProps {
   variant?: keyof typeof FontStyles;
   align?: "center" | "left" | "right";
   color?: keyof typeof colors.colors; // Colors 객체의 키를 타입으로
+  height?: number;
   numberOfLines?: number;
 }
 
@@ -22,6 +23,7 @@ export default function Txt({
   style,
   color = "black", // 기본 색상
   variant,
+  height,
   ...props
 }: TextProps) {
   return (
@@ -39,7 +41,11 @@ export default function Txt({
             ? FontStyles[variant].fontFamily
             : FontStyles.default.fontFamily,
           textAlign: props.align,
-          lineHeight: variant ? FontStyles[variant].lineHeight : undefined,
+          lineHeight: height
+            ? height
+            : variant
+            ? FontStyles[variant].lineHeight
+            : FontStyles.default.lineHeight,
         },
       ]}
     >
