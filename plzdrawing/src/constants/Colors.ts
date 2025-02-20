@@ -13,7 +13,7 @@ export default {
     light_gray3: "#E0DFDF", // 연회색3
     seperator: "#dcdfdf",
     dark_gray1: "#A8A8A8", // 진회색01
-    dark_gray2: "#828282", // 진회색02
+    dark_gray2: "#767A7A", // 진회색02
     black: "#000000", // Black
     white: "#FFFFFF", // White
   },
