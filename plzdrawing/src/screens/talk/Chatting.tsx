@@ -2,7 +2,7 @@ import { Container } from "../../components/common/container/Container";
 import MainHeader from "@/src/components/common/header/MainHeader";
 import Txt from "@/src/components/common/text/Txt";
 import Colors from "@/src/constants/Colors";
-import ChatInput from "@/src/components/\bchat/ChatInput";
+import ChatInput from "@/src/components/chat/ChatInput";
 import styled from "styled-components/native";
 import { useEffect, useRef, useState } from "react";
 import {
