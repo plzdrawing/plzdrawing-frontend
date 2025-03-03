@@ -1,7 +1,7 @@
-import React from "react";
-import { View, TextInput, StyleSheet, Platform } from "react-native";
-import Txt from "../text/Txt";
-import colors from "@/src/constants/Colors";
+import React, { useState } from "react";
+import { TextInput } from "react-native";
+import styled from "styled-components/native";
+import Colors from "@/src/constants/Colors";
 
 interface TextAreaFieldProps {
   label?: string;
@@ -13,64 +13,48 @@ interface TextAreaFieldProps {
 }
 
 const TextAreaField = ({
-  label = "",
   placeholder = "",
   value = "",
   onChange,
-  onClear = () => {},
   readOnly = false,
 }: TextAreaFieldProps) => {
+  const colors = Colors.colors;
+  const [text, setText] = useState(value);
+
+  const handleChange = (input: string) => {
+    setText(input);
+    onChange(input);
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.labelContainer}>
-        <Txt variant="bodyText" color="text" style={styles.label}>
-          {label}
-        </Txt>
-      </View>
-      <TextInput
-        value={value}
-        onChangeText={onChange}
+    <>
+      <TextAreaInput
         placeholder={placeholder}
-        style={[styles.input, readOnly && styles.readOnlyInput]}
-        placeholderTextColor={colors.colors.dark_gray1}
+        placeholderTextColor={colors.dark_gray1}
+        value={text}
+        onChangeText={handleChange}
+        editable={!readOnly}
         multiline
         textAlignVertical="top"
-        numberOfLines={4}
-        editable={!readOnly}
+        color={colors.black}
       />
-    </View>
+    </>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-  },
-  labelContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 7,
-  },
-  label: {
-    paddingHorizontal: 4,
-    paddingVertical: 7,
-    fontSize: 16,
-  },
-  input: {
-    width: "100%",
-    height: 120,
-    borderWidth: 1,
-    borderColor: colors.colors.light_gray2,
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 14,
-    backgroundColor: colors.colors.light_gray1,
-  },
-  readOnlyInput: {
-    borderColor: colors.colors.light_gray3,
-    backgroundColor: colors.colors.light_gray2,
-  },
-});
+const TextAreaInput = styled(TextInput)`
+  font-size: 14px;
+  font-weight: 300;
+  color: ${(props: { color: string }) => props.color};
+  background-color: ${Colors.colors.light_gray1};
+  font-family: "SsurroundAir";
+  outline: none;
+  width: 100%;
+  height: 90px;
+  padding: 15px 11px;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: ${Colors.colors.light_gray2};
+`;
 
 export default TextAreaField;
