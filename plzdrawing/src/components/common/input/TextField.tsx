@@ -75,7 +75,7 @@ const TextField = (props: TextFieldProps) => {
         {...rest}
       />
       {state === "error" && (
-        <Txt variant="bodySubText" color="error_red">
+        <Txt variant="bodySubText" color="error_red" style={{ marginLeft: 20 }}>
           {errorMessage}
         </Txt>
       )}

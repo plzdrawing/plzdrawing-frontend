@@ -15,8 +15,8 @@ import { RootStackParamList } from "@/src/types/navigation";
 export default function EmailSignup() {
   const [email, setEmail] = useState("");
   const [textFieldState, setTextFieldState] = useState<
-    "normal" | "focus" | "error"
-  >("normal");
+    "empty" | "filled" | "error" | undefined
+  >("filled");
   const [errorMessage, setErrorMessage] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -36,8 +36,20 @@ export default function EmailSignup() {
   useEffect(() => {
     const result = validateEmail(email);
     setIsValidEmail(result.isValid);
-    setTextFieldState(result.isValid || !email ? "normal" : "error");
-    setErrorMessage(result.message);
+
+    if (!email) {
+      // 이메일이 비어있는 경우
+      setTextFieldState("empty");
+      setErrorMessage("");
+    } else if (result.isValid) {
+      // 이메일이 유효한 경우
+      setTextFieldState("filled");
+      setErrorMessage("");
+    } else {
+      // 이메일이 유효하지 않은 경우
+      setTextFieldState("error");
+      setErrorMessage(result.message);
+    }
   }, [email]);
 
   const handleVerificationButtonOnClick = () => {
@@ -45,6 +57,9 @@ export default function EmailSignup() {
       console.log("유효성 검사 통과");
       navigation.navigate("EmailVerification");
       // 이미 가입된 회원인지 확인하는 api 호출해야됨
+    } else {
+      setErrorMessage("이미 회원가입된 이메일입니다.");
+      setTextFieldState("error");
     }
   };
 
@@ -59,22 +74,30 @@ export default function EmailSignup() {
           <Txt variant="bodySubText" align="left">
             이메일
           </Txt>
-          <TextField
-            placeholder="이메일을 입력해주세요."
-            state={textFieldState}
-            setState={setTextFieldState}
-            value={email}
-            onChangeText={setEmail}
-          />
-          {textFieldState === "error" && (
-            <Txt
-              variant="bodySubText"
-              color="error_red"
-              style={{ marginLeft: 21, marginTop: -10 }}
-            >
-              {errorMessage}
-            </Txt>
-          )}
+          <Col>
+            <TextField
+              placeholder="이메일을 입력해주세요."
+              state={textFieldState}
+              setState={setTextFieldState}
+              value={email}
+              onChangeText={setEmail}
+              errorMessage={errorMessage}
+              onFocus={() => {
+                // 포커스될 때 filled 상태로 변경
+                setTextFieldState("filled");
+              }}
+              onBlur={() => {
+                // 포커스를 잃을 때 다시 유효성 검사
+                if (!email) {
+                  setTextFieldState("empty");
+                } else if (validateEmail(email).isValid) {
+                  setTextFieldState("filled");
+                } else {
+                  setTextFieldState("error");
+                }
+              }}
+            />
+          </Col>
         </Col>
       </Col>
       <BottomFixedArea>
