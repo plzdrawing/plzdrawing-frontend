@@ -5,9 +5,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 interface ContainerProps {
   children: React.ReactNode;
+  style?: any;
 }
 
-export const Container = ({ children }: ContainerProps) => {
+export const Container = ({ children, style }: ContainerProps) => {
   return (
     <SafeAreaView
       style={{
@@ -15,6 +16,7 @@ export const Container = ({ children }: ContainerProps) => {
         alignItems: "flex-start",
         justifyContent: "flex-start",
         backgroundColor: `${Colors.colors.background}`,
+        ...style,
       }}
     >
       {children}

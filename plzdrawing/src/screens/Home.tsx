@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
-import { PrimaryButton } from "@/src/components/common/button/PrimaryButton";
 import colors from "@/src/constants/Colors";
+import PrimaryButton from "../components/common/button/PrimaryButton";
 
 export default function Home() {
   return (

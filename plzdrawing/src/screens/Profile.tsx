@@ -1,11 +1,12 @@
 import { StyleSheet, View } from "react-native";
-import { PrimaryButton } from "@/src/components/common/button/PrimaryButton";
 import colors from "@/src/constants/Colors";
+import PrimaryButton from "../components/common/button/PrimaryButton";
 
 export default function Profile() {
   return (
     <View style={styles.container}>
-      <PrimaryButton title="마이" />
+      <View style={styles.separator} />
+      
     </View>
   );
 }
@@ -16,6 +17,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: `${colors.colors.background}`,
+    paddingVertical: 0,
+    paddingHorizontal: 32,
   },
   title: {
     fontSize: 20,
