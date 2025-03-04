@@ -11,6 +11,7 @@ import { StyleSheet, View } from "react-native";
 import PrimaryButton from "@/src/components/common/button/PrimaryButton";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
+import AlertModal from "@/src/components/common/modal/AlertModal";
 
 export default function EmailSignup() {
   const [email, setEmail] = useState("");
@@ -20,6 +21,7 @@ export default function EmailSignup() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const validateEmail = (
     email: string
@@ -54,11 +56,18 @@ export default function EmailSignup() {
 
   const handleVerificationButtonOnClick = () => {
     if (isValidEmail) {
-      console.log("유효성 검사 통과");
-      navigation.navigate("EmailVerification");
-      // 이미 가입된 회원인지 확인하는 api 호출해야됨
+      const isEmailAlreadyRegistered = false;
+
+      if (isEmailAlreadyRegistered) {
+        // 이미 가입된 이메일인 경우
+        setModalVisible(true);
+      } else {
+        // 가입되지 않은 이메일인 경우
+        console.log("유효성 검사 통과");
+        navigation.navigate("EmailVerification");
+      }
     } else {
-      setErrorMessage("이미 회원가입된 이메일입니다.");
+      setErrorMessage("이메일 형식이 올바르지 않습니다.");
       setTextFieldState("error");
     }
   };
@@ -110,6 +119,14 @@ export default function EmailSignup() {
           />
         </ButtonContainer>
       </BottomFixedArea>
+      {modalVisible && (
+        <AlertModal
+          title="이미 회원가입한 이메일입니다:)"
+          buttonTitle="확인"
+          onClick={() => setModalVisible(false)}
+          textVariant="thirdText"
+        />
+      )}
     </Container>
   );
 }

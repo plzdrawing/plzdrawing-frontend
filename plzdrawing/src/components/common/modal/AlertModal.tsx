@@ -3,12 +3,15 @@ import styled from "styled-components/native";
 import { Dimensions, TouchableOpacity } from "react-native";
 import { Col } from "../flex/Flex";
 import Txt from "../text/Txt";
+import FontStyles from "@/src/constants/Fonts";
 
+type FontStyleKey = keyof typeof FontStyles;
 interface AlertModalProps {
   title?: string;
   buttonTitle?: string;
   content?: React.ReactNode;
   onClick?: () => void;
+  textVariant?: FontStyleKey;
 }
 
 const AlertModal = ({
@@ -16,6 +19,7 @@ const AlertModal = ({
   buttonTitle,
   content,
   onClick,
+  textVariant = "subtitleBold",
 }: AlertModalProps) => {
   return (
     <ModalView>
@@ -25,7 +29,7 @@ const AlertModal = ({
           alignItems="center"
           style={{ width: "100%", height: 95 }}
         >
-          <Txt variant="subtitleBold" align="center" style={{ width: "100%" }}>
+          <Txt variant={textVariant} align="center" style={{ width: "100%" }}>
             {title}
           </Txt>
           {content && content}
