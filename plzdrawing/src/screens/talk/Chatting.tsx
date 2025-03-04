@@ -6,23 +6,42 @@ import ChatInput from "@/src/components/chat/ChatInput";
 import styled from "styled-components/native";
 import { useEffect, useRef, useState } from "react";
 import {
-  InteractionManager,
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
+import SenderBox from "@/src/components/chat/SenderBox";
+import ReceiverBox from "@/src/components/chat/ReceiverBox";
+import AlertModal from "@/src/components/common/modal/AlertModal";
+
+interface Message {
+  message: string;
+  isSender: boolean;
+}
 
 export default function Chatting() {
-  const [message, setMessage] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const handleClickModalButton = () => {
+    setModalVisible(true);
+  };
+  const [sendMessage, setSendMessage] = useState("");
   const [isOpenedMenu, setIsOpenedMenu] = useState(false);
-  const [messageList, setMessageList] = useState(["안녕하세요", "안녕하세요"]);
+  const [messageList, setMessageList] = useState<Message[]>([
+    { message: "안녕하세요", isSender: true },
+    { message: "안녕하세요", isSender: false },
+    { message: "안녕하세요", isSender: false },
+    { message: "안녕하세요", isSender: false },
+  ]);
   const scrollViewRef = useRef<ScrollView>(null);
 
   const handleSendMessage = () => {
-    if (message && message !== "") setMessageList([...messageList, message]);
-    setMessage("");
+    if (sendMessage && sendMessage !== "")
+      setMessageList([
+        ...messageList,
+        { message: sendMessage, isSender: true },
+      ]);
+    setSendMessage("");
   };
 
   useEffect(() => {
@@ -85,23 +104,32 @@ export default function Chatting() {
               }}
             >
               <ChattingContainer>
-                {messageList.map((message, index) => (
-                  <ChattingTextBox key={index}>
-                    <Txt>{message}</Txt>
-                  </ChattingTextBox>
-                ))}
+                {messageList.map((message, index) =>
+                  message.isSender ? (
+                    <SenderBox key={index} message={message.message} />
+                  ) : (
+                    <ReceiverBox key={index} message={message.message} />
+                  )
+                )}
               </ChattingContainer>
             </TouchableWithoutFeedback>
           </ScrollContainer>
           <ChatInput
-            message={message}
-            setMessage={setMessage}
-            handleSendMessage={handleSendMessage}
+            message={sendMessage}
+            setMessage={setSendMessage}
+            handleSendMessage={() => setModalVisible(true)}
             isOpenMenu={isOpenedMenu}
             setIsOpenMenu={setIsOpenedMenu}
           />
         </ContentContainer>
       </KeyboardAvoidingView>
+      {modalVisible && (
+        <AlertModal
+          title="모달"
+          buttonTitle="확인"
+          onClick={() => setModalVisible(false)}
+        />
+      )}
     </Container>
   );
 }
@@ -128,15 +156,4 @@ const ContentContainer = styled.SafeAreaView`
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
-`;
-
-const ChattingTextBox = styled.View`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: left;
-  color: ${Colors.colors.black};
-  background-color: ${Colors.colors.sub_yellow};
-  border-radius: 10px;
-  padding: 10px 20px;
 `;
