@@ -1,5 +1,5 @@
 import Colors from "@/src/constants/Colors";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   ViewStyle,
   StyleProp,
@@ -11,29 +11,16 @@ import styled from "styled-components/native";
 
 interface BottomFixedAreaProps {
   children: React.ReactNode;
-  containerStyle?: StyleProp<ViewStyle>;
 }
-
-const detectIOS = Platform.OS === "ios";
 const { width } = Dimensions.get("window");
 
 export const BottomFixedArea: React.FC<BottomFixedAreaProps> = ({
   children,
-  containerStyle,
 }) => {
-  const [isKeypadOpen, setIsKeypadOpen] = React.useState(false);
-  const [keyboardHeight, setKeyboardHeight] = React.useState(0);
-
   React.useEffect(() => {
-    const showSubscription = Keyboard.addListener("keyboardDidShow", (e) => {
-      setIsKeypadOpen(true);
-      setKeyboardHeight(e.endCoordinates.height);
-    });
+    const showSubscription = Keyboard.addListener("keyboardDidShow", (e) => {});
 
-    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
-      setIsKeypadOpen(false);
-      setKeyboardHeight(0);
-    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {});
 
     return () => {
       showSubscription.remove();
@@ -42,7 +29,7 @@ export const BottomFixedArea: React.FC<BottomFixedAreaProps> = ({
   }, []);
 
   return (
-    <FixedAreaContainer behavior={"padding"} isKeypadOpen={isKeypadOpen}>
+    <FixedAreaContainer behavior={"padding"}>
       <ContentContainer>{children}</ContentContainer>
     </FixedAreaContainer>
   );

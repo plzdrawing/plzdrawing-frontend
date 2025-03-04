@@ -18,6 +18,7 @@ import EmailVerification from "@/src/screens/auth/signup/EmailVerification";
 import VerificationComplete from "@/src/screens/auth/signup/VerificationComplete";
 import PwdSetting from "@/src/screens/auth/signup/PwdSetting";
 import PasswordChange from "@/src/screens/auth/password/PasswordChange";
+import Chatting from "./src/screens/talk/Chatting";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -50,13 +51,13 @@ function AppNavigator() {
           component={VerificationComplete}
         />
         <Stack.Screen name="PwdSetting" component={PwdSetting} />
+        <Stack.Screen name="Chatting" component={Chatting} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 export default function App() {
-  const [isReady, setIsReady] = useState(false); // 앱 준비 상태
   const [fontsLoaded, setFontsLoaded] = useState(false); // 폰트 로드 상태
 
   // 폰트 로드 함수
