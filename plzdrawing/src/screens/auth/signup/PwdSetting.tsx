@@ -6,11 +6,12 @@ import { Col, Row } from "@/src/components/common/flex/Flex";
 import Header from "@/src/components/common/header/Header";
 import Txt from "@/src/components/common/text/Txt";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Alert } from "react-native";
 import styled from "styled-components/native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import TextField from "@/src/components/common/input/TextField";
+import AlertModal from "@/src/components/common/modal/AlertModal";
 
 export default function PwdSetting() {
   const [password, setPassword] = useState("");
@@ -24,6 +25,7 @@ export default function PwdSetting() {
   const [passwordError, setPasswordError] = useState("");
   const [confirmError, setConfirmError] = useState("");
   const [isValid, setIsValid] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const validatePassword = (
@@ -83,6 +85,7 @@ export default function PwdSetting() {
   const handleConfirmButton = () => {
     if (isValid) {
       console.log("비밀번호 설정 완료");
+      setModalVisible(true);
     }
   };
 
@@ -99,44 +102,28 @@ export default function PwdSetting() {
               비밀번호
             </Txt>
             <TextField
-              placeholder="영문,숫자, 특수문자 8자 이상 입력해주세요."
+              placeholder="영문, 숫자, 특수문자 8자 이상."
               state={passwordState}
               setState={setPasswordState}
               value={password}
               onChangeText={setPassword}
-              secureTextEntry
+              errorMessage="영문, 숫자, 특수문자를 포함하여 8자 이상 입력해주세요."
+              type="password"
             />
-            {passwordState === "error" && (
-              <Txt
-                variant="bodySubText"
-                color="error_red"
-                style={{ marginLeft: 21, marginTop: -10 }}
-              >
-                {passwordError}
-              </Txt>
-            )}
           </Col>
           <Col gap={17}>
             <Txt variant="bodySubText" align="left">
               비밀번호 확인
             </Txt>
             <TextField
-              placeholder="영문,숫자, 특수문자 8자 이상 입력해주세요."
+              placeholder="영문, 숫자, 특수문자 8자 이상."
               state={confirmState}
               setState={setConfirmState}
               value={confirmPassword}
               onChangeText={setConfirmPassword}
-              secureTextEntry
+              errorMessage="비밀번호가 일치하지 않아요"
+              type="password"
             />
-            {confirmState === "error" && (
-              <Txt
-                variant="bodySubText"
-                color="error_red"
-                style={{ marginLeft: 21, marginTop: -10 }}
-              >
-                {confirmError}
-              </Txt>
-            )}
           </Col>
         </Col>
       </Col>
@@ -150,6 +137,17 @@ export default function PwdSetting() {
           />
         </ButtonContainer>
       </BottomFixedArea>
+      {modalVisible && (
+        <AlertModal
+          title="비밀번호 설정이 완료되었어요 :)"
+          buttonTitle="확인"
+          onClick={() => {
+            setModalVisible(false);
+            navigation.navigate("Login");
+          }}
+          textVariant="thirdText"
+        />
+      )}
     </Container>
   );
 }

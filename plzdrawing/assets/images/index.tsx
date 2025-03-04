@@ -11,6 +11,7 @@ import FileIcon from "@/assets/images/file.svg";
 import PictureIcon from "@/assets/images/picture.svg";
 import CameraIcon from "@/assets/images/camera.svg";
 import DrawerIcon from "@/assets/images/drawer.svg";
+import HidePassword from "@/assets/images/hide-password.svg";
 
 export {
   BackArrowIcon,
@@ -26,4 +27,5 @@ export {
   PictureIcon,
   CameraIcon,
   DrawerIcon,
+  HidePassword,
 };

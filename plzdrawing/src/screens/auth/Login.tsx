@@ -11,6 +11,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/src/types/navigation";
 import TextField from "@/src/components/common/input/TextField";
+import AlertModal from "@/src/components/common/modal/AlertModal";
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -18,7 +19,7 @@ export default function Login() {
   const [textFieldState, setTextFieldState] = useState<
     "empty" | "filled" | "error"
   >("empty");
-
+  const [modalVisible, setModalVisible] = useState(false);
   const handleSignupButtonOnClick = () => {
     console.log("회원가입 버튼 클릭");
     navigation.navigate("Signup");
@@ -30,8 +31,13 @@ export default function Login() {
   };
 
   const handleLoginButtonOnClick = () => {
-    console.log("로그인 버튼 클릭");
+    // 일치하는지 확인하는 로직 필요
     navigation.navigate("Main");
+    // 일치하지 않을 경우
+    // setModalVisible(true);
+  };
+  const handleConfirm = () => {
+    setModalVisible(false);
   };
   return (
     <Container>
@@ -54,6 +60,8 @@ export default function Login() {
             placeholder="비밀번호"
             state={textFieldState}
             setState={setTextFieldState}
+            type="password"
+            errorMessage="비밀번호를 다시 한 번 확인해주세요."
           />
           <AuthButton
             title="로그인"
@@ -70,6 +78,14 @@ export default function Login() {
           </Txt>
         </Col>
       </Col>
+      {modalVisible && (
+        <AlertModal
+          title={"이메일 혹은 비밀번호가\n일치하지 않아요."}
+          buttonTitle="확인"
+          onClick={handleConfirm}
+          textVariant="thirdText"
+        />
+      )}
     </Container>
   );
 }
