@@ -21,6 +21,7 @@ export default function EmailSignup() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   const validateEmail = (
@@ -60,16 +61,19 @@ export default function EmailSignup() {
 
       if (isEmailAlreadyRegistered) {
         // 이미 가입된 이메일인 경우
-        setModalVisible(true);
+        setErrorModalVisible(true);
       } else {
         // 가입되지 않은 이메일인 경우
         console.log("유효성 검사 통과");
-        navigation.navigate("EmailVerification");
+        setModalVisible(true);
       }
     } else {
       setErrorMessage("이메일 형식이 올바르지 않습니다.");
       setTextFieldState("error");
     }
+  };
+  const handleNextButtonOnClick = () => {
+    navigation.navigate("EmailVerification");
   };
 
   return (
@@ -119,11 +123,22 @@ export default function EmailSignup() {
           />
         </ButtonContainer>
       </BottomFixedArea>
-      {modalVisible && (
+      {errorModalVisible && (
         <AlertModal
           title="이미 회원가입한 이메일입니다:)"
           buttonTitle="확인"
-          onClick={() => setModalVisible(false)}
+          onClick={() => setErrorModalVisible(false)}
+          textVariant="thirdText"
+        />
+      )}
+      {modalVisible && (
+        <AlertModal
+          title={"인증번호가 전송되었어요!\n이메일을 확인해주세요."}
+          buttonTitle="확인"
+          onClick={() => {
+            handleNextButtonOnClick();
+            setModalVisible(false);
+          }}
           textVariant="thirdText"
         />
       )}
