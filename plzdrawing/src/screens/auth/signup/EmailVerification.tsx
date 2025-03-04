@@ -10,6 +10,7 @@ import { StyleSheet, View, TextInput } from "react-native";
 import styled from "styled-components/native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
+import AlertModal from "@/src/components/common/modal/AlertModal";
 
 export default function EmailVerification() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -30,6 +31,8 @@ export default function EmailVerification() {
     null,
     null,
   ]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -78,11 +81,42 @@ export default function EmailVerification() {
     setVerificationCode(["", "", "", "", "", ""]);
   };
 
-  const isVerificationComplete = verificationCode.every((code) => code !== "");
-
-  const handleCompleteButtonOnClick = () => {
-    navigation.navigate("VerificationComplete");
+  const verifyCode = async (code: string): Promise<boolean> => {
+    try {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          //임시 "123456" 코드 유효하게함
+          resolve(code === "123456");
+        }, 500);
+      });
+    } catch (error) {
+      console.error("인증 코드 검증 중 오류 발생:", error);
+      return false;
+    }
   };
+
+  const handleVerificationButtonClick = async () => {
+    const code = verificationCode.join("");
+    if (!code || code.length !== 6) {
+      return;
+    }
+
+    try {
+      const isValid = await verifyCode(code);
+
+      if (isValid) {
+        setModalVisible(true);
+      } else {
+        setErrorModalVisible(true);
+      }
+    } catch (error) {
+      console.error("인증 처리 중 오류 발생:", error);
+    } finally {
+      // setIsLoading(false);
+    }
+  };
+
+  const isVerificationComplete = verificationCode.every((code) => code !== "");
 
   return (
     <Container>
@@ -128,10 +162,31 @@ export default function EmailVerification() {
             title="확인하기"
             color="sub_yellow"
             disabled={!isVerificationComplete}
-            onClick={handleCompleteButtonOnClick}
+            onClick={handleVerificationButtonClick}
           />
         </ButtonContainer>
       </BottomFixedArea>
+      {errorModalVisible && (
+        <AlertModal
+          title="인증번호가 일치하지 않아요."
+          buttonTitle="확인"
+          onClick={() => {
+            setErrorModalVisible(false);
+          }}
+          textVariant="thirdText"
+        />
+      )}
+      {modalVisible && (
+        <AlertModal
+          title="인증번호 확인이 완료되었어요 :)!"
+          buttonTitle="확인"
+          onClick={() => {
+            setModalVisible(false);
+            navigation.navigate("VerificationComplete");
+          }}
+          textVariant="thirdText"
+        />
+      )}
     </Container>
   );
 }

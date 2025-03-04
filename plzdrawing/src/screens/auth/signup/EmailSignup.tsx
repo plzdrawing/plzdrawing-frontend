@@ -72,9 +72,6 @@ export default function EmailSignup() {
       setTextFieldState("error");
     }
   };
-  const handleNextButtonOnClick = () => {
-    navigation.navigate("EmailVerification");
-  };
 
   return (
     <Container>
@@ -136,7 +133,7 @@ export default function EmailSignup() {
           title={"인증번호가 전송되었어요!\n이메일을 확인해주세요."}
           buttonTitle="확인"
           onClick={() => {
-            handleNextButtonOnClick();
+            navigation.navigate("EmailVerification");
             setModalVisible(false);
           }}
           textVariant="thirdText"
