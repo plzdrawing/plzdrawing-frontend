@@ -17,6 +17,10 @@ export default function Signup() {
     console.log("이메일회원가입 버튼 클릭");
     navigation.navigate("EmailSignup");
   };
+  const handleLoginButtonOnClick = () => {
+    console.log("로그인 버튼 클릭");
+    navigation.navigate("Login");
+  };
   return (
     <Container>
       <Header type="back" />
@@ -27,16 +31,26 @@ export default function Signup() {
         </Txt>
         <Col gap={17}>
           <Txt variant="bodySubText" align="left">
-            간편 로그인
+            먼저 로그인이 필요해요.
           </Txt>
           <SocialLoginButton type="kakao" onClick={() => {}} />
           <SocialLoginButton type="naver" onClick={() => {}} />
-          <Seperator />
           <AuthButton
-            title="이메일로 회원가입"
-            type="signup"
-            onClick={handleEmailSignupButtonOnClick}
+            title="이메일 로그인"
+            type="login"
+            onClick={handleLoginButtonOnClick}
           />
+          <Seperator />
+          <Col gap={17} margin={"50px 0"}>
+            <Txt variant="bodySubText" align="left">
+              소일거리 드로잉이 처음이신가요?
+            </Txt>
+            <AuthButton
+              title="회원가입"
+              type="signup"
+              onClick={handleEmailSignupButtonOnClick}
+            />
+          </Col>
         </Col>
       </Col>
     </Container>

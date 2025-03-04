@@ -66,19 +66,8 @@ export default function Login() {
             style={{ textDecorationLine: "underline", width: "100%" }}
             onPress={handlePasswordFindButtonOnClick}
           >
-            비밀번호 찾기
+            아이디/비밀번호 찾기
           </Txt>
-          <Seperator />
-        </Col>
-        <Col gap={17}>
-          <Txt variant="bodySubText" align="left">
-            소일거리 드로잉이 처음이신가요?
-          </Txt>
-          <AuthButton
-            title="회원가입"
-            type="signup"
-            onClick={handleSignupButtonOnClick}
-          />
         </Col>
       </Col>
     </Container>
