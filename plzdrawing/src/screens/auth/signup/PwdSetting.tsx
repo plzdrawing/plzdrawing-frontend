@@ -6,12 +6,19 @@ import { Col, Row } from "@/src/components/common/flex/Flex";
 import Header from "@/src/components/common/header/Header";
 import Txt from "@/src/components/common/text/Txt";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Alert,
+  Animated,
+} from "react-native";
 import styled from "styled-components/native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import TextField from "@/src/components/common/input/TextField";
 import AlertModal from "@/src/components/common/modal/AlertModal";
+import { EmptyCheck, FilledCheck } from "@/assets/images";
 
 export default function PwdSetting() {
   const [password, setPassword] = useState("");
@@ -26,7 +33,11 @@ export default function PwdSetting() {
   const [confirmError, setConfirmError] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [showPasswordChecks, setShowPasswordChecks] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const [lengthCheck, setLengthCheck] = useState(false);
+  const [combinationCheck, setCombinationCheck] = useState(false);
 
   const validatePassword = (
     pwd: string
@@ -34,6 +45,18 @@ export default function PwdSetting() {
     if (!pwd) {
       return { isValid: false, message: "" };
     }
+
+    // 8자 이상 체크
+    const lengthValid = pwd.length >= 8;
+    setLengthCheck(lengthValid);
+
+    // 영문, 숫자, 특수문자 조합 체크
+    const hasLetter = /[A-Za-z]/.test(pwd);
+    const hasDigit = /\d/.test(pwd);
+    const hasSpecial = /[@$!%*#?&]/.test(pwd);
+    const combinationValid = hasLetter && hasDigit && hasSpecial;
+    setCombinationCheck(combinationValid);
+
     // 영문, 숫자, 특수문자 조합 8자 이상
     const regex =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
@@ -53,6 +76,10 @@ export default function PwdSetting() {
     if (!confirmPwd) {
       return { isValid: false, message: "" };
     }
+
+    // 동일한 비밀번호 체크
+    const identicalValid = pwd === confirmPwd;
+
     if (pwd !== confirmPwd) {
       return {
         isValid: false,
@@ -67,7 +94,7 @@ export default function PwdSetting() {
     if (!password) {
       setPasswordState("empty");
     } else {
-      setPasswordState(passwordResult.isValid ? "filled" : "error");
+      setPasswordState("filled");
     }
     setPasswordError(passwordResult.message);
 
@@ -81,6 +108,10 @@ export default function PwdSetting() {
 
     setIsValid(passwordResult.isValid && confirmResult.isValid);
   }, [password, confirmPassword]);
+
+  const handlePasswordFocus = () => {
+    setShowPasswordChecks(true);
+  };
 
   const handleConfirmButton = () => {
     if (isValid) {
@@ -107,9 +138,26 @@ export default function PwdSetting() {
               setState={setPasswordState}
               value={password}
               onChangeText={setPassword}
-              errorMessage="영문, 숫자, 특수문자를 포함하여 8자 이상 입력해주세요."
               type="password"
+              onFocus={handlePasswordFocus}
             />
+
+            {showPasswordChecks && (
+              <Col gap={7} padding={"0 0 0 20px"}>
+                <Row gap={17}>
+                  {lengthCheck ? <FilledCheck /> : <EmptyCheck />}
+                  <Txt variant="bodySubText" color="icon_default">
+                    최소 8자 이상
+                  </Txt>
+                </Row>
+                <Row gap={17}>
+                  {combinationCheck ? <FilledCheck /> : <EmptyCheck />}
+                  <Txt variant="bodySubText" color="icon_default">
+                    영문, 숫자, 특수문자 3가지 조합
+                  </Txt>
+                </Row>
+              </Col>
+            )}
           </Col>
           <Col gap={17}>
             <Txt variant="bodySubText" align="left">

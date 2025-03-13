@@ -12,8 +12,12 @@ import PictureIcon from "@/assets/images/picture.svg";
 import CameraIcon from "@/assets/images/camera.svg";
 import DrawerIcon from "@/assets/images/drawer.svg";
 import HidePassword from "@/assets/images/hide-password.svg";
+import EmptyCheck from "@/assets/images/empty-check.svg";
+import FilledCheck from "@/assets/images/filled-check.svg";
 
 export {
+  EmptyCheck,
+  FilledCheck,
   BackArrowIcon,
   CloseIcon,
   KaKaoLoginIcon,
