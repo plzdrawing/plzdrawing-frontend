@@ -19,6 +19,7 @@ import VerificationComplete from "@/src/screens/auth/signup/VerificationComplete
 import PwdSetting from "@/src/screens/auth/signup/PwdSetting";
 import PasswordChange from "@/src/screens/auth/password/PasswordChange";
 import Chatting from "./src/screens/talk/Chatting";
+import PasswordFindVerification from "./src/screens/auth/password/PasswordFindVerification";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -45,6 +46,10 @@ function AppNavigator() {
         <Stack.Screen name="ProfileMakingDone" component={ProfileMakingDone} />
         <Stack.Screen name="PasswordFind" component={PasswordFind} />
         <Stack.Screen name="PasswordChange" component={PasswordChange} />
+        <Stack.Screen
+          name="PasswordFindVerification"
+          component={PasswordFindVerification}
+        />
         <Stack.Screen name="EmailVerification" component={EmailVerification} />
         <Stack.Screen
           name="VerificationComplete"

@@ -12,7 +12,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import AlertModal from "@/src/components/common/modal/AlertModal";
 
-export default function EmailVerification() {
+export default function PasswordFindVerification() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [verificationCode, setVerificationCode] = useState([
     "",
@@ -123,7 +123,7 @@ export default function EmailVerification() {
       <Header type="back" />
       <Col gap={98} padding="43px 32px">
         <Txt variant="headLineBold" align="left">
-          인증번호를 확인해주세요 :) {"\n"}
+          비밀번호 찾기
         </Txt>
         <Col gap={8}>
           <VerificationInputContainer>
@@ -159,7 +159,7 @@ export default function EmailVerification() {
       <BottomFixedArea>
         <ButtonContainer>
           <PrimaryButton
-            title="확인하기"
+            title="확인"
             color="sub_yellow"
             disabled={!isVerificationComplete}
             onClick={handleVerificationButtonClick}
@@ -178,11 +178,11 @@ export default function EmailVerification() {
       )}
       {modalVisible && (
         <AlertModal
-          title="인증번호 확인이 완료되었어요 :)!"
+          title={`인증에 성공했어요!\n임시 비밀번호가 발급되었어요 :)`}
           buttonTitle="확인"
           onClick={() => {
             setModalVisible(false);
-            navigation.navigate("VerificationComplete");
+            navigation.navigate("Login");
           }}
           textVariant="thirdText"
         />

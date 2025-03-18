@@ -14,6 +14,7 @@ export type RootStackParamList = {
   VerificationComplete: undefined;
   PwdSetting: undefined;
   Chatting: undefined;
+  PasswordFindVerification: undefined;
 };
 
 // 바텀네비게이션 타입 정의
