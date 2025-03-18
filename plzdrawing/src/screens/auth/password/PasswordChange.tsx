@@ -14,7 +14,7 @@ import {
 } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 
-export default function PasswordFind() {
+export default function PasswordChange() {
   const [pwdTextFieldState, setPwdTextFieldState] = useState<
     "empty" | "filled" | "error"
   >("empty");

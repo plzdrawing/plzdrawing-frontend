@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import PrimaryButton from "../components/common/button/PrimaryButton";
 import StarRating from "../components/common/rating/StarRating";
 import { Col } from "../components/common/flex/Flex";
@@ -10,8 +10,21 @@ import CheckPainting from "../components/common/post/CheckPainting";
 
 export default function Community() {
   return (
-    <Col padding={"32px"}>
-      <CheckPainting />
-    </Col>
+    <ScrollView style={styles.scrollContainer}>
+      <Col padding={"32px"}>
+        <CheckPainting />
+        <View style={styles.spacer} />
+        <CheckFeedBack />
+      </Col>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  scrollContainer: {
+    flex: 1,
+  },
+  spacer: {
+    height: 20,
+  },
+});

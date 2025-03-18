@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import colors from "@/src/constants/Colors";
 import Header from "@/src/components/common/header/Header";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Txt from "@/src/components/common/text/Txt";
 import { Container } from "@/src/components/common/container/Container";
 import { Col } from "@/src/components/common/flex/Flex";
@@ -11,13 +11,39 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/src/types/navigation";
 import TextField from "@/src/components/common/input/TextField";
+import AlertModal from "@/src/components/common/modal/AlertModal";
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const [textFieldState, setTextFieldState] = useState<
+  const [email, setEmail] = useState("");
+  const [emailState, setEmailState] = useState<"empty" | "filled" | "error">(
+    "empty"
+  );
+  const [emailError, setEmailError] = useState("");
+
+  const [passwordState, setPasswordState] = useState<
     "empty" | "filled" | "error"
   >("empty");
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  useEffect(() => {
+    if (!email) {
+      setEmailState("empty");
+      setEmailError("");
+    } else if (validateEmail(email)) {
+      setEmailState("filled");
+      setEmailError("");
+    } else {
+      setEmailState("error");
+      setEmailError("이메일 양식에 맞지 않아요.");
+    }
+  }, [email]);
 
   const handleSignupButtonOnClick = () => {
     console.log("회원가입 버튼 클릭");
@@ -30,9 +56,21 @@ export default function Login() {
   };
 
   const handleLoginButtonOnClick = () => {
-    console.log("로그인 버튼 클릭");
+    // 이메일 형식이 유효하지 않으면 로그인 막기
+    if (emailState === "error") {
+      return;
+    }
+
+    // 일치하는지 확인하는 로직 필요
     navigation.navigate("Main");
+    // 일치하지 않을 경우 모달 띄우기
+    // setModalVisible(true);
   };
+
+  const handleConfirm = () => {
+    setModalVisible(false);
+  };
+
   return (
     <Container>
       <Header type="close" />
@@ -47,13 +85,19 @@ export default function Login() {
           </Txt>
           <TextField
             placeholder="이메일"
-            state={textFieldState}
-            setState={setTextFieldState}
+            state={emailState}
+            setState={setEmailState}
+            value={email}
+            onChangeText={setEmail}
+            errorMessage="이메일 양식에 맞지 않아요."
           />
+
           <TextField
             placeholder="비밀번호"
-            state={textFieldState}
-            setState={setTextFieldState}
+            state={passwordState}
+            setState={setPasswordState}
+            type="password"
+            errorMessage="비밀번호를 다시 한 번 확인해주세요."
           />
           <AuthButton
             title="로그인"
@@ -66,21 +110,18 @@ export default function Login() {
             style={{ textDecorationLine: "underline", width: "100%" }}
             onPress={handlePasswordFindButtonOnClick}
           >
-            비밀번호 찾기
+            아이디/비밀번호 찾기
           </Txt>
-          <Seperator />
-        </Col>
-        <Col gap={17}>
-          <Txt variant="bodySubText" align="left">
-            소일거리 드로잉이 처음이신가요?
-          </Txt>
-          <AuthButton
-            title="회원가입"
-            type="signup"
-            onClick={handleSignupButtonOnClick}
-          />
         </Col>
       </Col>
+      {modalVisible && (
+        <AlertModal
+          title={"이메일 혹은 비밀번호가\n일치하지 않아요."}
+          buttonTitle="확인"
+          onClick={handleConfirm}
+          textVariant="thirdText"
+        />
+      )}
     </Container>
   );
 }

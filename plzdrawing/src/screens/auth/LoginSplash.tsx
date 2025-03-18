@@ -13,12 +13,12 @@ import styled from "styled-components/native";
 export default function LoginSplash() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const handleStartButtonOnClick = () => {
-    navigation.navigate("Login");
+    navigation.navigate("Signup");
   };
 
   return (
     <Container>
-      <Header />
+      <Header type="close" />
       <Txt
         variant="headLineBold"
         align="left"
@@ -32,7 +32,11 @@ export default function LoginSplash() {
       </Txt>
       <BottomFixedArea>
         <ButtonContainer>
-          <PrimaryButton title="시작하기" onClick={handleStartButtonOnClick} />
+          <PrimaryButton
+            title="시작하기"
+            onClick={handleStartButtonOnClick}
+            color="sub_yellow"
+          />
         </ButtonContainer>
       </BottomFixedArea>
     </Container>
