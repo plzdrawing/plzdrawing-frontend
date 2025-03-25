@@ -9,9 +9,14 @@ interface HeaderProps {
   title?: string;
   type?: "close" | "back";
   onClick?: () => void;
+  backgroundColor?: string;
 }
 
-const Header = ({ type = "back", onClick }: HeaderProps) => {
+const Header = ({
+  type = "back",
+  onClick,
+  backgroundColor = "#fff",
+}: HeaderProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <Container>
@@ -41,7 +46,8 @@ const Container = styled.View`
   flex-direction: row;
   align-items: center;
   padding: 4px 30px;
-  background-color: #fff;
+  background-color: ${(props: { backgroundColor: string }) =>
+    props.backgroundColor};
 `;
 
 const BackButton = styled(TouchableOpacity)`
