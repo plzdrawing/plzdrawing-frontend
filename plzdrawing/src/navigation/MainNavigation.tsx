@@ -13,6 +13,7 @@ export default function MainNavigation() {
   return (
     <Tab.Navigator
       screenOptions={{
+        headerShown: false,
         tabBarActiveTintColor: "#000",
         tabBarInactiveTintColor: "#000",
         tabBarStyle: {
@@ -21,9 +22,8 @@ export default function MainNavigation() {
       }}
     >
       <Tab.Screen
-        name="커뮤니티"
-        component={Community}
-        initialParams={{ screenType: "Community" }}
+        name="그림톡"
+        component={Talk}
         options={{
           tabBarIcon: ({ focused, color, size }) => <EmptyBox />,
           tabBarLabel: ({ focused, color }) => (
@@ -32,7 +32,7 @@ export default function MainNavigation() {
               align="center"
               style={{ marginTop: 5 }}
             >
-              커뮤니티
+              그림톡
             </Txt>
           ),
         }}
@@ -53,22 +53,7 @@ export default function MainNavigation() {
           ),
         }}
       />
-      <Tab.Screen
-        name="그림톡"
-        component={Talk}
-        options={{
-          tabBarIcon: ({ focused, color, size }) => <EmptyBox />,
-          tabBarLabel: ({ focused, color }) => (
-            <Txt
-              variant={focused ? "auxiliaryTextBold" : "auxiliaryTextLight"}
-              align="center"
-              style={{ marginTop: 5 }}
-            >
-              그림톡
-            </Txt>
-          ),
-        }}
-      />
+
       <Tab.Screen
         name="마이"
         component={Profile}

@@ -11,6 +11,12 @@ import FileIcon from "@/assets/images/file.svg";
 import PictureIcon from "@/assets/images/picture.svg";
 import CameraIcon from "@/assets/images/camera.svg";
 import DrawerIcon from "@/assets/images/drawer.svg";
+import SearchIcon from "@/assets/images/search.svg";
+import PencilIcon from "@/assets/images/pencil.svg";
+import AlarmIcon from "@/assets/images/alarm.svg";
+import MenuIcon from "@/assets/images/hamburger.svg";
+import CommentIcon from "@/assets/images/message.svg";
+import LikeIcon from "@/assets/images/heart.svg";
 import HidePassword from "@/assets/images/hide-password.svg";
 import EmptyCheck from "@/assets/images/empty-check.svg";
 import FilledCheck from "@/assets/images/filled-check.svg";
@@ -31,5 +37,11 @@ export {
   PictureIcon,
   CameraIcon,
   DrawerIcon,
+  SearchIcon,
+  PencilIcon,
+  AlarmIcon,
+  MenuIcon,
+  CommentIcon,
+  LikeIcon,
   HidePassword,
 };

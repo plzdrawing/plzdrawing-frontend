@@ -20,18 +20,24 @@ const FontStyles = {
   //대제목_L
   mainTitleLight: {
     fontFamily: "SsurroundAir",
-    fontSize: 24,
+    fontSize: 20,
     lineHeight: 26,
   },
   //서브제목_B
   subtitleBold: {
     fontFamily: "Ssurround",
-    fontSize: 20,
+    fontSize: 16,
     lineHeight: 22,
   },
   //본문
   bodyText: {
     fontFamily: "SsurroundAir",
+    fontSize: 16,
+    lineHeight: 21,
+  },
+  //본문
+  bodyTextBold: {
+    fontFamily: "Ssurround",
     fontSize: 16,
     lineHeight: 21,
   },

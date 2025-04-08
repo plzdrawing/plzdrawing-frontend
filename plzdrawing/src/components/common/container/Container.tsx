@@ -16,6 +16,7 @@ export const Container = ({ children, style }: ContainerProps) => {
         alignItems: "flex-start",
         justifyContent: "flex-start",
         backgroundColor: `${Colors.colors.background}`,
+        position: "relative",
         ...style,
       }}
     >
