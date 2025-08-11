@@ -10,6 +10,7 @@ import RadioFilter from "../components/home/RadioFilter";
 import styled from "styled-components/native";
 import { PencilIcon } from "@/assets/images";
 import HomeCard from "../components/home/HomeCard";
+import ReviewCard from "../components/home/ReviewCard";
 import { useState } from "react";
 import React from "react";
 
@@ -30,7 +31,7 @@ export default function Home() {
         gap={20}
         style={{ backgroundColor: colors.colors.light_gray1, height: "100%" }}
       >
-        <RadioFilter />
+        <RadioFilter selectedId={selectedId} />
         <ScrollContainer showsVerticalScrollIndicator={false}>
           <Col gap={17} style={{ paddingBottom: 10 }}>
             {selectedId === 0 ? (
@@ -39,7 +40,10 @@ export default function Home() {
                 <HomeCard />
               </>
             ) : (
-              <></>
+              <>
+                <ReviewCard />
+                <ReviewCard />
+              </>
             )}
           </Col>
         </ScrollContainer>

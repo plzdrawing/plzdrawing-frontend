@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components/native";
 import { Col, Row } from "../common/flex/Flex";
 import Txt from "../common/text/Txt";
 import Colors from "@/src/constants/Colors";
 
-const RadioFilter = () => {
-  const filterList = ["최신순", "내가찜한"];
-  const [filter, setFilter] = useState<string>("");
+interface RadioFilterProps {
+  selectedId: number;
+}
+
+const RadioFilter = ({ selectedId }: RadioFilterProps) => {
+  // 탭에 따라 다른 필터 리스트 사용
+  const filterList = selectedId === 0 ? ["최신순", "내가찜한"] : ["최신순", "별점높은순"];
+  const [filter, setFilter] = useState<string>("최신순");
+
+  // 탭이 변경될 때마다 필터를 "최신순"으로 초기화
+  useEffect(() => {
+    setFilter("최신순");
+  }, [selectedId]);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);

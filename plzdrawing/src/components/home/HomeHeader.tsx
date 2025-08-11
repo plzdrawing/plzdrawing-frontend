@@ -27,19 +27,10 @@ const HomeHeader = ({
   selectedId,
   setSelectedId,
 }: HomeHeaderProps) => {
-  const handleToggle = () => {
-    setSelectedId && setSelectedId(selectedId === 0 ? 1 : 0);
-    console.log(selectedId);
-  };
-
-  useEffect(() => {
-    console.log(selectedId);
-  }, [selectedId]);
-
   return (
     <Container>
       <Row gap={30} style={{ width: "auto" }}>
-        <ButtonContainer onPress={handleToggle}>
+        <ButtonContainer onPress={() => setSelectedId && setSelectedId(0)}>
           <Col
             alignItems="center"
             gap={10}
@@ -54,7 +45,7 @@ const HomeHeader = ({
           </Col>
         </ButtonContainer>
         {title2 && (
-          <ButtonContainer onPress={handleToggle}>
+          <ButtonContainer onPress={() => setSelectedId && setSelectedId(1)}>
             <Col
               alignItems="center"
               gap={10}
