@@ -51,11 +51,10 @@
 
 import React, { useEffect } from "react";
 import {
-  Dimensions,
   Keyboard,
-  Platform,
   KeyboardAvoidingView,
   SafeAreaView,
+  Dimensions,
 } from "react-native";
 
 interface BottomFixedAreaProps {
@@ -78,8 +77,17 @@ export const BottomFixedArea: React.FC<BottomFixedAreaProps> = ({
 
   return (
     <KeyboardAvoidingView
-      behavior={"padding"}
-      className="absolute bottom-0 z-50 flex-col w-full max-w-[840px] left-1/2 -translate-x-1/2"
+      className={`
+        absolute
+        left-${width * 0.5}px
+        right-auto
+        bottom-0
+        w-full
+        transform-translate-x-${-width * 0.5}px
+        max-w-[840px]
+        z-100
+        flex-col
+      `}
     >
       <SafeAreaView>{children}</SafeAreaView>
     </KeyboardAvoidingView>
