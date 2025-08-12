@@ -1,4 +1,6 @@
 // 네비게이션에 사용할 ParamList 정의
+import { Home } from '@/src/screens/Home';
+import HomeDrawingCardDetail from '../screens/post/HomeDrawingCardDetail';
 export type RootStackParamList = {
   Main: undefined;
   LoginSplash: undefined;
@@ -17,6 +19,7 @@ export type RootStackParamList = {
   PasswordFindVerification: undefined;
   PainterProfile: undefined;
   HomePostDetail: { postId: string };
+  HomeDrawingCardDetail: { cardId: string };
 };
 
 // 바텀네비게이션 타입 정의

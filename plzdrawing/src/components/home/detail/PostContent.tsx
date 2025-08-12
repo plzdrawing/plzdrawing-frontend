@@ -4,15 +4,16 @@ import Txt from "@/src/components/common/text/Txt";
 
 interface PostContentProps {
   hashtags: string;
+  type?: "post" | "drawingCard";
   body: string;
 }
 
-const PostContent: React.FC<PostContentProps> = ({ hashtags, body }) => {
+const PostContent: React.FC<PostContentProps> = ({ hashtags, type="post", body }) => {
   return (
     <PostContentContainer>
       <Txt
         variant="bodySubText"
-        color="dark_gray2"
+        color={type === "post" ? "dark_gray2" : "highright_orange"}
         style={{ marginBottom: 8 }}
       >
         {hashtags}

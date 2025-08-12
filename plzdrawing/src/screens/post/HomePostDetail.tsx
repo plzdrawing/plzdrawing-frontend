@@ -11,11 +11,20 @@ import DrawingCarousel from "@/src/components/home/detail/DrawingCarousel";
 import DrawingInfoCard from "@/src/components/home/detail/DrawingInfoCard";
 import DefaultButton from "@/src/components/common/button/DefaultButton";
 import Txt from "@/src/components/common/text/Txt";
+import { TouchableOpacity } from "react-native";
 
 type HomePostDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
   "HomePostDetail"
 >;
+
+interface DrawingInfo {
+  id: string; // Added ID for unique key and navigation param
+  image: string;
+  title: string;
+  price: string;
+  description: string;
+}
 
 interface PostData {
   author: string;
@@ -24,12 +33,7 @@ interface PostData {
   body: string;
   profileImage: string;
   mainImage: string;
-  drawingInfo: {
-    image: string;
-    title: string;
-    price: string;
-    description: string;
-  };
+  drawingInfos: DrawingInfo[];
 }
 
 function HomePostDetail({
@@ -46,12 +50,26 @@ function HomePostDetail({
     body: "소소한 그림 그려드려요!소소한 그림 그려드려요! 소소한 그림 그려드려요!",
     profileImage: "https://placehold.co/38x38",
     mainImage: "https://placehold.co/326x207",
-    drawingInfo: {
-      image: "https://placehold.co/60x60",
-      title: "귀여운 그림",
-      price: "1000원",
-      description: "30분 예상 / 수정 불가",
-    },
+    drawingInfos: [
+      {
+        id: "card_abc_1",
+        image: "https://placehold.co/60x60/FFE18D/000000?text=1",
+        title: "귀여운 그림",
+        price: "1000원",
+        description: "30분 예상 / 수정 불가",
+      },
+      {
+        id: "card_abc_2",
+        image: "https://placehold.co/60x60/A9C8E8/000000?text=2",
+        title: "캐릭터 스케치",
+        price: "2500원",
+        description: "1시간 예상 / 수정 1회",
+      },
+    ],
+  };
+
+  const handleCardPress = (cardId: string) => {
+    navigation.navigate('HomeDrawingCardDetail', { cardId });
   };
 
   return (
@@ -76,7 +94,15 @@ function HomePostDetail({
               postData.mainImage,
             ]}
           />
-          <DrawingInfoCard info={postData.drawingInfo} />
+
+          {postData.drawingInfos.map((info) => (
+            <TouchableOpacity onPress={() => handleCardPress(info.id)}>
+              <DrawingInfoCard
+                key={info.id}
+                info={info}
+              />
+            </TouchableOpacity>
+          ))}
 
           <ProfileButton>
             <Txt variant="bodyText" color="dark_gray2">

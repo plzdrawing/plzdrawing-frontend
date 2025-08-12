@@ -6,11 +6,13 @@ import Txt from "@/src/components/common/text/Txt";
 
 interface HomeDetailHeaderProps {
   authorName: string;
+  type?: "post" | "drawingCard";
   onBackPress: () => void;
 }
 
 const HomeDetailHeader: React.FC<HomeDetailHeaderProps> = ({
   authorName,
+  type = "post",
   onBackPress,
 }) => {
   return (
@@ -20,7 +22,9 @@ const HomeDetailHeader: React.FC<HomeDetailHeaderProps> = ({
       </BackButton>
       <HeaderTitleContainer>
         <Txt variant="mainTitleBold">{authorName} 님</Txt>
-        <Txt variant="bodyText" style={{ marginLeft: 7 }}> 의 게시글</Txt>
+        <Txt variant="bodyText" style={{ marginLeft: 7 }}> 
+          {type === "post" ? "의 게시글" : "의 그림 카드"}
+        </Txt>
       </HeaderTitleContainer>
     </HeaderContainer>
   );

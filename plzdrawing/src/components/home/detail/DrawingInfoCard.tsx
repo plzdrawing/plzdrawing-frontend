@@ -6,6 +6,7 @@ import Txt from "@/src/components/common/text/Txt";
 
 interface DrawingInfoCardProps {
   info: {
+    id: string; // Unique identifier for the drawing info
     image: string;
     title: string;
     price: string;
@@ -39,6 +40,7 @@ const CardContainer = styled.View`
   flex-direction: row;
   align-items: center;
   gap: 12px;
+  margin-bottom: 16px;
 `;
 
 const InfoImage = styled.Image`
