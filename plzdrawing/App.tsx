@@ -18,9 +18,11 @@ import EmailVerification from "@/src/screens/auth/signup/EmailVerification";
 import VerificationComplete from "@/src/screens/auth/signup/VerificationComplete";
 import PwdSetting from "@/src/screens/auth/signup/PwdSetting";
 import PasswordChange from "@/src/screens/auth/password/PasswordChange";
-import Chatting from "./src/screens/talk/Chatting";
-import PasswordFindVerification from "./src/screens/auth/password/PasswordFindVerification";
-import PainterProfile from "./src/screens/PainterProfile";
+import Chatting from "@/src/screens/talk/Chatting";
+import PasswordFindVerification from "@/src/screens/auth/password/PasswordFindVerification";
+import PainterProfile from "@/src/screens/PainterProfile";
+import Home from "@/src/screens/Home";
+import HomePostDetail from "@/src/screens/content/HomePostDetail";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -59,6 +61,7 @@ function AppNavigator() {
         <Stack.Screen name="PwdSetting" component={PwdSetting} />
         <Stack.Screen name="Chatting" component={Chatting} />
         <Stack.Screen name="PainterProfile" component={PainterProfile} />
+        <Stack.Screen name="HomePostDetail" component={HomePostDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

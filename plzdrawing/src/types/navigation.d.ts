@@ -16,6 +16,7 @@ export type RootStackParamList = {
   Chatting: undefined;
   PasswordFindVerification: undefined;
   PainterProfile: undefined;
+  HomePostDetail: { postId: string };
 };
 
 // 바텀네비게이션 타입 정의
