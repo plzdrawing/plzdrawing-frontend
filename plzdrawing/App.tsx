@@ -22,7 +22,7 @@ import Chatting from "@/src/screens/talk/Chatting";
 import PasswordFindVerification from "@/src/screens/auth/password/PasswordFindVerification";
 import PainterProfile from "@/src/screens/PainterProfile";
 import Home from "@/src/screens/Home";
-import HomePostDetail from "@/src/screens/content/HomePostDetail";
+import HomePostDetail from "@/src/screens/post/HomePostDetail";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
