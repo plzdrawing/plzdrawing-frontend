@@ -1,9 +1,8 @@
 ﻿import React from "react";
 import styled from "styled-components/native";
-import { View, Text, TouchableOpacity } from "react-native";
 import Colors from "@/src/constants/Colors";
 import { BackArrowIcon } from "@/assets/images";
-import Txt from "../../common/text/Txt";
+import Txt from "@/src/components/common/text/Txt";
 
 interface HomeDetailHeaderProps {
   authorName: string;
