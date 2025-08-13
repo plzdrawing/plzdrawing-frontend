@@ -22,12 +22,12 @@ const DrawingCarousel: React.FC<DrawingCarouselProps> = ({ images }) => {
       <DrawingImage source={{ uri: images[currentIndex] }} />
 
       {/* Left Arrow */}
-      <ArrowButton onPress={handlePrev} style={{ left: -14 }}>
+      <ArrowButton onPress={handlePrev} style={{ left: -24 }}>
         <PaginationLeftIcon style={{ top: -2 }} />
       </ArrowButton>
 
       {/* Right Arrow */}
-      <ArrowButton onPress={handleNext} style={{ right: -14 }}>
+      <ArrowButton onPress={handleNext} style={{ right: -24 }}>
         <PaginationRightIcon style={{ top: -2 }} />
       </ArrowButton>
 
@@ -50,7 +50,7 @@ const CarouselContainer = styled.View`
 `;
 
 const DrawingImage = styled.Image`
-  width: 95%;
+  width: 100%;
   height: 95%;
   border-radius: 5px;
   border: 0.5px solid #d9d9d9;

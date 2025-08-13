@@ -1,38 +1,39 @@
 ﻿import React from "react";
-import styled from "styled-components/native";
 import Colors from "@/src/constants/Colors";
+import styled from "styled-components/native";
+import HomeDetailHeader from "@/src/components/home/detail/HomeDetailHeader";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
-
-import HomeDetailHeader from "@/src/components/home/detail/HomeDetailHeader";
-import UserInfo from "@/src/components/home/detail/UserInfo";
+import DefaultButton from "@/src/components/common/button/DefaultButton";
+import Txt from "@/src/components/common/text/Txt";
 import PostContent from "@/src/components/home/detail/PostContent";
 import DrawingCarousel from "@/src/components/home/detail/DrawingCarousel";
 import DrawingInfoCard from "@/src/components/home/detail/DrawingInfoCard";
-import DefaultButton from "@/src/components/common/button/DefaultButton";
-import Txt from "@/src/components/common/text/Txt";
+import DrawingCardInfoBox from "@/src/components/home/detail/DrawingCardInfoBox";
 import { TouchableOpacity } from "react-native";
-import { PostData } from "@/src/types/post";
+import { DrawingCardData } from "@/src/types/post";
 
-type HomePostDetailScreenProps = NativeStackScreenProps<
+type HomeDrawingCardDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  "HomePostDetail"
+  "HomeDrawingCardDetail"
 >;
 
-function HomePostDetail({
+function HomeDrawingCardDetail ({ 
   route,
   navigation,
-}: HomePostDetailScreenProps) {
-  // const { postId } = route.params; // You'll use this to fetch data
+}: HomeDrawingCardDetailScreenProps) {
+  // const { cardId } = route.params; // You'll use this to fetch data
 
   // Dummy data - in a real app, this would be fetched based on postId
-  const postData: PostData = {
+  const cardData: DrawingCardData = {
     author: "홍길동",
-    authorStats: "그림 5회/후기 3개/ 별점 4.5점",
-    hashtags: "#귀여운 #낙서",
-    body: "소소한 그림 그려드려요!소소한 그림 그려드려요! 소소한 그림 그려드려요!",
-    profileImage: "https://placehold.co/38x38",
+    title: "귀여운 그림",
+    hashtags: "#반려동물 #낙서 #빠르게",
+    body: "귀여운 그림 그려드려요:)\n반려동물 그림이나 낙서같은 그림 환영합니다\n빠른 시간내에 가능해요 !",
     mainImage: "https://placehold.co/326x207",
+    price: 1000,
+    estimatedTime: 10,
+    revisions: false, 
     drawingInfos: [
       {
         id: "card_abc_1",
@@ -52,33 +53,56 @@ function HomePostDetail({
   };
 
   const handleCardPress = (cardId: string) => {
-    navigation.navigate('HomeDrawingCardDetail', { cardId });
+    navigation.navigate("HomeDrawingCardDetail", { cardId });
   };
 
   return (
     <Container style={{ paddingBottom: 10 }}>
       <HomeDetailHeader
-        authorName={postData.author}
+        authorName={cardData.author}
+        type="drawingCard"
         onBackPress={() => navigation.goBack()}
       />
-
       <StyledScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         <ContentContainer>
-          <UserInfo
-            profileImage={postData.profileImage}
-            name={postData.author}
-            stats={postData.authorStats}
+          <Txt variant="mainTitleBold" style={{ marginBottom: 20 }}>
+            {cardData.title}
+          </Txt>
+          <PostContent
+            hashtags={cardData.hashtags}
+            type="drawingCard"
+            body={cardData.body}
           />
-          <PostContent hashtags={postData.hashtags} body={postData.body} />
           <DrawingCarousel
             images={[
-              postData.mainImage,
-              postData.mainImage,
-              postData.mainImage,
+              cardData.mainImage,
+              cardData.mainImage,
+              cardData.mainImage,
             ]}
           />
+          <InfoGrid>
+            <DrawingCardInfoBox
+              label="예상금액"
+              value={`${cardData.price}원`}
+            />
+            <DrawingCardInfoBox
+              label="예상 소요시간"
+              value={`${cardData.estimatedTime}분`}
+            />
+            <DrawingCardInfoBox
+              label="그림 수정"
+              value={cardData.revisions == false ? "불가능" : "가능"}
+            />
+          </InfoGrid>
+          <Txt
+            variant="bodyText"
+            color="dark_gray2"
+            style={{ marginBottom: 20 }}
+          >
+            다른 그림카드 보러가기
+          </Txt>
 
-          {postData.drawingInfos.map((info) => (
+          {cardData.drawingInfos.map((info) => (
             <TouchableOpacity
               key={info.id}
               onPress={() => handleCardPress(info.id)}
@@ -86,12 +110,6 @@ function HomePostDetail({
               <DrawingInfoCard key={info.id} info={info} />
             </TouchableOpacity>
           ))}
-
-          <ProfileButton>
-            <Txt variant="bodyText" color="dark_gray2">
-              프로필 보기
-            </Txt>
-          </ProfileButton>
         </ContentContainer>
       </StyledScrollView>
 
@@ -121,12 +139,13 @@ const ContentContainer = styled.View`
   padding: 30px;
 `;
 
-const ProfileButton = styled.TouchableOpacity`
-  padding: 10px 25px;
-  border-radius: 12px;
-  border: 1px solid #d9d9d9;
-  align-self: center;
-  margin-top: 57px;
+const InfoGrid = styled.View`
+  width: 100%;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  gap: 12px;
+  margin-bottom: 37px;
 `;
 
 const FooterContainer = styled.View`
@@ -135,10 +154,10 @@ const FooterContainer = styled.View`
   width: 100%;
   height: 92px;
   padding: 9px 57px;
-  padding-bottom: 34px;
+  padding-bottom: 20px;
   background-color: ${Colors.colors.white};
   border-top-width: 1px;
   border-top-color: #f9f9f9;
 `;
 
-export default HomePostDetail;
+export default HomeDrawingCardDetail;
