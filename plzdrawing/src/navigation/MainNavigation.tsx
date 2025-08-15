@@ -5,7 +5,7 @@ import Home from "@/src/screens/Home";
 import Talk from "@/src/screens/talk/Talk";
 import Profile from "@/src/screens/Profile";
 import Txt from "../components/common/text/Txt";
-import { EmptyBox } from "@/assets/images";
+import { FooterTalk, FooterHome, FooterMy } from "@/assets/images";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,7 +25,7 @@ export default function MainNavigation() {
         name="그림톡"
         component={Talk}
         options={{
-          tabBarIcon: ({ focused, color, size }) => <EmptyBox />,
+          tabBarIcon: ({ focused, color, size }) => <FooterTalk />,
           tabBarLabel: ({ focused, color }) => (
             <Txt
               variant={focused ? "auxiliaryTextBold" : "auxiliaryTextLight"}
@@ -41,7 +41,7 @@ export default function MainNavigation() {
         name="그림홈"
         component={Home}
         options={{
-          tabBarIcon: ({ focused, color, size }) => <EmptyBox />,
+          tabBarIcon: ({ focused, color, size }) => <FooterHome />,
           tabBarLabel: ({ focused, color }) => (
             <Txt
               variant={focused ? "auxiliaryTextBold" : "auxiliaryTextLight"}
@@ -58,7 +58,7 @@ export default function MainNavigation() {
         name="마이"
         component={Profile}
         options={{
-          tabBarIcon: ({ focused, color, size }) => <EmptyBox />,
+          tabBarIcon: ({ focused, color, size }) => <FooterMy />,
           tabBarLabel: ({ focused, color }) => (
             <Txt
               variant={focused ? "auxiliaryTextBold" : "auxiliaryTextLight"}
