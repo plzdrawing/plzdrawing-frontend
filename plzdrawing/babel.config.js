@@ -3,7 +3,6 @@ module.exports = function (api) {
   return {
     presets: ["babel-preset-expo"],
     plugins: [
-      "nativewind/babel",
       "react-native-reanimated/plugin",
       "babel-plugin-styled-components",
       [
@@ -14,6 +13,7 @@ module.exports = function (api) {
           },
         },
       ],
+      // "nativewind/babel", // 일시적으로 비활성화
     ],
   };
 };
