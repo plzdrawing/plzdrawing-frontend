@@ -23,7 +23,7 @@ import FilledCheck from "@/assets/images/filled-check.svg";
 import FooterTalk from "@/assets/images/ic-footer-talk.svg";
 import FooterHome from "@/assets/images/ic-footer-home.svg";
 import FooterMy from "@/assets/images/ic-footer-my.svg";
-import NoTalk from "@/assets/images/no-talk.svg";
+import NoTalkImage from "@/assets/images/ic-no-talk.svg";
 
 export {
   EmptyCheck,
@@ -51,5 +51,5 @@ export {
   FooterTalk,
   FooterHome,
   FooterMy,
-  NoTalk,
+  NoTalkImage,
 };
