@@ -21,6 +21,7 @@ import PasswordChange from "@/src/screens/auth/password/PasswordChange";
 import Chatting from "./src/screens/talk/Chatting";
 import PasswordFindVerification from "./src/screens/auth/password/PasswordFindVerification";
 import PainterProfile from "./src/screens/PainterProfile";
+import Alarm from "./src/screens/alarm/Alarm";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -59,6 +60,7 @@ function AppNavigator() {
         <Stack.Screen name="PwdSetting" component={PwdSetting} />
         <Stack.Screen name="Chatting" component={Chatting} />
         <Stack.Screen name="PainterProfile" component={PainterProfile} />
+        <Stack.Screen name="Alarm" component={Alarm} />
       </Stack.Navigator>
     </NavigationContainer>
   );
