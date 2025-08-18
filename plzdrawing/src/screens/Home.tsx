@@ -1,39 +1,20 @@
-import { TouchableOpacity } from "react-native";
+import { StyleSheet, View } from "react-native";
 import colors from "@/src/constants/Colors";
+import PrimaryButton from "../components/common/button/PrimaryButton";
 import { Container } from "../components/common/container/Container";
 import HomeHeader from "../components/home/HomeHeader";
+import ScrollFilter from "../components/home/ScrollFilter";
 import { Col } from "../components/common/flex/Flex";
+import Txt from "../components/common/text/Txt";
 import RadioFilter from "../components/home/RadioFilter";
 import styled from "styled-components/native";
 import { PencilIcon } from "@/assets/images";
 import HomeCard from "../components/home/HomeCard";
 import { useState } from "react";
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
-type RootStackParamList = {
-  Home: undefined;
-  HomePostDetail: { postId: string };
-};
-
-type HomeScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "HomePostDetail"
->;
 
 export default function Home() {
   const [selectedId, setSelectedId] = useState(0);
-  const navigation = useNavigation<HomeScreenNavigationProp>();
-
-  /**
-   * Handles navigation to the detail screen.
-   * @param postId - The ID of the post to display.
-   */
-  const handleCardPress = (postId: string) => {
-    navigation.navigate("HomePostDetail", { postId });
-  };
-
   return (
     <Container style={{ paddingBottom: 10 }}>
       <HomeHeader
@@ -54,14 +35,8 @@ export default function Home() {
           <Col gap={17} style={{ paddingBottom: 10 }}>
             {selectedId === 0 ? (
               <>
-                {/* Each card is now wrapped in a TouchableOpacity to handle presses */}
-                {/* A unique postId is passed for each card */}
-                <TouchableOpacity onPress={() => handleCardPress("post-id-1")}>
-                  <HomeCard />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleCardPress("post-id-2")}>
-                  <HomeCard />
-                </TouchableOpacity>
+                <HomeCard />
+                <HomeCard />
               </>
             ) : (
               <></>
