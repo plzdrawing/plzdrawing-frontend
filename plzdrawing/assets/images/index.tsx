@@ -50,7 +50,7 @@ export {
   LikeIcon,
   HidePassword,
   PaginationLeftIcon,
-  PaginationRightIcon
+  PaginationRightIcon,
   FooterTalk,
   FooterHome,
   FooterMy,
