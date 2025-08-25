@@ -14,9 +14,11 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~4.0.1",
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
+    "@react-navigation/native-stack": "^7.3.25",
     "@react-navigation/stack": "^7.1.1",
     "babel-plugin-styled-components": "^2.1.4",
     "expo": "~52.0.20",
