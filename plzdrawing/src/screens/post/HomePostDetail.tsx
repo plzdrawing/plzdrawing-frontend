@@ -51,9 +51,14 @@ function HomePostDetail({
     ],
   };
 
-  const handleCardPress = (cardId: string) => {
-    navigation.navigate('HomeDrawingCardDetail', { cardId });
+  const handleCardPress = (cardId: string, postId: string) => {
+    navigation.navigate('HomeDrawingCardDetail', { cardId, postId });
   };
+
+   const handleButtonPress = (postId: string) => {
+     navigation.navigate("HomeRequest", { postId });
+   };
+
 
   return (
     <Container style={{ paddingBottom: 10 }}>
@@ -81,7 +86,7 @@ function HomePostDetail({
           {postData.drawingInfos.map((info) => (
             <TouchableOpacity
               key={info.id}
-              onPress={() => handleCardPress(info.id)}
+              onPress={() => handleCardPress(info.id, route.params.postId)}
             >
               <DrawingInfoCard key={info.id} info={info} />
             </TouchableOpacity>
@@ -99,7 +104,7 @@ function HomePostDetail({
         <DefaultButton
           title="요청하기"
           onPress={() => {
-            // Handle request action)}
+            handleButtonPress(route.params.postId);
           }}
           variant="primary"
         />
