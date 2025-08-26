@@ -3,10 +3,11 @@ import colors from "@/src/constants/Colors";
 import { Container } from "../components/common/container/Container";
 import HomeHeader from "../components/home/HomeHeader";
 import { Col } from "../components/common/flex/Flex";
-import RadioFilter from "../components/home/RadioFilter";
+import SearchFilter from "../components/home/SearchFilter";
 import styled from "styled-components/native";
 import { PencilIcon } from "@/assets/images";
 import HomeCard from "../components/home/HomeCard";
+import ReviewCard from "../components/home/ReviewCard";
 import { useState } from "react";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -49,7 +50,7 @@ export default function Home() {
         gap={20}
         style={{ backgroundColor: colors.colors.light_gray1, height: "100%" }}
       >
-        <RadioFilter />
+        <SearchFilter selectedId={selectedId} />
         <ScrollContainer showsVerticalScrollIndicator={false}>
           <Col gap={17} style={{ paddingBottom: 10 }}>
             {selectedId === 0 ? (
@@ -64,7 +65,10 @@ export default function Home() {
                 </TouchableOpacity>
               </>
             ) : (
-              <></>
+              <>
+                <ReviewCard />
+                <ReviewCard />
+              </>
             )}
           </Col>
         </ScrollContainer>
