@@ -20,6 +20,8 @@ import LikeIcon from "@/assets/images/heart.svg";
 import HidePassword from "@/assets/images/hide-password.svg";
 import EmptyCheck from "@/assets/images/empty-check.svg";
 import FilledCheck from "@/assets/images/filled-check.svg";
+import PaginationLeftIcon from "@/assets/images/pagination_left.svg";
+import PaginationRightIcon from "@/assets/images/pagination_right.svg";
 import FooterTalk from "@/assets/images/ic-footer-talk.svg";
 import FooterHome from "@/assets/images/ic-footer-home.svg";
 import FooterMy from "@/assets/images/ic-footer-my.svg";
@@ -48,6 +50,8 @@ export {
   CommentIcon,
   LikeIcon,
   HidePassword,
+  PaginationLeftIcon,
+  PaginationRightIcon,
   FooterTalk,
   FooterHome,
   FooterMy,
