@@ -1,13 +1,16 @@
 import { StyleSheet, View } from "react-native";
 import colors from "@/src/constants/Colors";
 import PrimaryButton from "../components/common/button/PrimaryButton";
+import UserProfile from "@/src/screens/userProfile/UserProfile";
 
 export default function Profile() {
   return (
-    <View style={styles.container}>
-      <View style={styles.separator} />
-      
-    </View>
+    // <View style={styles.container}>
+    //   <View style={styles.separator} />
+    // </View>
+
+    // 임시 테스트용
+    <UserProfile />
   );
 }
 
