@@ -37,8 +37,12 @@ const TextField = (props: TextFieldProps) => {
   const colors = Colors.colors;
   const [value, setValue] = useState(content || "");
   const [showPassword, setShowPassword] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const getBorderColor = () => {
+    if (isFocused) {
+      return colors.main_yellow;
+    }
     switch (state) {
       case "filled":
         return colors.main_yellow;
@@ -76,9 +80,11 @@ const TextField = (props: TextFieldProps) => {
           onChangeText={handleChange}
           color={colors.black}
           onFocus={() => {
+            setIsFocused(true);
             setState("filled");
           }}
           onBlur={() => {
+            setIsFocused(false);
             if (value.length <= 0) {
               setState("empty");
             }
