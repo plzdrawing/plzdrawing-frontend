@@ -26,6 +26,7 @@ function ProfileUpload({ route, navigation }: ProfileUploadScreenProps) {
 
   const handleConfirm = () => {
     // [todo] : dummy 네비게이션 수정해야 함
+    setModalVisible(false);
     navigation.navigate("DrawingCardUpload");
   };
 
