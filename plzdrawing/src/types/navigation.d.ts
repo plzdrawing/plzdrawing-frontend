@@ -21,7 +21,8 @@ export type RootStackParamList = {
   HomePostDetail: { postId: string };
   HomeDrawingCardDetail: { cardId: string, postId: string };
   HomeRequest: { postId: string };
-  ProfileUpload: undefined
+  ProfileUpload: undefined;
+  Alarm: undefined;
 };
 
 // 바텀네비게이션 타입 정의

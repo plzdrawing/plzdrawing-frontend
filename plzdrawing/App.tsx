@@ -26,6 +26,7 @@ import HomePostDetail from "@/src/screens/post/HomePostDetail";
 import HomeDrawingCardDetail from "@/src/screens/post/HomeDrawingCardDetail";
 import HomeRequest from "@/src/screens/post/HomeRequest";
 import ProfileUpload from "@/src/screens/profile/ProfileUpload";
+import Alarm from "./src/screens/alarm/Alarm";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -64,6 +65,7 @@ function AppNavigator() {
         <Stack.Screen name="PwdSetting" component={PwdSetting} />
         <Stack.Screen name="Chatting" component={Chatting} />
         <Stack.Screen name="PainterProfile" component={PainterProfile} />
+        
         <Stack.Screen name="HomePostDetail" component={HomePostDetail} />
         <Stack.Screen
           name="HomeDrawingCardDetail"
@@ -71,6 +73,8 @@ function AppNavigator() {
         />
         <Stack.Screen name="HomeRequest" component={HomeRequest} />
         <Stack.Screen name="ProfileUpload" component={ProfileUpload} />
+
+        <Stack.Screen name="Alarm" component={Alarm} />
       </Stack.Navigator>
     </NavigationContainer>
   );
