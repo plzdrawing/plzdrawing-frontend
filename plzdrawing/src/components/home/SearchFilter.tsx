@@ -4,11 +4,11 @@ import { Col, Row } from "../common/flex/Flex";
 import Txt from "../common/text/Txt";
 import Colors from "@/src/constants/Colors";
 
-interface RadioFilterProps {
+interface SearchFilterProps {
   selectedId: number;
 }
 
-const RadioFilter = ({ selectedId }: RadioFilterProps) => {
+const SearchFilter = ({ selectedId }: SearchFilterProps) => {
   // 탭에 따라 다른 필터 리스트 사용
   const filterList = selectedId === 0 ? ["최신순", "내가찜한"] : ["최신순", "별점높은순"];
   const [filter, setFilter] = useState<string>("최신순");
@@ -42,7 +42,7 @@ const RadioFilter = ({ selectedId }: RadioFilterProps) => {
   );
 };
 
-export default RadioFilter;
+export default SearchFilter;
 
 const ButtonContainer = styled.TouchableOpacity`
   display: flex;

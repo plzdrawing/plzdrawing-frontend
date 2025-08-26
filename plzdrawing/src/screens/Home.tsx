@@ -6,7 +6,7 @@ import HomeHeader from "../components/home/HomeHeader";
 import ScrollFilter from "../components/home/ScrollFilter";
 import { Col } from "../components/common/flex/Flex";
 import Txt from "../components/common/text/Txt";
-import RadioFilter from "../components/home/RadioFilter";
+import SearchFilter from "../components/home/SearchFilter";
 import styled from "styled-components/native";
 import { PencilIcon } from "@/assets/images";
 import HomeCard from "../components/home/HomeCard";
@@ -31,7 +31,7 @@ export default function Home() {
         gap={20}
         style={{ backgroundColor: colors.colors.light_gray1, height: "100%" }}
       >
-        <RadioFilter selectedId={selectedId} />
+        <SearchFilter selectedId={selectedId} />
         <ScrollContainer showsVerticalScrollIndicator={false}>
           <Col gap={17} style={{ paddingBottom: 10 }}>
             {selectedId === 0 ? (
