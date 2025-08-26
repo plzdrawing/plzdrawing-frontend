@@ -19,7 +19,9 @@ export type RootStackParamList = {
   PasswordFindVerification: undefined;
   PainterProfile: undefined;
   HomePostDetail: { postId: string };
-  HomeDrawingCardDetail: { cardId: string };
+  HomeDrawingCardDetail: { cardId: string, postId: string };
+  HomeRequest: { postId: string };
+  ProfileUpload: undefined
 };
 
 // 바텀네비게이션 타입 정의
