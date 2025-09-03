@@ -2,6 +2,7 @@
   name: string,
   imageUrl: string,
   hashtag: string[],
+  description?: string,
 };
 
 export type ProfileMenuItem = {
