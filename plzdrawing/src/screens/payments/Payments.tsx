@@ -1,0 +1,25 @@
+import { StyleSheet, View } from "react-native";
+import colors from "@/src/constants/Colors";
+import Txt from "@/src/components/common/text/Txt";
+import { Container } from "@/src/components/common/container/Container";
+import PaymentsHeader from "./components/PaymentsHeader";
+import PaymentsList from "./components/PaymentsList";
+import PaymentsItem from "./components/PaymentsItem";
+
+import React, { useState } from 'react';
+
+export default function Payments() {
+  const [selectedPayment, setSelectedPayment] = useState(null);
+
+    // 상세화면에서 뒤로가기
+    const handleBack = () => {
+      setSelectedPayment(null);
+    };
+
+    return (
+      <Container>
+        <PaymentsHeader selectedPayment={selectedPayment} onBack={handleBack} />
+        <PaymentsList setSelectedPayment={setSelectedPayment} selectedPayment={selectedPayment} />
+      </Container>
+    );
+  }
