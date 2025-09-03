@@ -26,6 +26,7 @@ import HomePostDetail from "@/src/screens/post/HomePostDetail";
 import HomeDrawingCardDetail from "@/src/screens/post/HomeDrawingCardDetail";
 import HomeRequest from "@/src/screens/post/HomeRequest";
 import ProfileUpload from "@/src/screens/profile/ProfileUpload";
+import DrawingCardUpload from "./src/screens/profile/DrawingCardUpload";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -71,6 +72,7 @@ function AppNavigator() {
         />
         <Stack.Screen name="HomeRequest" component={HomeRequest} />
         <Stack.Screen name="ProfileUpload" component={ProfileUpload} />
+        <Stack.Screen name="DrawingCardUpload" component={DrawingCardUpload} />
       </Stack.Navigator>
     </NavigationContainer>
   );

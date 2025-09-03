@@ -1,4 +1,4 @@
-﻿import React from "react";
+﻿import React, { useState } from "react";
 import Colors from "@/src/constants/Colors";
 import styled from "styled-components/native";
 import HomeDetailHeader from "@/src/components/home/detail/HomeDetailHeader";
@@ -8,6 +8,7 @@ import DefaultButton from "@/src/components/common/button/DefaultButton";
 import Txt from "@/src/components/common/text/Txt";
 import ImageUploader from "@/src/components/common/input/ImgUploader";
 import TextField from "@/src/components/common/input/TextField";
+import AlertModal from "@/src/components/common/modal/AlertModal";
 
 type ProfileUploadScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -15,11 +16,24 @@ type ProfileUploadScreenProps = NativeStackScreenProps<
 >;
 
 function ProfileUpload({ route, navigation }: ProfileUploadScreenProps) {
-  const [introduceText, setIntroduceText] = React.useState("");
-  const [referenceImages, setReferenceImages] = React.useState<string[]>([]);
-  const [profileImages, setProfileImages] = React.useState<string[]>([]);
-  const [introduceState, setIntroduceState] = React.useState("");
-  
+  const [introduceText, setIntroduceText] = useState("");
+  const [introduceState, setIntroduceState] = useState("");
+  const [keywordText, setKeywordText] = useState("");
+  const [keywordState, setKeywordState] = useState("");
+  const [referenceImages, setReferenceImages] = useState<string[]>([]);
+  const [profileImages, setProfileImages] = useState<string[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleConfirm = () => {
+    // [todo] : dummy 네비게이션 수정해야 함
+    setModalVisible(false);
+    navigation.navigate("DrawingCardUpload");
+  };
+
+  const handleButtonPress = () => {
+    setModalVisible(true);
+  };
+
   return (
     <Container style={{ paddingBottom: 10 }}>
       <HomeDetailHeader
@@ -44,7 +58,6 @@ function ProfileUpload({ route, navigation }: ProfileUploadScreenProps) {
             setState={setIntroduceState}
             value={introduceText}
             onChangeText={setIntroduceText}
-            errorMessage="이메일 양식에 맞지 않아요."
           />
           <Txt
             variant="mainTitleBold"
@@ -54,10 +67,9 @@ function ProfileUpload({ route, navigation }: ProfileUploadScreenProps) {
           </Txt>
           <TextField
             placeholder="키워드로 나를 어필해볼까요?"
-            setState={setIntroduceState}
-            value={introduceText}
-            onChangeText={setIntroduceText}
-            errorMessage="이메일 양식에 맞지 않아요."
+            setState={setKeywordState}
+            value={keywordText}
+            onChangeText={setKeywordText}
           />
 
           <ImageUploader
@@ -69,8 +81,20 @@ function ProfileUpload({ route, navigation }: ProfileUploadScreenProps) {
       </StyledScrollView>
 
       <FooterContainer>
-        <DefaultButton title="보내기" onPress={() => {}} variant="primary" />
+        <DefaultButton
+          title="보내기"
+          onPress={handleButtonPress}
+          variant="primary"
+        />
       </FooterContainer>
+      {modalVisible && (
+        <AlertModal
+          title={"프로필 업로드가 완료되었어요!\n그림카드를 업로드해볼까요?"}
+          buttonTitle="확인"
+          onClick={handleConfirm}
+          textVariant="thirdText"
+        />
+      )}
     </Container>
   );
 }
