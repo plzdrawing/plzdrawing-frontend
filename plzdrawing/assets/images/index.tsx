@@ -32,6 +32,7 @@ import MultipleFileIcon from "@/assets/images/ic_multiple_file.svg";
 import PasswordChangeIcon from "@/assets/images/ic_password.svg";
 import ProfileIcon from "@/assets/images/ic_profile.svg";
 import QuestionIcon from "@/assets/images/ic_question.svg";
+import CameraCircleIcon from "@/assets/images/ic_camera_circle.svg"
 
 
 export {
@@ -68,5 +69,6 @@ export {
   MultipleFileIcon,
   PasswordChangeIcon,
   ProfileIcon,
-  QuestionIcon
+  QuestionIcon,
+  CameraCircleIcon
 };
