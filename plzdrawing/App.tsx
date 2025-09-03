@@ -27,6 +27,7 @@ import HomeDrawingCardDetail from "@/src/screens/post/HomeDrawingCardDetail";
 import HomeRequest from "@/src/screens/post/HomeRequest";
 import ProfileUpload from "@/src/screens/profile/ProfileUpload";
 import DrawingCardUpload from "./src/screens/profile/DrawingCardUpload";
+import ProfileEdit from "@/src/screens/profileEdit/ProfileEdit";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -35,7 +36,8 @@ function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName="LoginSplash"
+        // initialRouteName="LoginSplash"
+        initialRouteName="ProfileEdit"
       >
         <Stack.Screen name="Main" component={MainNavigation} />
         <Stack.Screen name="LoginSplash" component={LoginSplash} />
@@ -73,6 +75,7 @@ function AppNavigator() {
         <Stack.Screen name="HomeRequest" component={HomeRequest} />
         <Stack.Screen name="ProfileUpload" component={ProfileUpload} />
         <Stack.Screen name="DrawingCardUpload" component={DrawingCardUpload} />
+        <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
       </Stack.Navigator>
     </NavigationContainer>
   );
