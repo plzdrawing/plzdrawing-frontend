@@ -26,7 +26,12 @@ import HomePostDetail from "@/src/screens/post/HomePostDetail";
 import HomeDrawingCardDetail from "@/src/screens/post/HomeDrawingCardDetail";
 import HomeRequest from "@/src/screens/post/HomeRequest";
 import ProfileUpload from "@/src/screens/profile/ProfileUpload";
-import DrawingCardUpload from "./src/screens/profile/DrawingCardUpload";
+import DrawingCardUpload from "@/src/screens/profile/DrawingCardUpload";
+import AlarmSetting from "@/src/screens/profile/mypage/AlarmSetting";
+import CustomerService from "@/src/screens/profile/mypage/CustomerService";
+import Notice from "@/src/screens/profile/mypage/Notice";
+import ProfileEdit from "@/src/screens/profile/mypage/ProfileEdit";
+import Tos from "@/src/screens/profile/mypage/Tos";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -73,6 +78,11 @@ function AppNavigator() {
         <Stack.Screen name="HomeRequest" component={HomeRequest} />
         <Stack.Screen name="ProfileUpload" component={ProfileUpload} />
         <Stack.Screen name="DrawingCardUpload" component={DrawingCardUpload} />
+        <Stack.Screen name="AlarmSetting" component={AlarmSetting} />
+        <Stack.Screen name="CustomerService" component={CustomerService} />
+        <Stack.Screen name="Notice" component={Notice} />
+        <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
+        <Stack.Screen name="Tos" component={Tos} />
       </Stack.Navigator>
     </NavigationContainer>
   );

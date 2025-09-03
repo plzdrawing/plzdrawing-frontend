@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components/native";
 import colors from "@/src/constants/Colors";
-import { Container } from "@/src/components/common/container/Container";
 import HomeHeader from "@/src/components/home/HomeHeader";
 import { Col } from "@/src/components/common/flex/Flex";
 import { BaseProfile, ProfileMenuItem } from "@/src/types/profile";
@@ -16,9 +15,26 @@ import {
 } from "@/assets/images";
 import ProfileInfoSection from "@/src/screens/profile/mypage/ProfileInfoSection";
 import MenuGroup from "@/src/screens/profile/mypage/ProfileMenuGroup";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import Colors from "@/src/constants/Colors";
 
+type RootStackParamList = {
+  Profile: undefined;
+  AlarmSetting: undefined;
+  CustomerService: undefined;
+  Notice: undefined;
+  ProfileEdit: undefined;
+  Tos: undefined;
+};
+
+type ProfileScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "Profile"
+>;
 export default function Profile() {
   const [selectedId, setSelectedId] = useState(0);
+  const navigation = useNavigation<ProfileScreenNavigationProp>();
 
   const profleData: BaseProfile = {
     name: "똥강아지",
@@ -27,15 +43,15 @@ export default function Profile() {
   };
 
   const settingsMenuItems: ProfileMenuItem[] = [
-    { icon: <AlarmIcon />, text: "알림 설정", onPress: () => {} },
+    { icon: <AlarmIcon />, text: "알림 설정", onPress: () => {navigation.navigate("AlarmSetting")} },
     { icon: <LanguageIcon />, text: "언어 설정", onPress: () => {} },
   ];
 
   const supportMenuItems: ProfileMenuItem[] = [
-    { icon: <MegaphoneIcon />, text: "공지사항", onPress: () => {} },
-    { icon: <QuestionIcon />, text: "고객센터", onPress: () => {} },
+    { icon: <MegaphoneIcon />, text: "공지사항", onPress: () => {navigation.navigate("Notice");} },
+    { icon: <QuestionIcon />, text: "고객센터", onPress: () => {navigation.navigate("CustomerService")} },
     { icon: <QuestionIcon />, text: "1:1 문의하기", onPress: () => {} },
-    { icon: <MultipleFileIcon />, text: "이용약관", onPress: () => {} },
+    { icon: <MultipleFileIcon />, text: "이용약관", onPress: () => {navigation.navigate("Tos");} },
     { icon: <MenuCircleIcon />, text: "결제내역", onPress: () => {} },
   ];
 
@@ -65,7 +81,7 @@ export default function Profile() {
         >
           <ProfileInfoSection
             profile={profleData}
-            onEditPress={() => console.log("프로필 수정!")}
+            onEditPress={() => navigation.navigate("ProfileEdit")}
           />
 
           <MenuGroup
@@ -81,6 +97,12 @@ export default function Profile() {
     </Container>
   );
 }
+
+const Container = styled.View`
+  padding-top: 60px;
+  flex: 1;
+  background-color: ${Colors.colors.white};
+`;
 
 const ScrollContainer = styled.ScrollView`
   width: 100%;
