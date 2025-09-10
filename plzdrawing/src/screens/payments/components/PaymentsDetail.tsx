@@ -53,7 +53,7 @@ export default function PaymentsDetail({
       <Details>
         <PaymentHistory>
           <PainterProfile>
-            {/* <img src={painterProfile} alt='' /> */}
+            <img src={painterProfile} alt='' />
           </PainterProfile>
           <PaymentDetail>
             <Txt variant='auxiliaryTextLight'>
@@ -67,15 +67,7 @@ export default function PaymentsDetail({
 
         <DetailContainer>
           <Detail>
-            <Txt variant='auxiliaryTextLight'>메모</Txt>
-            <Txt variant='auxiliaryTextLight' onPress={() => {}}>메모를 남겨보세요 &gt;</Txt>
-          </Detail>
-          <Detail>
-            <Txt variant='auxiliaryTextLight'>결제수단</Txt>
-            <Txt variant='auxiliaryTextLight' onPress={() => {}}>네이버 페이 &gt;</Txt>
-          </Detail>
-          <Detail>
-            <Txt variant='auxiliaryTextLight'>결제방법</Txt>
+            <Txt variant='auxiliaryTextLight'>결제방법/수단</Txt>
             <Txt variant='auxiliaryTextLight' onPress={() => {}}>네이버 페이 &gt;</Txt>
           </Detail>
           <Detail>
@@ -141,8 +133,9 @@ const Details = styled.View`
 const PaymentHistory = styled.View`
   flex-direction: row;
   align-items: center;
+  width: 100%;
   margin: 12px 0;
-  padding: 0 30px;
+  padding: 30px 30px 0 30px;
 `;
 
 const PainterProfile = styled.View`
