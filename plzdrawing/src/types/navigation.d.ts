@@ -21,7 +21,8 @@ export type RootStackParamList = {
   HomePostDetail: { postId: string };
   HomeDrawingCardDetail: { cardId: string, postId: string };
   HomeRequest: { postId: string };
-  ProfileUpload: undefined;
+  ProfileUpload: undefined
+  DrawingCardUpload: undefined
   Payments: undefined;
 };
 
