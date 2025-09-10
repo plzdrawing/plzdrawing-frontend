@@ -5,6 +5,7 @@ import colors from '@/src/constants/Colors';
 import Txt from '@/src/components/common/text/Txt';
 import PaymentsItem from './PaymentsItem';
 import PaymentsDetail from './PaymentsDetail';
+import { GreeSad } from '@/assets/images';
 
 type FilterType = '보낸 내역' | '받은 내역';
 
@@ -163,7 +164,10 @@ export default function PaymentsList({ setSelectedPayment, selectedPayment }: Pa
           </MonthNavButton>
         </MonthRow>
         <Txt variant="bodyText">
-          - <Txt variant="mainTitleBold">{totalAmount.toLocaleString()}원</Txt>
+          {selectedFilter === '보낸 내역'
+            ? <Txt variant="mainTitleBold">- {totalAmount.toLocaleString()}원</Txt>
+            : <Txt variant="mainTitleBold">+ {totalAmount.toLocaleString()}원</Txt>
+          } 
         </Txt>
       </MonthContainer>
 
@@ -178,7 +182,16 @@ export default function PaymentsList({ setSelectedPayment, selectedPayment }: Pa
         renderItem={({ item }) => (
           <PaymentsItem {...item} onPress={() => setSelectedPayment(item)} />
         )}
-        ListEmptyComponent={<Txt align="center" style={{ marginTop: 32 }}>해당 월의 내역이 없습니다.</Txt>}
+        ListEmptyComponent={
+          <NoPlayments>
+            <GreeSad width={120} height={120} />
+            <Txt align="center" style={{ marginTop: 32 }}>
+              {selectedFilter === '보낸 내역'
+                ? '아직 보낸 내역이 없어요'
+                : '아직 받은 내역이 없어요'}
+            </Txt>
+          </NoPlayments>
+        }
         style={{ flex: 1, paddingHorizontal: 32 }}
         contentContainerStyle={{ paddingBottom: 32 }}
       />
@@ -224,4 +237,10 @@ const MonthNavButton = styled.TouchableOpacity``;
 
 const SectionHeader = styled.View`
   padding: 19px 0 9px 0;
+`;
+
+const NoPlayments = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-top: 145px
 `;

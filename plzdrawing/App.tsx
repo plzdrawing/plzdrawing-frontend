@@ -35,8 +35,7 @@ function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        // initialRouteName="LoginSplash"
-        initialRouteName="Payments"
+        initialRouteName="LoginSplash"
       >
         <Stack.Screen name="Main" component={MainNavigation} />
         <Stack.Screen name="LoginSplash" component={LoginSplash} />
