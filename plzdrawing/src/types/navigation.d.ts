@@ -24,6 +24,8 @@ export type RootStackParamList = {
   ProfileUpload: undefined
   DrawingCardUpload: undefined
   ProfileEdit: undefined;
+  PasswordEdit: undefined;
+  EditSuccess: { type: 'profile' | 'password' };
 };
 
 // 바텀네비게이션 타입 정의

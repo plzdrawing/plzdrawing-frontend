@@ -25,6 +25,7 @@ import PaginationRightIcon from "@/assets/images/pagination_right.svg";
 import FooterTalk from "@/assets/images/ic-footer-talk.svg";
 import FooterHome from "@/assets/images/ic-footer-home.svg";
 import FooterMy from "@/assets/images/ic-footer-my.svg";
+import GreeSuccess from "@/assets/images/logo-gree-success.svg";
 
 export {
   EmptyCheck,
@@ -54,4 +55,5 @@ export {
   FooterTalk,
   FooterHome,
   FooterMy,
+  GreeSuccess,
 };

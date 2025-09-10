@@ -6,21 +6,24 @@ import TextField from "@/src/components/common/input/TextField";
 import DefaultButton from "@/src/components/common/button/DefaultButton";
 import ProfileEditHeader from "./components/ProfileEditHeader";
 import { Alert } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/src/types/navigation';
+
+type ProfileEditNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function ProfileEdit() {
+  const navigation = useNavigation<ProfileEditNavigationProp>();
+
   const [birthDate, setBirthDate] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
-  // 생년월일 포맷팅 함수 (yyyy.mm.dd)
+  // 생년월일 포맷팅 (yyyy.mm.dd)
   const formatBirthDate = (text: string) => {
-    // 숫자만 추출
     const numbers = text.replace(/\D/g, '');
-    
-    // 최대 8자리까지만 허용
     const limitedNumbers = numbers.slice(0, 8);
     
-    // 포맷팅 적용
     if (limitedNumbers.length <= 4) {
       return limitedNumbers;
     } else if (limitedNumbers.length <= 6) {
@@ -36,15 +39,11 @@ export default function ProfileEdit() {
     return emailRegex.test(email);
   };
 
-  // 휴대폰 번호 포맷팅 함수 (000-0000-0000)
+  // 휴대폰 번호 포맷팅 (000-0000-0000)
   const formatPhoneNumber = (text: string) => {
-    // 숫자만 추출
     const numbers = text.replace(/\D/g, '');
-    
-    // 최대 11자리까지만 허용
     const limitedNumbers = numbers.slice(0, 11);
-    
-    // 포맷팅 적용
+
     if (limitedNumbers.length <= 3) {
       return limitedNumbers;
     } else if (limitedNumbers.length <= 7) {
@@ -54,26 +53,21 @@ export default function ProfileEdit() {
     }
   };
 
-  // 생년월일 변경 핸들러
   const handleBirthDateChange = (text: string) => {
     const formatted = formatBirthDate(text);
     setBirthDate(formatted);
   };
 
-  // 이메일 변경 핸들러
   const handleEmailChange = (text: string) => {
     setEmail(text);
   };
 
-  // 휴대폰 번호 변경 핸들러
   const handlePhoneChange = (text: string) => {
     const formatted = formatPhoneNumber(text);
     setPhone(formatted);
   };
 
-  // 폼 유효성 검사 및 제출
   const handleSubmit = () => {
-    // 생년월일 유효성 검사 (8자리 숫자 + 올바른 날짜)
     const birthNumbers = birthDate.replace(/\D/g, '');
     if (birthNumbers.length !== 8) {
       Alert.alert("알림", "생년월일을 올바른 형식으로 입력해주세요. (yyyy.mm.dd)");
@@ -99,24 +93,18 @@ export default function ProfileEdit() {
       return;
     }
 
-    // 이메일 유효성 검사
     if (!isValidEmail(email)) {
       Alert.alert("알림", "올바른 이메일 형식으로 입력해주세요.");
       return;
     }
 
-    // 휴대폰 번호 유효성 검사 (11자리 숫자)
     const phoneNumbers = phone.replace(/\D/g, '');
     if (phoneNumbers.length !== 11) {
       Alert.alert("알림", "휴대폰 번호를 올바른 형식으로 입력해주세요. (000-0000-0000)");
       return;
     }
-
-    // 모든 유효성 검사 통과
-    console.log('Birth Date:', birthDate);
-    console.log('Email:', email);
-    console.log('Phone:', phone);
-    Alert.alert("성공", "정보가 성공적으로 입력되었습니다.");
+    
+    navigation.navigate('EditSuccess', { type: 'profile' });
   };
 
   return (
@@ -135,7 +123,7 @@ export default function ProfileEdit() {
           keyboardType="numeric"
         />
 
-        <Txt variant="bodySubText" style={{ marginVertical: 17 }}>
+        <Txt variant="bodySubText" style={{ marginTop: 27, marginBottom: 17 }}>
           이메일
         </Txt>
         <TextField 
@@ -147,7 +135,7 @@ export default function ProfileEdit() {
           autoCapitalize="none"
         />
 
-        <Txt variant="bodySubText" style={{ marginVertical: 17 }}>
+        <Txt variant="bodySubText" style={{ marginTop: 27, marginBottom: 17 }}>
           휴대폰 번호
         </Txt>
         <TextField 
