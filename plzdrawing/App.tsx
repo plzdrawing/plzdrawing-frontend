@@ -27,7 +27,7 @@ import HomeDrawingCardDetail from "@/src/screens/post/HomeDrawingCardDetail";
 import HomeRequest from "@/src/screens/post/HomeRequest";
 import ProfileUpload from "@/src/screens/profile/ProfileUpload";
 import DrawingCardUpload from "./src/screens/profile/DrawingCardUpload";
-import Alarm from "@/src/screens/alarm/Alarm";bbd551d558d3f75cf5195a86cd77092d78
+import Alarm from "@/src/screens/alarm/Alarm";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
