@@ -92,7 +92,7 @@ function HomePostDetail({
             </TouchableOpacity>
           ))}
 
-          <ProfileButton>
+          <ProfileButton onPress={() => navigation.navigate("UserProfile")}>
             <Txt variant="bodyText" color="dark_gray2">
               프로필 보기
             </Txt>
