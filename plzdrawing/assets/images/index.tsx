@@ -26,6 +26,14 @@ import FooterTalk from "@/assets/images/ic-footer-talk.svg";
 import FooterHome from "@/assets/images/ic-footer-home.svg";
 import FooterMy from "@/assets/images/ic-footer-my.svg";
 import NoTalkImage from "@/assets/images/ic-no-talk.svg";
+import LanguageIcon from "@/assets/images/ic_language.svg";
+import MegaphoneIcon from "@/assets/images/ic_megaphone.svg";
+import MenuCircleIcon from "@/assets/images/ic_menu.svg";
+import MultipleFileIcon from "@/assets/images/ic_multiple_file.svg";
+import PasswordChangeIcon from "@/assets/images/ic_password.svg";
+import ProfileIcon from "@/assets/images/ic_profile.svg";
+import QuestionIcon from "@/assets/images/ic_question.svg";
+import CameraCircleIcon from "@/assets/images/ic_camera_circle.svg"
 
 export {
   EmptyCheck,
@@ -56,4 +64,12 @@ export {
   FooterHome,
   FooterMy,
   NoTalkImage,
+  LanguageIcon,
+  MegaphoneIcon, 
+  MenuCircleIcon,
+  MultipleFileIcon,
+  PasswordChangeIcon,
+  ProfileIcon,
+  QuestionIcon,
+  CameraCircleIcon
 };
