@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Alert,
   Animated,
+  Keyboard,
 } from "react-native";
 import styled from "styled-components/native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
@@ -38,6 +39,7 @@ export default function PwdSetting() {
 
   const [lengthCheck, setLengthCheck] = useState(false);
   const [combinationCheck, setCombinationCheck] = useState(false);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
   const validatePassword = (
     pwd: string
@@ -109,6 +111,26 @@ export default function PwdSetting() {
     setIsValid(passwordResult.isValid && confirmResult.isValid);
   }, [password, confirmPassword]);
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setIsKeyboardVisible(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setIsKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   const handlePasswordFocus = () => {
     setShowPasswordChecks(true);
   };
@@ -123,11 +145,11 @@ export default function PwdSetting() {
   return (
     <Container>
       <Header type="back" />
-      <Col gap={98} padding="43px 32px">
+      <Col gap={isKeyboardVisible ? 28 : 98} padding="43px 32px">
         <Txt variant="headLineBold" align="left">
           비밀번호를 설정해주세요.
         </Txt>
-        <Col gap={17}>
+        <Col gap={37}>
           <Col gap={17}>
             <Txt variant="bodySubText" align="left">
               비밀번호
@@ -178,7 +200,7 @@ export default function PwdSetting() {
       <BottomFixedArea>
         <ButtonContainer>
           <PrimaryButton
-            title="확인하기"
+            title="다음"
             color="sub_yellow"
             disabled={!isValid}
             onClick={handleConfirmButton}
