@@ -22,6 +22,7 @@ export type RootStackParamList = {
   HomeDrawingCardDetail: { cardId: string, postId: string };
   HomeRequest: { postId: string };
   ProfileUpload: undefined
+  Alarm: undefined;
   DrawingCardUpload: undefined,
   AlarmSetting: undefined,
   CustomerService: undefined,
