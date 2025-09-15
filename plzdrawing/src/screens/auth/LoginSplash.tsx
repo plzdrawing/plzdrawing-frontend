@@ -18,7 +18,7 @@ export default function LoginSplash() {
 
   return (
     <Container>
-      <Header type="close" />
+      <Header type="none" />
       <Txt
         variant="headLineBold"
         align="left"
