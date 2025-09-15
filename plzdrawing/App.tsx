@@ -8,6 +8,7 @@ import LoginSplash from "@/src/screens/auth/LoginSplash";
 import Login from "@/src/screens/auth/Login";
 import MainNavigation from "@/src/navigation/MainNavigation";
 import { RootStackParamList } from "@/src/types/navigation";
+
 import Signup from "@/src/screens/auth/signup/Signup";
 import EmailSignup from "@/src/screens/auth/signup/EmailSignup";
 import ProfileMakingSplash from "@/src/screens/auth/signup/profileMaking/ProfileMakingSplash";
