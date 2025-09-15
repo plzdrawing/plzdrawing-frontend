@@ -28,6 +28,7 @@ import HomeDrawingCardDetail from "@/src/screens/post/HomeDrawingCardDetail";
 import HomeRequest from "@/src/screens/post/HomeRequest";
 import ProfileUpload from "@/src/screens/profile/ProfileUpload";
 import DrawingCardUpload from "@/src/screens/profile/DrawingCardUpload";
+import Alarm from "@/src/screens/alarm/Alarm";
 import AlarmSetting from "@/src/screens/profile/mypage/AlarmSetting";
 import CustomerService from "@/src/screens/profile/mypage/CustomerService";
 import Notice from "@/src/screens/profile/mypage/Notice";
@@ -79,6 +80,7 @@ function AppNavigator() {
         <Stack.Screen name="HomeRequest" component={HomeRequest} />
         <Stack.Screen name="ProfileUpload" component={ProfileUpload} />
         <Stack.Screen name="DrawingCardUpload" component={DrawingCardUpload} />
+        <Stack.Screen name="Alarm" component={Alarm} />
         <Stack.Screen name="AlarmSetting" component={AlarmSetting} />
         <Stack.Screen name="CustomerService" component={CustomerService} />
         <Stack.Screen name="Notice" component={Notice} />

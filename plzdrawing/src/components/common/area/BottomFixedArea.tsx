@@ -8,6 +8,7 @@ import styled from "styled-components/native";
 interface BottomFixedAreaProps {
   children: React.ReactNode;
 }
+
 const { width } = Dimensions.get("window");
 
 export const BottomFixedArea: React.FC<BottomFixedAreaProps> = ({
