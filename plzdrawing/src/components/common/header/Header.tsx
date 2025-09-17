@@ -7,7 +7,7 @@ import { RootStackParamList } from "@/src/types/navigation";
 
 interface HeaderProps {
   title?: string;
-  type?: "close" | "back" | "none";
+  type?: "close" | "back";
   onClick?: () => void;
   backgroundColor?: string;
 }
@@ -32,7 +32,7 @@ const Header = ({
         <IconContainer>
           {type === "back"
             ? <BackArrowIcon width={24} height={24} />
-            : ( type === "close" ? <CloseIcon width={24} height={24} /> : <></>)
+            : <CloseIcon width={24} height={24} />
           }
         </IconContainer>
       </BackButton>

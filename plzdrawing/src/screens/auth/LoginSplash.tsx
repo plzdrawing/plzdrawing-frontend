@@ -18,7 +18,6 @@ export default function LoginSplash() {
 
   return (
     <Container style={{ alignItems: "center", justifyContent: "center" }}>
-      {/* <Header type="none" /> */}
       <View style={{ width: 120, height: 120, backgroundColor: colors.colors.light_gray3 }}></View>
       <Txt
         variant="mainTitleBold"
