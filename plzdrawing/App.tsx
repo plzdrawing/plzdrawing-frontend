@@ -8,6 +8,7 @@ import LoginSplash from "@/src/screens/auth/LoginSplash";
 import Login from "@/src/screens/auth/Login";
 import MainNavigation from "@/src/navigation/MainNavigation";
 import { RootStackParamList } from "@/src/types/navigation";
+
 import Signup from "@/src/screens/auth/signup/Signup";
 import EmailSignup from "@/src/screens/auth/signup/EmailSignup";
 import ProfileMakingSplash from "@/src/screens/auth/signup/profileMaking/ProfileMakingSplash";
@@ -26,7 +27,13 @@ import HomePostDetail from "@/src/screens/post/HomePostDetail";
 import HomeDrawingCardDetail from "@/src/screens/post/HomeDrawingCardDetail";
 import HomeRequest from "@/src/screens/post/HomeRequest";
 import ProfileUpload from "@/src/screens/profile/ProfileUpload";
-import DrawingCardUpload from "./src/screens/profile/DrawingCardUpload";
+import DrawingCardUpload from "@/src/screens/profile/DrawingCardUpload";
+import Alarm from "@/src/screens/alarm/Alarm";
+import AlarmSetting from "@/src/screens/profile/mypage/AlarmSetting";
+import CustomerService from "@/src/screens/profile/mypage/CustomerService";
+import Notice from "@/src/screens/profile/mypage/Notice";
+import Tos from "@/src/screens/profile/mypage/Tos";
+// import ProfileEdit from "@/src/screens/profile/mypage/ProfileEdit";
 import ProfileEdit from "@/src/screens/profileEdit/ProfileEdit";
 import PasswordEdit from "@/src/screens/profileEdit/PasswordEdit";
 import EditSuccess from "@/src/screens/profileEdit/components/EditSuccess";
@@ -76,6 +83,11 @@ function AppNavigator() {
         <Stack.Screen name="HomeRequest" component={HomeRequest} />
         <Stack.Screen name="ProfileUpload" component={ProfileUpload} />
         <Stack.Screen name="DrawingCardUpload" component={DrawingCardUpload} />
+        <Stack.Screen name="Alarm" component={Alarm} />
+        <Stack.Screen name="AlarmSetting" component={AlarmSetting} />
+        <Stack.Screen name="CustomerService" component={CustomerService} />
+        <Stack.Screen name="Notice" component={Notice} />
+        <Stack.Screen name="Tos" component={Tos} />
         <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
         <Stack.Screen name="PasswordEdit" component={PasswordEdit} />
         <Stack.Screen name="EditSuccess" component={EditSuccess} />

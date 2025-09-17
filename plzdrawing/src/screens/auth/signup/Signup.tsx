@@ -23,18 +23,19 @@ export default function Signup() {
   };
   return (
     <Container>
-      <Header type="back" />
+      <Header type="close" />
       <Col gap={67} padding="43px 32px">
         <Txt variant="headLineBold" align="left">
           안녕하세요 :) {"\n"}
-          소일거리 드로잉입니다. {"\n"}
+          '그리'입니다. {"\n"}
         </Txt>
         <Col gap={17}>
           <Txt variant="bodySubText" align="left">
             먼저 로그인이 필요해요.
           </Txt>
           <SocialLoginButton type="kakao" onClick={() => {}} />
-          <SocialLoginButton type="naver" onClick={() => {}} />
+          <SocialLoginButton type="google" onClick={() => {}} />
+          <SocialLoginButton type="apple" onClick={() => {}} />
           <AuthButton
             title="이메일 로그인"
             type="login"
