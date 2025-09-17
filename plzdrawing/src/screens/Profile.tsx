@@ -28,6 +28,7 @@ type RootStackParamList = {
   Tos: undefined;
   EditAccount: undefined;
   EditPassword: undefined;
+  Payments: undefined;
 };
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
@@ -54,7 +55,7 @@ export default function Profile() {
     { icon: <QuestionIcon />, text: "고객센터", onPress: () => {navigation.navigate("CustomerService")} },
     { icon: <QuestionIcon />, text: "1:1 문의하기", onPress: () => {} },
     { icon: <MultipleFileIcon />, text: "이용약관", onPress: () => {navigation.navigate("Tos");} },
-    { icon: <MenuCircleIcon />, text: "결제내역", onPress: () => {} },
+    { icon: <MenuCircleIcon />, text: "결제내역", onPress: () => {navigation.navigate("Payments");} },
   ];
 
   const accountMenuItems: ProfileMenuItem[] = [
