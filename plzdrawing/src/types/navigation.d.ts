@@ -21,8 +21,17 @@ export type RootStackParamList = {
   HomePostDetail: { postId: string };
   HomeDrawingCardDetail: { cardId: string, postId: string };
   HomeRequest: { postId: string };
-  ProfileUpload: undefined
-  DrawingCardUpload: undefined
+  ProfileUpload: undefined;
+  DrawingCardUpload: undefined;
+  Alarm: undefined;
+  AlarmSetting: undefined;
+  CustomerService: undefined;
+  Notice: undefined;
+  ProfileEdit: undefined;
+  Tos: undefined;
+  EditAccount: undefined;
+  EditPassword: undefined;
+  EditSuccess: { type: 'profile' | 'password' };
   Payments: undefined;
 };
 

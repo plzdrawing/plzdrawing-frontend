@@ -13,6 +13,7 @@ module.exports = function (api) {
           },
         },
       ],
+      // "nativewind/babel", // 일시적으로 비활성화
     ],
   };
 };
