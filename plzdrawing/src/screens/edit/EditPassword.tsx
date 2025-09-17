@@ -4,16 +4,16 @@ import styled from "styled-components/native";
 import Txt from "@/src/components/common/text/Txt";
 import TextField from "@/src/components/common/input/TextField";
 import DefaultButton from "@/src/components/common/button/DefaultButton";
-import ProfileEditHeader from "./components/ProfileEditHeader";
+import ProfileEditHeader from "./components/EditHeader";
 import { Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types/navigation';
 
-type PasswordEditNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type EditPasswordNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-export default function PasswordEdit() {
-  const navigation = useNavigation<PasswordEditNavigationProp>();
+export default function EditPassword() {
+  const navigation = useNavigation<EditPasswordNavigationProp>();
   const [pwdTextFieldState, setPwdTextFieldState] = useState<
     "empty" | "filled" | "error"
   >("empty");

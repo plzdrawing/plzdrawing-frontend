@@ -26,6 +26,8 @@ type RootStackParamList = {
   Notice: undefined;
   ProfileEdit: undefined;
   Tos: undefined;
+  EditAccount: undefined;
+  EditPassword: undefined;
 };
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
@@ -56,8 +58,8 @@ export default function Profile() {
   ];
 
   const accountMenuItems: ProfileMenuItem[] = [
-    { icon: <MenuCircleIcon />, text: "회원정보 수정", onPress: () => {} },
-    { icon: <PasswordChangeIcon />, text: "비밀번호 변경", onPress: () => {} },
+    { icon: <MenuCircleIcon />, text: "회원정보 수정", onPress: () => {navigation.navigate("EditAccount")} },
+    { icon: <PasswordChangeIcon />, text: "비밀번호 변경", onPress: () => {navigation.navigate("EditPassword")} },
   ];
 
   const loginMenuItems: ProfileMenuItem[] = [

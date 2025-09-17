@@ -10,7 +10,7 @@ interface ProfileEditHeaderProps {
   onBack: () => void;
 }
 
-export default function ProfileEditHeader({ type, onBack }: ProfileEditHeaderProps) {
+export default function EditHeader({ type, onBack }: ProfileEditHeaderProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleBackPress = () => {

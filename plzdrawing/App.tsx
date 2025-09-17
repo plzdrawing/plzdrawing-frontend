@@ -32,11 +32,11 @@ import Alarm from "@/src/screens/alarm/Alarm";
 import AlarmSetting from "@/src/screens/profile/mypage/AlarmSetting";
 import CustomerService from "@/src/screens/profile/mypage/CustomerService";
 import Notice from "@/src/screens/profile/mypage/Notice";
+import ProfileEdit from "@/src/screens/profile/mypage/ProfileEdit";
 import Tos from "@/src/screens/profile/mypage/Tos";
-// import ProfileEdit from "@/src/screens/profile/mypage/ProfileEdit";
-import ProfileEdit from "@/src/screens/profileEdit/ProfileEdit";
-import PasswordEdit from "@/src/screens/profileEdit/PasswordEdit";
-import EditSuccess from "@/src/screens/profileEdit/components/EditSuccess";
+import EditAccount from "@/src/screens/edit/EditAccount";
+import EditPassword from "@/src/screens/edit/EditPassword";
+import EditSuccess from "@/src/screens/edit/components/EditSuccess";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -87,9 +87,10 @@ function AppNavigator() {
         <Stack.Screen name="AlarmSetting" component={AlarmSetting} />
         <Stack.Screen name="CustomerService" component={CustomerService} />
         <Stack.Screen name="Notice" component={Notice} />
-        <Stack.Screen name="Tos" component={Tos} />
         <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
-        <Stack.Screen name="PasswordEdit" component={PasswordEdit} />
+        <Stack.Screen name="Tos" component={Tos} />
+        <Stack.Screen name="EditAccount" component={EditAccount} />
+        <Stack.Screen name="EditPassword" component={EditPassword} />
         <Stack.Screen name="EditSuccess" component={EditSuccess} />
       </Stack.Navigator>
     </NavigationContainer>

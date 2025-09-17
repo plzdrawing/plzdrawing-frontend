@@ -27,9 +27,10 @@ export type RootStackParamList = {
   AlarmSetting: undefined;
   CustomerService: undefined;
   Notice: undefined;
-  Tos: undefined;
   ProfileEdit: undefined;
-  PasswordEdit: undefined;
+  Tos: undefined;
+  EditAccount: undefined;
+  EditPassword: undefined;
   EditSuccess: { type: 'profile' | 'password' };
 };
 
