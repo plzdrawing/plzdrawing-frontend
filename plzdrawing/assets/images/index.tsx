@@ -38,6 +38,7 @@ import ProfileIcon from "@/assets/images/ic_profile.svg";
 import QuestionIcon from "@/assets/images/ic_question.svg";
 import CameraCircleIcon from "@/assets/images/ic_camera_circle.svg"
 import GreeSuccess from "@/assets/images/logo-gree-success.svg";
+import GreeSad from "@/assets/images/logo-gree-sad.svg";
 
 export {
   EmptyCheck,
@@ -80,4 +81,5 @@ export {
   QuestionIcon,
   CameraCircleIcon,
   GreeSuccess,
+  GreeSad,
 };

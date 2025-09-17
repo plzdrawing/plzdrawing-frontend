@@ -37,6 +37,7 @@ import Tos from "@/src/screens/profile/mypage/Tos";
 import EditAccount from "@/src/screens/edit/EditAccount";
 import EditPassword from "@/src/screens/edit/EditPassword";
 import EditSuccess from "@/src/screens/edit/components/EditSuccess";
+import Payments from "@/src/screens/payments/Payments";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -92,6 +93,7 @@ function AppNavigator() {
         <Stack.Screen name="EditAccount" component={EditAccount} />
         <Stack.Screen name="EditPassword" component={EditPassword} />
         <Stack.Screen name="EditSuccess" component={EditSuccess} />
+        <Stack.Screen name="Payments" component={Payments} />
       </Stack.Navigator>
     </NavigationContainer>
   );
