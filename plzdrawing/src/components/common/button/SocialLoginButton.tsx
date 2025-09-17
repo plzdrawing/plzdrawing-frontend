@@ -3,10 +3,10 @@ import styled from "styled-components/native";
 import { Pressable, PressableProps } from "react-native";
 import Txt from "../text/Txt"; // Txt 컴포넌트 경로에 맞게 수정
 import Colors from "@/src/constants/Colors";
-import { KaKaoLoginIcon, NaverLoginIcon } from "@/assets/images";
+import { KaKaoLogin2Icon, GoogleLoginIcon, AppleLoginIcon } from "@/assets/images";
 
 interface SocialLoginButtonProps extends PressableProps {
-  type?: "kakao" | "naver";
+  type?: "kakao" | "google" | "apple";
   onClick?: () => void;
 }
 
@@ -17,13 +17,18 @@ const SocialLoginButton = ({
 }: SocialLoginButtonProps) => {
   return (
     <ButtonContainer {...rest} onPress={onClick} type={type}>
-      {type === "kakao" ? <KaKaoLoginIcon /> : <NaverLoginIcon />}
+      {type === "kakao"
+        ? <KaKaoLogin2Icon />
+        : type === "google"
+          ? <GoogleLoginIcon />
+          : <AppleLoginIcon />
+      }
     </ButtonContainer>
   );
 };
 
 interface ButtonContainerProps {
-  type: "kakao" | "naver";
+  type: "kakao" | "google" | "apple";
 }
 
 const ButtonContainer = styled(Pressable)<ButtonContainerProps>`
@@ -34,7 +39,9 @@ const ButtonContainer = styled(Pressable)<ButtonContainerProps>`
   justify-content: center;
   align-items: center;
   background-color: ${(props: ButtonContainerProps) =>
-    props.type === "kakao" ? "#FEE500" : "#03C75A"};
+    props.type === "kakao" ? "#FEE500" : "#FFFFFF"};
+  border: ${(props: ButtonContainerProps) =>
+    props.type === "kakao" ? "none" : "1px solid #000000"};
   z-index: 200;
 `;
 

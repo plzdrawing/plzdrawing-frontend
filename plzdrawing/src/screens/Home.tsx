@@ -52,7 +52,7 @@ export default function Home() {
       >
         <SearchFilter selectedId={selectedId} />
         <ScrollContainer showsVerticalScrollIndicator={false}>
-          <Col gap={17} style={{ paddingBottom: 10 }}>
+          <Col gap={17} style={{ paddingBottom: 50 }}>
             {selectedId === 0 ? (
               <>
                 {/* Each card is now wrapped in a TouchableOpacity to handle presses */}
