@@ -34,6 +34,9 @@ import CustomerService from "@/src/screens/profile/mypage/CustomerService";
 import Notice from "@/src/screens/profile/mypage/Notice";
 import ProfileEdit from "@/src/screens/profile/mypage/ProfileEdit";
 import Tos from "@/src/screens/profile/mypage/Tos";
+import EditAccount from "@/src/screens/edit/EditAccount";
+import EditPassword from "@/src/screens/edit/EditPassword";
+import EditSuccess from "@/src/screens/edit/components/EditSuccess";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -86,6 +89,9 @@ function AppNavigator() {
         <Stack.Screen name="Notice" component={Notice} />
         <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
         <Stack.Screen name="Tos" component={Tos} />
+        <Stack.Screen name="EditAccount" component={EditAccount} />
+        <Stack.Screen name="EditPassword" component={EditPassword} />
+        <Stack.Screen name="EditSuccess" component={EditSuccess} />
       </Stack.Navigator>
     </NavigationContainer>
   );

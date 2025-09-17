@@ -21,14 +21,17 @@ export type RootStackParamList = {
   HomePostDetail: { postId: string };
   HomeDrawingCardDetail: { cardId: string, postId: string };
   HomeRequest: { postId: string };
-  ProfileUpload: undefined
+  ProfileUpload: undefined;
+  DrawingCardUpload: undefined;
   Alarm: undefined;
-  DrawingCardUpload: undefined,
-  AlarmSetting: undefined,
-  CustomerService: undefined,
-  Notice: undefined,
-  ProfileEdit: undefined,
-  Tos: undefined
+  AlarmSetting: undefined;
+  CustomerService: undefined;
+  Notice: undefined;
+  ProfileEdit: undefined;
+  Tos: undefined;
+  EditAccount: undefined;
+  EditPassword: undefined;
+  EditSuccess: { type: 'profile' | 'password' };
 };
 
 // 바텀네비게이션 타입 정의

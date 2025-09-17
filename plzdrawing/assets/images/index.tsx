@@ -37,6 +37,7 @@ import PasswordChangeIcon from "@/assets/images/ic_password.svg";
 import ProfileIcon from "@/assets/images/ic_profile.svg";
 import QuestionIcon from "@/assets/images/ic_question.svg";
 import CameraCircleIcon from "@/assets/images/ic_camera_circle.svg"
+import GreeSuccess from "@/assets/images/logo-gree-success.svg";
 
 export {
   EmptyCheck,
@@ -77,5 +78,6 @@ export {
   PasswordChangeIcon,
   ProfileIcon,
   QuestionIcon,
-  CameraCircleIcon
+  CameraCircleIcon,
+  GreeSuccess,
 };
