@@ -17,17 +17,16 @@ export default function LoginSplash() {
   };
 
   return (
-    <Container>
-      <Header type="none" />
+    <Container style={{ alignItems: "center", justifyContent: "center" }}>
+      {/* <Header type="none" /> */}
+      <View style={{ width: 120, height: 120, backgroundColor: colors.colors.light_gray3 }}></View>
       <Txt
-        variant="headLineBold"
-        align="left"
-        style={{ marginTop: 43, paddingLeft: 32 }}
+        variant="mainTitleBold"
+        align="center"
+        style={{ marginTop: 9, marginBottom: 40 }}
       >
-        오랜만이에요 :)
-        {"\n"}
-        {"\n"}
-        소일거리 드로잉어플과 함께 {"\n"}
+        환영합니다 :) {"\n"}{"\n"}
+        '그리'와 함께 {"\n"}
         소소한 일상을 즐겨보아요!
       </Txt>
       <BottomFixedArea>
