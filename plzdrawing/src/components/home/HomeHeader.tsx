@@ -27,6 +27,12 @@ const HomeHeader = ({
   selectedId,
   setSelectedId,
 }: HomeHeaderProps) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const handleAlarmPress = () => {
+    navigation.navigate("Alarm");
+  };
+
   return (
     <Container>
       <Row gap={30} style={{ width: "auto" }}>
@@ -62,7 +68,7 @@ const HomeHeader = ({
         )}
       </Row>
       <Row justifyContent="center" gap={15} style={{ width: "auto" }}>
-        <AlarmIcon width={20} height={20} style={{ marginBottom: 14 }} />
+        <AlarmIcon width={20} height={20} style={{ marginBottom: 14 }} onPress={handleAlarmPress} />
         {!title2 && (
           <MenuIcon width={20} height={20} style={{ marginBottom: 14 }} />
         )}

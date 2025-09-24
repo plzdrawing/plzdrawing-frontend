@@ -30,11 +30,10 @@ const Header = ({
         }
       >
         <IconContainer>
-          {type === "back" ? (
-            <BackArrowIcon width={24} height={24} />
-          ) : (
-            <CloseIcon width={24} height={24} />
-          )}
+          {type === "back"
+            ? <BackArrowIcon width={24} height={24} />
+            : <CloseIcon width={24} height={24} />
+          }
         </IconContainer>
       </BackButton>
     </Container>

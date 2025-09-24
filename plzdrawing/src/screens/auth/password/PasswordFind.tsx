@@ -19,6 +19,7 @@ export default function PasswordFind() {
   const [emailError, setEmailError] = useState("");
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -49,12 +50,14 @@ export default function PasswordFind() {
     console.log("인증번호 전송 버튼 클릭");
     // TODO: 유효한 이메일인지 확인 API 호출
     // TODO: 가입되지 않은 이메일일 경우 모달 띄우기
+    // setErrorModalVisible(true);
     // TODO: 인증번호 전송 API 호출
-    navigation.navigate("PasswordFindVerification");
+    setModalVisible(true);
   };
 
   const handleModalButtonClick = () => {
     setModalVisible(false);
+    navigation.navigate("PasswordFindVerification");
   };
 
   return (
@@ -88,9 +91,17 @@ export default function PasswordFind() {
           />
         </ButtonContainer>
       </BottomFixedArea>
-      {modalVisible && (
+      {errorModalVisible && (
         <AlertModal
           title={"가입되지 않은 이메일이에요."}
+          buttonTitle="확인"
+          onClick={handleModalButtonClick}
+          textVariant="thirdText"
+        />
+      )}
+      {modalVisible && (
+        <AlertModal
+          title="인증번호가 전송되었어요!"
           buttonTitle="확인"
           onClick={handleModalButtonClick}
           textVariant="thirdText"

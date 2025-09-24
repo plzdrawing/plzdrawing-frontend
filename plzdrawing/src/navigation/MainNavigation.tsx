@@ -6,10 +6,13 @@ import Talk from "@/src/screens/talk/Talk";
 import Profile from "@/src/screens/Profile";
 import Txt from "../components/common/text/Txt";
 import { FooterTalk, FooterHome, FooterMy } from "@/assets/images";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator();
 
 export default function MainNavigation() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -18,6 +21,7 @@ export default function MainNavigation() {
         tabBarInactiveTintColor: "#000",
         tabBarStyle: {
           paddingTop: 8,
+          height: 70 + insets.bottom,
         },
       }}
     >

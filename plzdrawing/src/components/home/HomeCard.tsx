@@ -3,8 +3,11 @@ import styled from "styled-components/native";
 import Txt from "../common/text/Txt";
 import { Col, Row } from "../common/flex/Flex";
 import { CommentIcon, LikeIcon } from "@/assets/images";
+import { Dimensions } from "react-native";
 
 const HomeCard = () => {
+  const { width } = Dimensions.get("window");
+
   return (
     <CardContainer>
       <Col gap={17}>
@@ -79,7 +82,7 @@ export default HomeCard;
 const CardContainer = styled.View`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: ${Dimensions.get("window").width - 64}px;
   padding: 17px;
   border-radius: 5px;
   background-color: ${Colors.colors.white};

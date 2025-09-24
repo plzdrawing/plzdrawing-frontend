@@ -77,7 +77,7 @@ export default function Login() {
       <Col gap={67} padding="43px 32px">
         <Txt variant="headLineBold" align="left">
           안녕하세요 :) {"\n"}
-          소일거리 드로잉입니다. {"\n"}
+          '그리'입니다. {"\n"}
         </Txt>
         <Col gap={17}>
           <Txt variant="bodySubText" align="left">
