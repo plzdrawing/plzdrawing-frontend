@@ -30,7 +30,7 @@ export default function UserDetail({
       <ProfileImage />
       <Txt variant='mainTitleBold'>{userName} 님</Txt>
       <Txt variant='bodyText'>{userIntroduction}</Txt>
-      <Txt color='dark_gray1' variant='bodyText'>{userTags.join(", ")}</Txt>
+      <Txt color='dark_gray2' variant='bodyText'>{userTags.join(' ')}</Txt>
       <PostButtonContainer>
         <PrimaryButton
           title='게시글 보러가기'
