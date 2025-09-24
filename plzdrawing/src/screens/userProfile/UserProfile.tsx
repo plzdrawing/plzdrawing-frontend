@@ -6,6 +6,7 @@ import Header from "@/src/components/common/header/Header";
 import UserDetail from "./UserDetail";
 import UserDrawings from "./UserDrawings";
 import UserReviews from "./UserReviews";
+import { GreeSad } from "@/assets/images";
 
 type FilterType = '그림' | '후기';
 
@@ -17,14 +18,15 @@ export default function UserProfile() {
     name: "홍길동",
     intro: "안녕하세요. 동물 그림쟁입니다:)",
     tags: ["#귀여운", "#낙서", "#동물그림"],
-    drawings: Array.from({ length: 12 }, (_, index) => ({
-      id: `drawing-${index}`,
-      imageUrl: '',
-      likes: 43,
-      comments: 12,
-      description: '많이 찾아주시는 고양이 그림 낙서형태로 그려봤어요 :)',
-      date: '2025년 6월 18일',
-    })),
+    drawings: [],
+    // drawings: Array.from({ length: 5 }, (_, index) => ({
+    //   id: `drawing-${index}`,
+    //   imageUrl: '',
+    //   likes: 43,
+    //   comments: 12,
+    //   description: '많이 찾아주시는 고양이 그림 낙서형태로 그려봤어요 :)',
+    //   date: '2025년 6월 18일',
+    // })),
     reviews: {
       drawNum: 7,
       rejectNum: 0,
@@ -63,6 +65,7 @@ export default function UserProfile() {
           userTags={user.tags}
           selectedFilter={selectedFilter}
           onFilterChange={setSelectedFilter}
+          isOwner={true}
         />
         {selectedFilter === '그림'
           ? <UserDrawings

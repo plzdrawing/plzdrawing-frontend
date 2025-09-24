@@ -12,6 +12,7 @@ interface UserDetailProps {
   userTags: string[];
   selectedFilter: FilterType;
   onFilterChange: (filter: FilterType) => void;
+  isOwner?: boolean;
 }
 
 export default function UserDetail({ 
@@ -19,7 +20,8 @@ export default function UserDetail({
   userIntroduction, 
   userTags, 
   selectedFilter, 
-  onFilterChange 
+  onFilterChange,
+  isOwner = false,
 }: UserDetailProps) {
   const handleFilterPress = (filter: FilterType) => {
     onFilterChange(filter);
@@ -27,17 +29,21 @@ export default function UserDetail({
 
   return (
     <DetailWrapper>
-      <ProfileImage />
-      <Txt variant='mainTitleBold'>{userName} 님</Txt>
-      <Txt variant='bodyText'>{userIntroduction}</Txt>
-      <Txt color='dark_gray2' variant='bodyText'>{userTags.join(' ')}</Txt>
-      <PostButtonContainer>
-        <PrimaryButton
-          title='게시글 보러가기'
-          color='sub_yellow'
-          onPress={() => {}}
-        />
-      </PostButtonContainer>
+      <ProfileMeta>
+        <ProfileImage />
+        <Txt variant='mainTitleBold'>{userName} 님</Txt>
+        <Txt variant='bodyText'>{userIntroduction}</Txt>
+        <Txt color='dark_gray2' variant='bodyText'>{userTags.join(' ')}</Txt>
+      </ProfileMeta>
+      {isOwner && (
+        <PostButtonContainer>
+          <PrimaryButton
+            title='프로필 편집'
+            color='sub_yellow'
+            onPress={() => {}}
+          />
+        </PostButtonContainer>
+      )}
       <FilterButtonContainer>
         <FilterButton 
           isSelected={selectedFilter === '그림'}
@@ -67,9 +73,20 @@ const DetailWrapper = styled.View`
   flex-direction: column;
   align-items: center;
   gap: 7px;
-  width: 100%;
+  // width: 100%;
+  min-width: 100%;
   padding: 16px 0 4px 0;
   background-color: ${colors.colors.light_gray1};
+`;
+
+const ProfileMeta = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 37px;
+  padding: 0 20px;
+  width: 100%;
 `;
 
 const ProfileImage = styled.View`
@@ -83,7 +100,7 @@ const ProfileImage = styled.View`
 
 const PostButtonContainer = styled.View`
   width: 100%;
-  margin: 27px 0 46px 0;
+  margin: -10px 0 46px 0;
   padding: 0 66px;
 `;
 
