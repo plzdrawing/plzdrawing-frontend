@@ -33,6 +33,7 @@ export type RootStackParamList = {
   EditPassword: undefined;
   EditSuccess: { type: 'profile' | 'password' };
   Payments: undefined;
+  UserProfile: undefined;
 };
 
 // 바텀네비게이션 타입 정의
