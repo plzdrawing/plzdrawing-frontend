@@ -80,7 +80,7 @@ export default function Profile() {
           justifyContent="flex-start"
           padding="32px"
           gap={18}
-          style={{ flex: 1, backgroundColor: colors.colors.light_gray1 }}
+          style={{ flex: 1, backgroundColor: colors.colors.light_gray1, paddingTop: 16 }}
         >
           <ProfileInfoSection
             profile={profleData}

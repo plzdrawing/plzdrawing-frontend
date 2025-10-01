@@ -23,7 +23,7 @@ const ProfileInfoSection = ({
         <Txt variant="mainTitleBold">{profile.name}</Txt>
         <Row style={{ marginTop: 7, marginBottom: 17 }}>
           {profile.hashtag.map((item, index) => (
-            <Txt key={index} variant="bodyText" color="dark_gray2">
+            <Txt key={index} variant="bodyText" color="dark_gray2" style={{ marginRight: 4 }}>
               {item}
             </Txt>
           ))}
