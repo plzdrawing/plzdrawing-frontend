@@ -22,7 +22,6 @@ import PasswordChange from "@/src/screens/auth/password/PasswordChange";
 import Chatting from "@/src/screens/talk/Chatting";
 import PasswordFindVerification from "@/src/screens/auth/password/PasswordFindVerification";
 import PainterProfile from "@/src/screens/PainterProfile";
-import Home from "@/src/screens/Home";
 import HomePostDetail from "@/src/screens/post/HomePostDetail";
 import HomeDrawingCardDetail from "@/src/screens/post/HomeDrawingCardDetail";
 import HomeRequest from "@/src/screens/post/HomeRequest";

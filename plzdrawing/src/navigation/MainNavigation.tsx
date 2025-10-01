@@ -15,6 +15,7 @@ export default function MainNavigation() {
 
   return (
     <Tab.Navigator
+      initialRouteName="그림홈"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "#000",
