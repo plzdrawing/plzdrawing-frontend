@@ -9,6 +9,7 @@ import { RootStackParamList } from "@/src/types/navigation";
 import { Container } from "@/src/components/common/container/Container";
 import PrimaryButton from "@/src/components/common/button/PrimaryButton";
 import styled from "styled-components/native";
+import { GreeNormal } from "@/assets/images";
 
 export default function LoginSplash() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -18,7 +19,7 @@ export default function LoginSplash() {
 
   return (
     <Container style={{ alignItems: "center", justifyContent: "center" }}>
-      <View style={{ width: 120, height: 120, backgroundColor: colors.colors.light_gray3 }}></View>
+      <GreeNormal />
       <Txt
         variant="mainTitleBold"
         align="center"

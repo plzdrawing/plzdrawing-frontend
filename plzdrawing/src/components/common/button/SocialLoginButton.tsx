@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import { Pressable, PressableProps } from "react-native";
 import Txt from "../text/Txt"; // Txt 컴포넌트 경로에 맞게 수정
 import Colors from "@/src/constants/Colors";
-import { KaKaoLogin2Icon, GoogleLoginIcon, AppleLoginIcon } from "@/assets/images";
+import { KaKaoLoginIcon, GoogleLoginIcon, AppleLoginIcon } from "@/assets/images";
 
 interface SocialLoginButtonProps extends PressableProps {
   type?: "kakao" | "google" | "apple";
@@ -18,7 +18,7 @@ const SocialLoginButton = ({
   return (
     <ButtonContainer {...rest} onPress={onClick} type={type}>
       {type === "kakao"
-        ? <KaKaoLogin2Icon />
+        ? <KaKaoLoginIcon />
         : type === "google"
           ? <GoogleLoginIcon />
           : <AppleLoginIcon />

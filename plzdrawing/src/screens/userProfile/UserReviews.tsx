@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import colors from '@/src/constants/Colors';
 import Txt from '@/src/components/common/text/Txt';
-import IcStar from '@/assets/images/ic-star-empty.svg';
+import { EmptyStar, FilledStar } from '@/assets/images';
 
 interface UserReviewsProps {
   drawNum: number;
@@ -34,7 +34,7 @@ export default function UserReviews({
         <Txt variant='auxiliaryTextLight'>거절 횟수: {rejectNum}회</Txt>
       </NumbersContainer>
       <RatingContainer>
-        <IcStar />
+        <EmptyStar />
         <Txt variant='bodyTextBold'>{rating}점</Txt>
         <Txt color='dark_gray2' variant='bodySubText'>평가 {reviewNum}개</Txt>
       </RatingContainer>
