@@ -57,3 +57,30 @@ export const authApi = {
     return response.data;
   },
 };
+
+// ✅ 이메일 인증 코드 전송 API 함수
+export const sendVerificationEmail = async (email: string): Promise<ApiResponse<any>> => {
+  try {
+    const response = await apiClient.post('/api/auth/email/v1/email-verification', { email });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to send verification email:", error);
+    throw error;
+  }
+};
+
+// ✅ GET 요청으로 이메일과 코드를 보내는 함수 (참고용)
+export const verifyEmailCode = async (email: string, code: string): Promise<ApiResponse<any>> => {
+  try {
+    const response = await apiClient.get('/api/auth/email/v1/email-verification', {
+      params: {
+        email,
+        code
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to verify email code:", error);
+    throw error;
+  }
+}

@@ -1,9 +1,8 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// API 기본 설정
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
+const API_BASE_URL = 'http://13.124.246.36:8080';
 
-// axios 인스턴스 생성
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -12,11 +11,12 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
-// 요청 인터셉터
+// 요청 인터셉터 (Request Interceptor)
 apiClient.interceptors.request.use(
-  (config: AxiosRequestConfig): any => {
+  async (config: any) => { // config 타입을 any 또는 InternalAxiosRequestConfig로 설정
+    const token = await AsyncStorage.getItem('accessToken');
+
     // 토큰이 있다면 헤더에 추가
-    const token = null; // TODO: AsyncStorage에서 토큰 가져오기
     if (token) {
       config.headers = {
         ...config.headers,
@@ -24,12 +24,7 @@ apiClient.interceptors.request.use(
       };
     }
     
-    console.log('API Request:', {
-      method: config.method?.toUpperCase(),
-      url: config.url,
-      baseURL: config.baseURL,
-    });
-    
+    console.log('API Request:', config.method?.toUpperCase(), config.url);
     return config;
   },
   (error) => {
@@ -38,31 +33,17 @@ apiClient.interceptors.request.use(
   }
 );
 
-// 응답 인터셉터
+// 응답 인터셉터 (Response Interceptor)
 apiClient.interceptors.response.use(
-  (response: AxiosResponse): AxiosResponse => {
-    console.log('API Response:', {
-      status: response.status,
-      url: response.config.url,
-      data: response.data,
-    });
-    
-    return response;
-  },
+  (response) => response, // 성공 응답은 그대로 반환
   (error) => {
-    console.error('Response Error:', error);
-    
-    // 401 에러 처리 (인증 만료)
+    // 401 Unauthorized 에러 시 토큰 갱신 또는 로그아웃 처리
     if (error.response?.status === 401) {
-      // TODO: 로그아웃 처리 또는 토큰 갱신
-      console.log('Authentication expired');
+      console.log('Authentication error: Token might be expired.');
+      // TODO: 토큰 갱신 로직 또는 로그인 화면으로 리디렉션
     }
     
-    // 네트워크 에러 처리
-    if (!error.response) {
-      console.error('Network Error: Unable to connect to server');
-    }
-    
+    console.error('Response Error:', error);
     return Promise.reject(error);
   }
 );

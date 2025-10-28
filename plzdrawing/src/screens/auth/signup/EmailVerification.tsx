@@ -6,33 +6,26 @@ import { Col, Row } from "@/src/components/common/flex/Flex";
 import Header from "@/src/components/common/header/Header";
 import Txt from "@/src/components/common/text/Txt";
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, TextInput } from "react-native";
+import { TextInput } from "react-native";
 import styled from "styled-components/native";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import AlertModal from "@/src/components/common/modal/AlertModal";
+import { verifyEmailCode } from "@/src/apis/auth";
+
+type EmailVerificationRouteProp = RouteProp<RootStackParamList, 'EmailVerification'>;
 
 export default function EmailVerification() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [verificationCode, setVerificationCode] = useState([
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-  ]);
+  const route = useRoute<EmailVerificationRouteProp>();
+  const { email } = route.params;
+
+  const [verificationCode, setVerificationCode] = useState(["", "", "", "", "", ""]);
   const [timeLeft, setTimeLeft] = useState(300);
-  const inputRefs = useRef<Array<TextInput | null>>([
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-  ]);
+  const inputRefs = useRef<Array<TextInput | null>>([null, null, null, null, null, null]);
   const [modalVisible, setModalVisible] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -79,40 +72,28 @@ export default function EmailVerification() {
   const handleResendCode = () => {
     setTimeLeft(300);
     setVerificationCode(["", "", "", "", "", ""]);
-  };
-
-  const verifyCode = async (code: string): Promise<boolean> => {
-    try {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          //임시 "123456" 코드 유효하게함
-          resolve(code === "123456");
-        }, 500);
-      });
-    } catch (error) {
-      console.error("인증 코드 검증 중 오류 발생:", error);
-      return false;
-    }
+    // TODO: 인증번호 재전송 API
   };
 
   const handleVerificationButtonClick = async () => {
     const code = verificationCode.join("");
-    if (!code || code.length !== 6) {
+    if (!code || code.length !== 6 || isLoading) {
       return;
     }
 
-    try {
-      const isValid = await verifyCode(code);
+    setIsLoading(true); // 로딩 시작
 
-      if (isValid) {
-        setModalVisible(true);
-      } else {
-        setErrorModalVisible(true);
-      }
+    try {
+      await verifyEmailCode(email, code);
+
+      // 성공 시
+      setModalVisible(true);
     } catch (error) {
-      console.error("인증 처리 중 오류 발생:", error);
+      // 실패 시
+      console.error("인증 실패:", error);
+      setErrorModalVisible(true);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false); // 로딩 종료
     }
   };
 

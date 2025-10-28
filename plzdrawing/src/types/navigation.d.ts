@@ -12,7 +12,7 @@ export type RootStackParamList = {
   ProfileMakingDone: undefined;
   PasswordFind: undefined;
   PasswordChange: undefined;
-  EmailVerification: undefined;
+  EmailVerification: { email: string };
   VerificationComplete: undefined;
   PwdSetting: undefined;
   Chatting: undefined;
