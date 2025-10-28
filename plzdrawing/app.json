@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "plzdrawing",
-    "slug": "plzdrawing",
+    "name": "gree",
+    "slug": "gree",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -20,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.junghyungo.gree"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
@@ -31,6 +32,10 @@
         "family": "Ssurround"
       }
     ],
-    "entryPoint": "./App.tsx"
+    "extra": {
+      "eas": {
+        "projectId": "ff320edd-21e5-4b93-88ed-0329f03e8af2"
+      }
+    }
   }
 }
