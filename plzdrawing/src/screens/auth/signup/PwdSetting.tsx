@@ -1,20 +1,12 @@
-import colors from "@/src/constants/Colors";
+import React, { useState, useEffect } from "react";
+import { Keyboard } from "react-native";
+import styled from "styled-components/native";
 import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
 import PrimaryButton from "@/src/components/common/button/PrimaryButton";
 import { Container } from "@/src/components/common/container/Container";
 import { Col, Row } from "@/src/components/common/flex/Flex";
 import Header from "@/src/components/common/header/Header";
 import Txt from "@/src/components/common/text/Txt";
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Alert,
-  Animated,
-  Keyboard,
-} from "react-native";
-import styled from "styled-components/native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import TextField from "@/src/components/common/input/TextField";
@@ -78,9 +70,6 @@ export default function PwdSetting() {
     if (!confirmPwd) {
       return { isValid: false, message: "" };
     }
-
-    // 동일한 비밀번호 체크
-    const identicalValid = pwd === confirmPwd;
 
     if (pwd !== confirmPwd) {
       return {
@@ -200,6 +189,7 @@ export default function PwdSetting() {
       <BottomFixedArea>
         <ButtonContainer>
           <PrimaryButton
+            isValid={isValid}
             title="다음"
             color="sub_yellow"
             disabled={!isValid}

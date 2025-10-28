@@ -13,9 +13,7 @@ import AlertModal from "@/src/components/common/modal/AlertModal";
 
 export default function PasswordFind() {
   const [email, setEmail] = useState("");
-  const [emailState, setEmailState] = useState<"empty" | "filled" | "error">(
-    "empty"
-  );
+  const [emailState, setEmailState] = useState<"empty" | "filled" | "error">("empty");
   const [emailError, setEmailError] = useState("");
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);

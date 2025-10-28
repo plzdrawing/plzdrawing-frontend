@@ -18,13 +18,13 @@ interface DefaultButtonProps {
   isLoading?: boolean;
 }
 
-const DefaultButton = ({
+export default function DefaultButton({
   title,
   onPress,
   variant = "default",
   disabled = false,
   isLoading = false,
-}: DefaultButtonProps) => {
+}: DefaultButtonProps) {
   const getButtonStyle = () => {
     switch (variant) {
       case "primary":
@@ -96,5 +96,3 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
-
-export default DefaultButton;

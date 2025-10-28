@@ -10,12 +10,12 @@ interface AuthButtonProps extends PressableProps {
   onClick?: () => void;
 }
 
-const AuthButton = ({
+export default function AuthButton({
   title,
   type = "login",
   onClick,
   ...rest
-}: AuthButtonProps) => {
+}: AuthButtonProps) {
   return (
     <ButtonContainer {...rest} onPress={onClick} type={type}>
       <Txt variant="bodyText" color="black" align="center">
@@ -41,5 +41,3 @@ const ButtonContainer = styled(Pressable)<ButtonContainerProps>`
     props.type === "login" ? Colors.colors.sub_yellow : "white"};
   z-index: 200;
 `;
-
-export default AuthButton;

@@ -1,14 +1,11 @@
-import { StyleSheet, View } from "react-native";
-import colors from "@/src/constants/Colors";
-import Header from "@/src/components/common/header/Header";
 import React from "react";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import styled from "styled-components/native";
+import { RootStackParamList } from "@/src/types/navigation";
 import Txt from "@/src/components/common/text/Txt";
 import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { RootStackParamList } from "@/src/types/navigation";
 import { Container } from "@/src/components/common/container/Container";
 import PrimaryButton from "@/src/components/common/button/PrimaryButton";
-import styled from "styled-components/native";
 import { GreeNormal } from "@/assets/images";
 
 export default function LoginSplash() {

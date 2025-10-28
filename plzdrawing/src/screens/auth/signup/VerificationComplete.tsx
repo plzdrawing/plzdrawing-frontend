@@ -106,6 +106,7 @@ export default function VerificationComplete() {
       <BottomFixedArea>
         <ButtonContainer>
           <PrimaryButton
+            isValid={isNextEnabled}
             title="다음"
             color="sub_yellow"
             disabled={!isNextEnabled}

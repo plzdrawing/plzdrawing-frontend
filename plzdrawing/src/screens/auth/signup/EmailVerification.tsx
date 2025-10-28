@@ -159,6 +159,7 @@ export default function EmailVerification() {
       <BottomFixedArea>
         <ButtonContainer>
           <PrimaryButton
+            isValid={isVerificationComplete}
             title="확인"
             color="sub_yellow"
             disabled={!isVerificationComplete}
