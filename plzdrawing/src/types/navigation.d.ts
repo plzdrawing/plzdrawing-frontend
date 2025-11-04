@@ -1,20 +1,27 @@
 // 네비게이션에 사용할 ParamList 정의
 import { Home } from '@/src/screens/Home';
 import HomeDrawingCardDetail from '../screens/post/HomeDrawingCardDetail';
+
+type Agreements = {
+  terms: boolean;
+  privacy: boolean;
+  marketing: boolean;
+}
+
 export type RootStackParamList = {
   Main: undefined;
   LoginSplash: undefined;
   Login: { userId: string } | undefined;
   Signup: undefined;
   EmailSignup: undefined;
-  ProfileMakingSplash: undefined;
-  ProfileMakingNickname: undefined;
+  ProfileMakingSplash: { email: string; password: string; agreements: Agreements };
+  ProfileMakingNickname: { email: string; password: string; agreements: Agreements };
   ProfileMakingDone: undefined;
   PasswordFind: undefined;
   PasswordChange: undefined;
   EmailVerification: { email: string };
-  VerificationComplete: undefined;
-  PwdSetting: undefined;
+  VerificationComplete: { email: string };
+  PwdSetting: { email: string; agreements: Agreements };
   Chatting: undefined;
   PasswordFindVerification: undefined;
   PainterProfile: undefined;

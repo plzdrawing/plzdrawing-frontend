@@ -7,20 +7,50 @@ import styled from "styled-components/native";
 import TextField from "@/src/components/common/input/TextField";
 import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
 import PrimaryButton from "@/src/components/common/button/PrimaryButton";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
+import { authApi } from "@/src/apis/auth";
+
+type ProfileMakingNicknameRouteProp = RouteProp<RootStackParamList, 'ProfileMakingNickname'>;
 
 export default function ProfileMakingNickname() {
-  const [textFieldState, setTextFieldState] = useState<
-    "empty" | "filled" | "error"
-  >("empty");
+  const route = useRoute<ProfileMakingNicknameRouteProp>();
+  const { email, password, agreements } = route.params;
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const handleNextButtonOnClick = () => {
-    console.log("다음 버튼 클릭");
-    navigation.navigate("ProfileMakingDone");
+  const [nickName, setNickName] = useState("");
+  const [textFieldState, setTextFieldState] = useState<"empty" | "filled" | "error">("empty");
+
+  const handleNextButtonOnClick = async () => {
+    if (!nickName.trim()) {
+      return;
+    }
+
+    console.log("닉네임:", nickName);
+    console.log("이메일:", email);
+    console.log("비밀번호:", password);
+    console.log("약관 동의:", agreements);
+
+    try {
+      await authApi.signup({
+        email: email,
+        password: password,
+        nickName: nickName,
+        personalInfoConsent: agreements.privacy,
+        acceptTermsOfUse: agreements.terms,
+        marketingConsent: agreements.marketing,
+      });
+
+      // 회원가입 성공
+      navigation.navigate("ProfileMakingDone");
+
+    } catch (error: any) {
+      // 회원가입 실패
+      console.error("Signup failed:", error);
+    }
   };
+
   return (
     <Container>
       <Header type="back" />

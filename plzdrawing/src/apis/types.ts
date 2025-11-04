@@ -107,3 +107,18 @@ export interface CreateReviewRequest {
   content: string;
   targetUserId: string;
 }
+
+// 회원가입 요청 타입
+export interface SignUpRequest {
+  email: string;
+  password: string;
+  nickName: string;
+  personalInfoConsent: boolean;
+  acceptTermsOfUse: boolean;
+  marketingConsent: boolean;
+}
+
+// 회원가입 응답 타입
+export interface SignUpResponse {
+  memberId: number;
+}

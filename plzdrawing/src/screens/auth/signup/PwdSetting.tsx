@@ -7,13 +7,18 @@ import { Container } from "@/src/components/common/container/Container";
 import { Col, Row } from "@/src/components/common/flex/Flex";
 import Header from "@/src/components/common/header/Header";
 import Txt from "@/src/components/common/text/Txt";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import TextField from "@/src/components/common/input/TextField";
 import AlertModal from "@/src/components/common/modal/AlertModal";
 import { EmptyCheck, FilledCheck } from "@/assets/images";
 
+type PwdSettingRouteProp = RouteProp<RootStackParamList, 'PwdSetting'>;
+
 export default function PwdSetting() {
+  const route = useRoute<PwdSettingRouteProp>();
+  const { email, agreements } = route.params;
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordState, setPasswordState] = useState<
@@ -203,7 +208,11 @@ export default function PwdSetting() {
           buttonTitle="확인"
           onClick={() => {
             setModalVisible(false);
-            navigation.navigate("Login");
+            navigation.navigate("ProfileMakingSplash", {
+              email,
+              password,
+              agreements
+            });
           }}
           textVariant="thirdText"
         />

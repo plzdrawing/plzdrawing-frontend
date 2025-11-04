@@ -164,7 +164,7 @@ export default function EmailVerification() {
           buttonTitle="확인"
           onClick={() => {
             setModalVisible(false);
-            navigation.navigate("VerificationComplete");
+            navigation.navigate("VerificationComplete", { email: email });
           }}
           textVariant="thirdText"
         />

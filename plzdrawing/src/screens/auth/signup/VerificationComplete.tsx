@@ -6,12 +6,17 @@ import { Col, Row } from "@/src/components/common/flex/Flex";
 import Header from "@/src/components/common/header/Header";
 import Txt from "@/src/components/common/text/Txt";
 import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 
+type VerificationCompleteRouteProp = RouteProp<RootStackParamList, 'VerificationComplete'>;
+
 export default function VerificationComplete() {
+  const route = useRoute<VerificationCompleteRouteProp>();
+  const { email } = route.params;
+
   const [agreements, setAgreements] = useState({
     all: false,
     terms: false,
@@ -46,7 +51,14 @@ export default function VerificationComplete() {
   };
 
   const handleNextButton = () => {  
-    navigation.navigate("PwdSetting");
+    navigation.navigate("PwdSetting", { 
+      email: email,
+      agreements: {
+        terms: agreements.terms,
+        privacy: agreements.privacy,
+        marketing: agreements.marketing,
+      }
+    });
   }
 
   const isNextEnabled = agreements.terms && agreements.privacy;

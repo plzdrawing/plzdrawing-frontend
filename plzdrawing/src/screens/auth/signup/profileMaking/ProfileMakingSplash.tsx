@@ -2,16 +2,26 @@ import Header from "@/src/components/common/header/Header";
 import React from "react";
 import Txt from "@/src/components/common/text/Txt";
 import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { useNavigation, NavigationProp, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import { Container } from "@/src/components/common/container/Container";
 import PrimaryButton from "@/src/components/common/button/PrimaryButton";
 import styled from "styled-components/native";
 
+type ProfileMakingSplashRouteProp = RouteProp<RootStackParamList, 'ProfileMakingSplash'>;
+
 export default function ProfileMakingSplash() {
+  const route = useRoute<ProfileMakingSplashRouteProp>();
+  const { email, password, agreements } = route.params;
+
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   const handleProfileMakingButtonOnClick = () => {
-    navigation.navigate("ProfileMakingNickname");
+    navigation.navigate("ProfileMakingNickname", {
+      email,
+      password,
+      agreements,
+    });
   };
 
   return (
