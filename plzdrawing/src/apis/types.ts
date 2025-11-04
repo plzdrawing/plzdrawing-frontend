@@ -30,6 +30,7 @@ export interface ApiError {
 
 // API 요청/응답 관련 타입들
 export interface LoginRequest {
+  provider: "EMAIL" | "KAKAO" | "NAVER";
   email: string;
   password: string;
 }

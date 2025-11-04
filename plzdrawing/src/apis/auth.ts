@@ -12,7 +12,7 @@ import {
 export const authApi = {
   // 로그인
   login: async (data: LoginRequest): Promise<ApiResponse<LoginResponse>> => {
-    const response = await apiClient.post('/auth/login', data);
+    const response = await apiClient.post('/api/auth/v1/login', data);
     return response.data;
   },
 

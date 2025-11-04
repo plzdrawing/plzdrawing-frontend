@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components/native";
 import { RootStackParamList } from "@/src/types/navigation";
-import colors from "@/src/constants/Colors";
 import Header from "@/src/components/common/header/Header";
 import Txt from "@/src/components/common/text/Txt";
 import { Container } from "@/src/components/common/container/Container";
@@ -10,6 +8,7 @@ import AuthButton from "@/src/components/common/button/AuthButton";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import TextField from "@/src/components/common/input/TextField";
 import AlertModal from "@/src/components/common/modal/AlertModal";
+import { authApi } from "@/src/apis/auth";
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -17,6 +16,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [emailState, setEmailState] = useState<"empty" | "filled" | "error">("empty");
   const [emailError, setEmailError] = useState("");
+  const [password, setPassword] = useState("");
   const [passwordState, setPasswordState] = useState<"empty" | "filled" | "error">("empty");
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -43,16 +43,26 @@ export default function Login() {
     navigation.navigate("PasswordFind");
   };
 
-  const handleLoginButtonOnClick = () => {
-    // 이메일 형식이 유효하지 않으면 로그인 막기
+  const handleLoginButtonOnClick = async () => {
     if (emailState === "error") {
       return;
     }
 
-    // 일치하는지 확인하는 로직 필요
-    navigation.navigate("Main");
-    // 일치하지 않을 경우 모달 띄우기
-    // setModalVisible(true);
+    try {
+      const response = await authApi.login({
+        provider: "EMAIL",
+        email: email,
+        password: password,
+      });
+
+      // 로그인 성공
+      navigation.navigate("Main");
+    } catch (error) {
+      // 로그인 실패 (네트워크 오류, 401, 500 등)
+      console.error("Login failed:", error);
+      // 일치하지 않을 경우 모달 띄우기
+      setModalVisible(true);
+    }
   };
 
   const handleConfirm = () => {
@@ -86,11 +96,14 @@ export default function Login() {
             placeholder="비밀번호"
             state={passwordState}
             setState={setPasswordState}
+            value={password}
+            onChangeText={setPassword}
             type="password"
             errorMessage="비밀번호를 다시 한 번 확인해주세요."
           />
 
           <AuthButton
+            isValid={email.trim() !== "" && password.trim() !== ""}
             title="로그인"
             type="login"
             onClick={handleLoginButtonOnClick}
