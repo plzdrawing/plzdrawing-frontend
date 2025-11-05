@@ -10,6 +10,7 @@ import PrimaryButton from "@/src/components/common/button/PrimaryButton";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import AlertModal from "@/src/components/common/modal/AlertModal";
+import { authApi } from "@/src/apis/auth";
 
 export default function PasswordFind() {
   const [email, setEmail] = useState("");
@@ -42,20 +43,30 @@ export default function PasswordFind() {
     }
   }, [email]);
 
-  const handleNextButtonOnClick = () => {
+  const handleNextButtonOnClick = async () => {
     if (!isButtonEnabled) return;
 
     console.log("인증번호 전송 버튼 클릭");
-    // TODO: 유효한 이메일인지 확인 API 호출
-    // TODO: 가입되지 않은 이메일일 경우 모달 띄우기
-    // setErrorModalVisible(true);
-    // TODO: 인증번호 전송 API 호출
-    setModalVisible(true);
+
+    try {
+      // [수정] API 호출
+      await authApi.requestPasswordReissue({ email });
+      // API 호출 성공
+      setModalVisible(true);
+    } catch (error) {
+      // API 호출 실패 (가입되지 않은 이메일 등)
+      console.error("Password reissue request failed:", error);
+      setErrorModalVisible(true);
+    }
   };
 
   const handleModalButtonClick = () => {
     setModalVisible(false);
-    navigation.navigate("PasswordFindVerification");
+    navigation.navigate("PasswordFindVerification", { email: email });
+  };
+
+  const handleModalClose = () => {
+    setErrorModalVisible(false);
   };
 
   return (
@@ -86,6 +97,7 @@ export default function PasswordFind() {
             color="sub_yellow"
             disabled={!isButtonEnabled}
             onClick={handleNextButtonOnClick}
+            isValid={isButtonEnabled}
           />
         </ButtonContainer>
       </BottomFixedArea>
@@ -93,7 +105,7 @@ export default function PasswordFind() {
         <AlertModal
           title={"가입되지 않은 이메일이에요."}
           buttonTitle="확인"
-          onClick={handleModalButtonClick}
+          onClick={handleModalClose}
           textVariant="thirdText"
         />
       )}

@@ -8,6 +8,8 @@ import {
   RefreshTokenRequest,
   RefreshTokenResponse,
   PasswordUpdateRequest,
+  PasswordReissueRequest,
+  PasswordReissueVerifyRequest,
 } from './types';
 
 export const authApi = {
@@ -17,36 +19,15 @@ export const authApi = {
     return response.data;
   },
 
-  // 로그아웃
-  logout: async (): Promise<ApiResponse> => {
-    const response = await apiClient.post('/auth/logout');
+  // 비밀번호 재발급 인증번호 전송 (POST)
+  requestPasswordReissue: async (data: PasswordReissueRequest): Promise<ApiResponse> => {
+    const response = await apiClient.post('/api/auth/email/v1/password/reissue', data);
     return response.data;
   },
 
-  // 토큰 갱신
-  refreshToken: async (data: RefreshTokenRequest): Promise<ApiResponse<RefreshTokenResponse>> => {
-    const response = await apiClient.post('/auth/refresh', data);
-    return response.data;
-  },
-
-  // 이메일 중복 확인
-  checkEmail: async (email: string): Promise<ApiResponse<{ available: boolean }>> => {
-    const response = await apiClient.get(`/auth/check-email?email=${email}`);
-    return response.data;
-  },
-
-  // 비밀번호 재설정 요청
-  requestPasswordReset: async (email: string): Promise<ApiResponse> => {
-    const response = await apiClient.post('/auth/password-reset-request', { email });
-    return response.data;
-  },
-
-  // 비밀번호 재설정
-  resetPassword: async (data: {
-    token: string;
-    newPassword: string;
-  }): Promise<ApiResponse> => {
-    const response = await apiClient.post('/auth/password-reset', data);
+  // 비밀번호 재발급 (PATCH)
+  verifyPasswordReissue: async (data: PasswordReissueVerifyRequest): Promise<ApiResponse> => {
+    const response = await apiClient.patch('/api/auth/email/v1/password/reissue', data);
     return response.data;
   },
 
@@ -56,6 +37,7 @@ export const authApi = {
     return response.data;
   },
 
+  // 비밀번호 변경
   updatePassword: async (data: PasswordUpdateRequest): Promise<ApiResponse> => {
     const response = await apiClient.patch('/api/auth/email/v1/password/update', data);
     return response.data;

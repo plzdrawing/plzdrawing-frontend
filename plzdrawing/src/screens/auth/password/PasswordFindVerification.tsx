@@ -8,28 +8,25 @@ import Txt from "@/src/components/common/text/Txt";
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, View, TextInput } from "react-native";
 import styled from "styled-components/native";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, useRoute, RouteProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import AlertModal from "@/src/components/common/modal/AlertModal";
+import { authApi } from "@/src/apis/auth";
+
+type PasswordFindVerificationRouteProp = RouteProp<RootStackParamList, 'PasswordFindVerification'>;
 
 export default function PasswordFindVerification() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const route = useRoute<PasswordFindVerificationRouteProp>();
+  const { email } = route.params;
+
   const [verificationCode, setVerificationCode] = useState([
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
+    "", "", "", "", "", "",
   ]);
   const [timeLeft, setTimeLeft] = useState(300);
   const inputRefs = useRef<Array<TextInput | null>>([
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
+    null, null, null, null, null, null,
   ]);
   const [modalVisible, setModalVisible] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
@@ -76,22 +73,14 @@ export default function PasswordFindVerification() {
     }
   };
 
-  const handleResendCode = () => {
+  const handleResendCode = async () => {
     setTimeLeft(300);
     setVerificationCode(["", "", "", "", "", ""]);
-  };
-
-  const verifyCode = async (code: string): Promise<boolean> => {
+    // [추가] 인증번호 재전송 API 호출
     try {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          //임시 "123456" 코드 유효하게함
-          resolve(code === "123456");
-        }, 500);
-      });
+      await authApi.requestPasswordReissue({ email });
     } catch (error) {
-      console.error("인증 코드 검증 중 오류 발생:", error);
-      return false;
+      console.error("Resend code failed:", error);
     }
   };
 
@@ -102,17 +91,17 @@ export default function PasswordFindVerification() {
     }
 
     try {
-      const isValid = await verifyCode(code);
+      await authApi.verifyPasswordReissue({
+        email: email,
+        authCode: code,
+      });
 
-      if (isValid) {
-        setModalVisible(true);
-      } else {
-        setErrorModalVisible(true);
-      }
+      // API 성공
+      setModalVisible(true);
     } catch (error) {
-      console.error("인증 처리 중 오류 발생:", error);
-    } finally {
-      // setIsLoading(false);
+      // API 실패
+      console.error("Verification failed:", error);
+      setErrorModalVisible(true);
     }
   };
 
@@ -163,6 +152,7 @@ export default function PasswordFindVerification() {
             color="sub_yellow"
             disabled={!isVerificationComplete}
             onClick={handleVerificationButtonClick}
+            isValid={isVerificationComplete}
           />
         </ButtonContainer>
       </BottomFixedArea>

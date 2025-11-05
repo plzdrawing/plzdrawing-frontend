@@ -130,3 +130,14 @@ export interface PasswordUpdateRequest {
   nowPassword: string;
   newPassword: string;
 }
+
+// 비밀번호 재발급(인증번호 전송) 요청 타입
+export interface PasswordReissueRequest {
+  email: string;
+}
+
+// 비밀번호 재발급(인증번호 확인) 요청 타입
+export interface PasswordReissueVerifyRequest {
+  email: string;
+  authCode: string;
+}

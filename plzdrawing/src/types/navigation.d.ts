@@ -23,7 +23,7 @@ export type RootStackParamList = {
   VerificationComplete: { email: string };
   PwdSetting: { email: string; agreements: Agreements };
   Chatting: undefined;
-  PasswordFindVerification: undefined;
+  PasswordFindVerification: { email: string };
   PainterProfile: undefined;
   HomePostDetail: { postId: string };
   HomeDrawingCardDetail: { cardId: string, postId: string };
