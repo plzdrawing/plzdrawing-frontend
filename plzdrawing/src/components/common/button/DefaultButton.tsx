@@ -16,6 +16,7 @@ interface DefaultButtonProps {
   variant?: "default" | "primary";
   disabled?: boolean;
   isLoading?: boolean;
+  isValid?: boolean;
 }
 
 export default function DefaultButton({
@@ -24,14 +25,27 @@ export default function DefaultButton({
   variant = "default",
   disabled = false,
   isLoading = false,
+  isValid = true,
 }: DefaultButtonProps) {
+  // 배경색에 알파값 적용
+    const getBackgroundColor = () => {
+      const baseColor = colors.colors["sub_yellow"];
+      if (isValid) return baseColor;
+      
+      // HEX to RGBA 변환 (35% 투명도)
+      const hex = baseColor.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      return `rgba(${r}, ${g}, ${b}, 0.35)`;
+    };
+
   const getButtonStyle = () => {
-    switch (variant) {
-      case "primary":
-        return styles.primaryButton;
-      default:
-        return styles.defaultButton;
-    }
+    const baseStyle = variant === "primary" ? styles.primaryButton : styles.defaultButton;
+    return {
+      ...baseStyle,
+      backgroundColor: variant === "primary" ? getBackgroundColor() : baseStyle.backgroundColor,
+    };
   };
 
   const buttonContent = (

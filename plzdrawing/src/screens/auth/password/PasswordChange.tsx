@@ -11,8 +11,14 @@ import {
   CommonActions,
   NavigationProp,
   useNavigation,
+  useRoute,
+  RouteProp,
 } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
+import { authApi } from "@/src/apis/auth";
+import AlertModal from "@/src/components/common/modal/AlertModal";
+
+type PasswordChangeRouteProp = RouteProp<RootStackParamList, 'PasswordChange'>;
 
 export default function PasswordChange() {
   const [pwdTextFieldState, setPwdTextFieldState] = useState<
@@ -29,23 +35,47 @@ export default function PasswordChange() {
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const handleNextButtonOnClick = () => {
-    console.log("다음 버튼 클릭");
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "Login" }],
-      })
-    );
-  };
+  const route = useRoute<PasswordChangeRouteProp>();
+  const { email } = route.params;
 
-  const [password, setPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const [newPwderrorMessage, setNewPwdErrorMessage] = useState("");
   const [newPwdCheckErrorMessage, setNewPwdCheckErrorMessage] = useState("");
 
+  const handleNextButtonOnClick = async () => {
+    if (!currentPassword.trim()) {
+      console.error("현재 비밀번호를 입력해주세요.");
+      return;
+    }
+    if (newPwdtextFieldState !== "filled") {
+      console.error("새 비밀번호를 올바르게 입력해주세요.");
+      return;
+    }
+    if (newPwdChecktextFieldState !== "filled") {
+      console.error("비밀번호 확인이 일치하지 않습니다.");
+      return;
+    }
+
+    try {
+      await authApi.updatePassword({
+        email: email,
+        nowPassword: currentPassword,
+        newPassword: newPassword,
+      });
+
+      // 성공 처리
+    } catch (error) {
+      // 에러 처리
+      console.error("Password update failed:", error);
+      console.error("비밀번호 변경에 실패했습니다.\n입력 정보를 확인해주세요.");
+    }
+  };
+
   const validatePassword = (text: string) => {
-    setPassword(text);
-    console.log("p", text);
+    setNewPassword(text); // [수정]
     const regex =
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     if (text === "") {
@@ -63,15 +93,16 @@ export default function PasswordChange() {
   };
 
   const validatePasswordCheck = (text: string) => {
+    setConfirmPassword(text); // [추가]
     if (text === "") {
       setNewPwdCheckTextFieldState("empty");
-    } else if (text !== password) {
+      setNewPwdCheckErrorMessage(""); // [추가]
+    } else if (text !== newPassword) { // [수정]
       setNewPwdCheckTextFieldState("error");
-      console.log("password", text);
       setNewPwdCheckErrorMessage("비밀번호가 일치하지 않아요.");
     } else {
-      console.log("password", text);
       setNewPwdCheckTextFieldState("filled");
+      setNewPwdCheckErrorMessage(""); // [추가]
     }
   };
 

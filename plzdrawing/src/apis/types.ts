@@ -123,3 +123,10 @@ export interface SignUpRequest {
 export interface SignUpResponse {
   memberId: number;
 }
+
+// 비밀번호 변경 요청 타입
+export interface PasswordUpdateRequest {
+  email: string;
+  nowPassword: string;
+  newPassword: string;
+}

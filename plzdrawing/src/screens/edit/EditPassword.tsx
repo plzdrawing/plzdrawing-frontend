@@ -6,14 +6,21 @@ import TextField from "@/src/components/common/input/TextField";
 import DefaultButton from "@/src/components/common/button/DefaultButton";
 import ProfileEditHeader from "./components/EditHeader";
 import { Alert } from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types/navigation';
+import { authApi } from "@/src/apis/auth";
 
 type EditPasswordNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type EditPasswordRouteProp = RouteProp<RootStackParamList, 'EditPassword'>;
 
 export default function EditPassword() {
   const navigation = useNavigation<EditPasswordNavigationProp>();
+  const route = useRoute<EditPasswordRouteProp>();
+  const { email: currentUserEmail } = route.params;
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const [pwdTextFieldState, setPwdTextFieldState] = useState<
     "empty" | "filled" | "error"
   >("empty");
@@ -68,7 +75,7 @@ export default function EditPassword() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!currentPassword.trim()) {
       Alert.alert("알림", "기존 비밀번호를 입력해주세요.");
       return;
@@ -84,7 +91,31 @@ export default function EditPassword() {
       return;
     }
 
-    navigation.navigate('EditSuccess', { type: 'password' });
+    if (!currentUserEmail) {
+      Alert.alert("오류", "사용자 정보가 없습니다. 잠시 후 다시 시도해주세요.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // API 호출
+      await authApi.updatePassword({
+        email: currentUserEmail,
+        nowPassword: currentPassword,
+        newPassword: newPassword,
+      });
+
+      // 성공 시
+      navigation.navigate('EditSuccess', { type: 'password' });
+
+    } catch (error) {
+      // 실패 시
+      console.error("Password update failed:", error);
+      Alert.alert("오류", "비밀번호 변경에 실패했습니다. 기존 비밀번호를 확인해주세요.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -136,6 +167,12 @@ export default function EditPassword() {
           title="확인"
           variant="primary"
           onPress={handleSubmit}
+          isLoading={isLoading}
+          isValid={
+            pwdTextFieldState === "filled" &&
+            newPwdtextFieldState === "filled" &&
+            newPwdChecktextFieldState === "filled"
+          }
         />
       </ButtonContainer>
     </Container>

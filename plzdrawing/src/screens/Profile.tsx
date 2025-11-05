@@ -27,7 +27,7 @@ type RootStackParamList = {
   ProfileEdit: undefined;
   Tos: undefined;
   EditAccount: undefined;
-  EditPassword: undefined;
+  EditPassword: { email: string };
   Payments: undefined;
 };
 
@@ -38,6 +38,7 @@ type ProfileScreenNavigationProp = NativeStackNavigationProp<
 export default function Profile() {
   const [selectedId, setSelectedId] = useState(0);
   const navigation = useNavigation<ProfileScreenNavigationProp>();
+  const [userEmail, setUserEmail] = useState("test@plz.com");
 
   const profleData: BaseProfile = {
     name: "똥강아지",
@@ -60,7 +61,15 @@ export default function Profile() {
 
   const accountMenuItems: ProfileMenuItem[] = [
     { icon: <MenuCircleIcon />, text: "회원정보 수정", onPress: () => {navigation.navigate("EditAccount")} },
-    { icon: <PasswordChangeIcon />, text: "비밀번호 변경", onPress: () => {navigation.navigate("EditPassword")} },
+    { icon: <PasswordChangeIcon />, text: "비밀번호 변경",
+      onPress: () => {
+        if (userEmail) { // 이메일이 있는지 확인
+          navigation.navigate("EditPassword", { email: userEmail });
+        } else {
+          console.error("사용자 정보(이메일)를 불러올 수 없습니다.");
+        }
+      }
+    },
   ];
 
   const loginMenuItems: ProfileMenuItem[] = [

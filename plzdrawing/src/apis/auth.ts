@@ -7,6 +7,7 @@ import {
   LoginResponse,
   RefreshTokenRequest,
   RefreshTokenResponse,
+  PasswordUpdateRequest,
 } from './types';
 
 export const authApi = {
@@ -52,6 +53,11 @@ export const authApi = {
   // 회원가입 API
   signup: async (data: SignUpRequest): Promise<ApiResponse<SignUpResponse>> => {
     const response = await apiClient.post('/api/auth/v1/signup', data);
+    return response.data;
+  },
+
+  updatePassword: async (data: PasswordUpdateRequest): Promise<ApiResponse> => {
+    const response = await apiClient.patch('/api/auth/email/v1/password/update', data);
     return response.data;
   },
 };

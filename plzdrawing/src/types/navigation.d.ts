@@ -18,7 +18,7 @@ export type RootStackParamList = {
   ProfileMakingNickname: { email: string; password: string; agreements: Agreements };
   ProfileMakingDone: undefined;
   PasswordFind: undefined;
-  PasswordChange: undefined;
+  PasswordChange: { email: string };
   EmailVerification: { email: string };
   VerificationComplete: { email: string };
   PwdSetting: { email: string; agreements: Agreements };
@@ -37,7 +37,7 @@ export type RootStackParamList = {
   ProfileEdit: undefined;
   Tos: undefined;
   EditAccount: undefined;
-  EditPassword: undefined;
+  EditPassword: { email: string };
   EditSuccess: { type: 'profile' | 'password' };
   Payments: undefined;
   UserProfile: undefined;
