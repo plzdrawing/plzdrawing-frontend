@@ -37,7 +37,7 @@ export type RootStackParamList = {
   ProfileEdit: undefined;
   Tos: undefined;
   EditAccount: undefined;
-  EditPassword: { email: string };
+  EditPassword: undefined;
   EditSuccess: { type: 'profile' | 'password' };
   Payments: undefined;
   UserProfile: undefined;

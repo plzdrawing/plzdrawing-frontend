@@ -41,7 +41,7 @@ export const authApi = {
     return response.data;
   },
 
-  // 비밀번호 변경
+  // 비밀번호 변경 (JWT 기반 - email 불필요)
   updatePassword: async (data: PasswordUpdateRequest): Promise<ApiResponse> => {
     const response = await apiClient.patch('/api/auth/email/v1/password/update', data);
     return response.data;

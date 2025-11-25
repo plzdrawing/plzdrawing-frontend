@@ -33,7 +33,7 @@ type RootStackParamList = {
   ProfileEdit: undefined;
   Tos: undefined;
   EditAccount: undefined;
-  EditPassword: { email: string };
+  EditPassword: undefined;
   Payments: undefined;
 };
 
@@ -45,7 +45,6 @@ export default function Profile() {
   const [selectedId, setSelectedId] = useState(0);
   const navigation = useNavigation<ProfileScreenNavigationProp>();
   const isFocused = useIsFocused();
-  const [userEmail, setUserEmail] = useState("");
   const [userProfile, setUserProfile] = useState<BaseProfile>({
     name: "",
     imageUrl: "",
@@ -83,8 +82,6 @@ export default function Profile() {
             imageUrl: data.profileImageUrl,
             hashtag: data.hashtags
           });
-          
-          setUserEmail(data.email || "");
         } 
         // ApiResponse 구조인 경우: { success, data }
         else if (data?.success && data?.data) {
@@ -93,7 +90,6 @@ export default function Profile() {
             imageUrl: data.data.profileImageUrl || data.data.profileImage || "",
             hashtag: data.data.hashtags || data.data.tags || [],
           });
-          setUserEmail(data.data.email || "");
         } else {
           // 데이터가 없을 때 기본값 설정
           console.log('No user data, using default values');
@@ -181,11 +177,7 @@ export default function Profile() {
     // { icon: <MenuCircleIcon />, text: "회원정보 수정", onPress: () => {navigation.navigate("EditAccount")} },
     { icon: <PasswordChangeIcon />, text: "비밀번호 변경",
       onPress: () => {
-        if (userEmail) { // 이메일이 있는지 확인
-          navigation.navigate("EditPassword", { email: userEmail });
-        } else {
-          console.error("사용자 정보(이메일)를 불러올 수 없습니다.");
-        }
+        navigation.navigate("EditPassword");
       }
     },
   ];

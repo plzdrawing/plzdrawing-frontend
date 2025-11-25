@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Alert } from "react-native";
 import { RootStackParamList } from "@/src/types/navigation";
 import Header from "@/src/components/common/header/Header";
 import Txt from "@/src/components/common/text/Txt";
@@ -67,7 +66,6 @@ export default function Login() {
     } catch (error) {
       // 로그인 실패 (네트워크 오류, 401, 500 등)
       console.error("Login failed:", error);
-      Alert.alert('로그인 실패', '에러: ' + (error instanceof Error ? error.message : String(error)));
       // 일치하지 않을 경우 모달 띄우기
       setModalVisible(true);
     }

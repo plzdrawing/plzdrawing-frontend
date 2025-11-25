@@ -18,7 +18,9 @@ export default function EditSuccess() {
   const { type } = route.params;
 
   const handleConfirm = () => {
-    navigation.navigate('Main');
+    // Profile 화면으로 돌아가기 (2번 goBack: EditPassword/EditAccount -> Profile)
+    navigation.goBack();
+    navigation.goBack();
   };
 
   return (

@@ -6,18 +6,15 @@ import TextField from "@/src/components/common/input/TextField";
 import DefaultButton from "@/src/components/common/button/DefaultButton";
 import ProfileEditHeader from "./components/EditHeader";
 import { Alert } from "react-native";
-import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types/navigation';
 import { authApi } from "@/src/apis/auth";
 
 type EditPasswordNavigationProp = NativeStackNavigationProp<RootStackParamList>;
-type EditPasswordRouteProp = RouteProp<RootStackParamList, 'EditPassword'>;
 
 export default function EditPassword() {
   const navigation = useNavigation<EditPasswordNavigationProp>();
-  const route = useRoute<EditPasswordRouteProp>();
-  const { email: currentUserEmail } = route.params;
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -91,17 +88,11 @@ export default function EditPassword() {
       return;
     }
 
-    if (!currentUserEmail) {
-      Alert.alert("오류", "사용자 정보가 없습니다. 잠시 후 다시 시도해주세요.");
-      return;
-    }
-
     setIsLoading(true);
 
     try {
-      // API 호출
+      // API 호출 (JWT 토큰으로 사용자 식별)
       await authApi.updatePassword({
-        email: currentUserEmail,
         nowPassword: currentPassword,
         newPassword: newPassword,
       });
