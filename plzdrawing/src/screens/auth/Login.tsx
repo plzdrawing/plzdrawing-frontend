@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Alert } from "react-native";
 import { RootStackParamList } from "@/src/types/navigation";
 import Header from "@/src/components/common/header/Header";
 import Txt from "@/src/components/common/text/Txt";
@@ -56,15 +57,7 @@ export default function Login() {
         password: password,
       });
 
-      // 로그인 성공 - 토큰 저장
-      if (response.data?.accessToken) {
-        await AsyncStorage.setItem('accessToken', response.data.accessToken);
-        if (response.data.refreshToken) {
-          await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
-        }
-      }
-
-      // 로그인 성공 후 뒤로가기 방지를 위해 reset 사용
+      // 로그인 성공 - 토큰은 interceptor에서 자동 저장됨
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -74,6 +67,7 @@ export default function Login() {
     } catch (error) {
       // 로그인 실패 (네트워크 오류, 401, 500 등)
       console.error("Login failed:", error);
+      Alert.alert('로그인 실패', '에러: ' + (error instanceof Error ? error.message : String(error)));
       // 일치하지 않을 경우 모달 띄우기
       setModalVisible(true);
     }

@@ -35,7 +35,41 @@ apiClient.interceptors.request.use(
 
 // 응답 인터셉터 (Response Interceptor)
 apiClient.interceptors.response.use(
-  (response) => response, // 성공 응답은 그대로 반환
+  async (response) => {
+    // Set-Cookie 헤더에서 토큰 추출
+    const setCookieHeader = response.headers['set-cookie'];
+    
+    if (setCookieHeader) {
+      console.log('Set-Cookie headers:', setCookieHeader);
+      
+      // Set-Cookie는 배열 또는 문자열일 수 있음
+      const cookies = Array.isArray(setCookieHeader) ? setCookieHeader : [setCookieHeader];
+      
+      for (const cookie of cookies) {
+        // access_token 추출
+        if (cookie.includes('access_token=')) {
+          const match = cookie.match(/access_token=([^;]+)/);
+          if (match && match[1]) {
+            const token = match[1];
+            console.log('Found access_token in cookie:', token.substring(0, 20) + '...');
+            await AsyncStorage.setItem('accessToken', token);
+          }
+        }
+        
+        // refresh_token 추출
+        if (cookie.includes('refresh_token=')) {
+          const match = cookie.match(/refresh_token=([^;]+)/);
+          if (match && match[1]) {
+            const refreshToken = match[1];
+            console.log('Found refresh_token in cookie');
+            await AsyncStorage.setItem('refreshToken', refreshToken);
+          }
+        }
+      }
+    }
+    
+    return response;
+  },
   (error) => {
     // 401 Unauthorized 에러 시 토큰 갱신 또는 로그아웃 처리
     if (error.response?.status === 401) {

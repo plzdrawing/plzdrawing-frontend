@@ -16,6 +16,10 @@ export const authApi = {
   // 로그인
   login: async (data: LoginRequest): Promise<ApiResponse<LoginResponse>> => {
     const response = await apiClient.post('/api/auth/v1/login', data);
+    console.log('Raw axios response:', response);
+    console.log('response.data:', response.data);
+    console.log('response.data type:', typeof response.data);
+    console.log('response.data keys:', Object.keys(response.data || {}));
     return response.data;
   },
 

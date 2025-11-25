@@ -82,7 +82,7 @@ const Container = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 30px 32px 0 32px;
+  padding: 10px 32px 0 32px;
   background-color: #fff;
   border-bottom-width: 1px;
   border-bottom-color: ${Colors.colors.seperator};

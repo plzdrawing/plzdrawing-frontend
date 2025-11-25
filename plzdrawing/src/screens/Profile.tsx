@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BackHandler } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styled from "styled-components/native";
 import colors from "@/src/constants/Colors";
 import HomeHeader from "@/src/components/home/HomeHeader";
@@ -19,6 +20,7 @@ import MenuGroup from "@/src/screens/profile/mypage/ProfileMenuGroup";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import Colors from "@/src/constants/Colors";
+import { userApi } from "@/src/apis/user";
 
 type RootStackParamList = {
   Profile: undefined;
@@ -40,7 +42,78 @@ export default function Profile() {
   const [selectedId, setSelectedId] = useState(0);
   const navigation = useNavigation<ProfileScreenNavigationProp>();
   const isFocused = useIsFocused();
-  const [userEmail, setUserEmail] = useState("test@plz.com");
+  const [userEmail, setUserEmail] = useState("");
+  const [userProfile, setUserProfile] = useState<BaseProfile>({
+    name: "",
+    imageUrl: "",
+    hashtag: [],
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 사용자 정보 조회
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await userApi.getMe();
+        console.log('User data response:', response);
+        
+        // any로 캐스팅하여 실제 API 응답 구조 처리
+        const data = response as any;
+        
+        // 실제 응답 구조: { nickname, hashtags, introduction, profileImageUrl }
+        if (data && (data.nickname || data.hashtags)) {
+          console.log('Mapping profile data:', {
+            nickname: data.nickname,
+            profileImageUrl: data.profileImageUrl,
+            hashtags: data.hashtags
+          });
+          
+          setUserProfile({
+            name: data.nickname || "사용자",
+            imageUrl: data.profileImageUrl || "",
+            hashtag: data.hashtags || [],
+          });
+          
+          console.log('UserProfile set to:', {
+            name: data.nickname,
+            imageUrl: data.profileImageUrl,
+            hashtag: data.hashtags
+          });
+          
+          setUserEmail(data.email || "");
+        } 
+        // ApiResponse 구조인 경우: { success, data }
+        else if (data?.success && data?.data) {
+          setUserProfile({
+            name: data.data.nickname || data.data.name || "사용자",
+            imageUrl: data.data.profileImageUrl || data.data.profileImage || "",
+            hashtag: data.data.hashtags || data.data.tags || [],
+          });
+          setUserEmail(data.data.email || "");
+        } else {
+          // 데이터가 없을 때 기본값 설정
+          console.log('No user data, using default values');
+          setUserProfile({
+            name: "사용자",
+            imageUrl: "",
+            hashtag: ["#프로필", "#미작성"],
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        // 에러 발생 시에도 기본값 설정
+        setUserProfile({
+          name: "사용자",
+          imageUrl: "",
+          hashtag: ["#프로필", "#미작성"],
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   // 마이 페이지에서 뒤로가기 시 그림홈으로 이동
   useEffect(() => {
@@ -54,12 +127,6 @@ export default function Profile() {
 
     return () => backHandler.remove();
   }, [isFocused, navigation]);
-
-  const profleData: BaseProfile = {
-    name: "똥강아지",
-    imageUrl: "",
-    hashtag: ["#귀여운", "#낙서"],
-  };
 
   const settingsMenuItems: ProfileMenuItem[] = [
     { icon: <AlarmIcon />, text: "알림 설정", onPress: () => {navigation.navigate("AlarmSetting")} },
@@ -107,7 +174,7 @@ export default function Profile() {
           style={{ flex: 1, backgroundColor: colors.colors.light_gray1, paddingTop: 16 }}
         >
           <ProfileInfoSection
-            profile={profleData}
+            profile={userProfile}
             onEditPress={() => navigation.navigate("ProfileEdit")}
           />
 

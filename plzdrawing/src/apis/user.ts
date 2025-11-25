@@ -9,6 +9,12 @@ import {
 } from './types';
 
 export const userApi = {
+  // 현재 로그인한 사용자 정보 조회 (JWT 기반)
+  getMe: async (): Promise<ApiResponse<UserProfile>> => {
+    const response = await apiClient.get('/api/member/v1/me');
+    return response.data;
+  },
+
   // 현재 사용자 프로필 조회
   getMyProfile: async (): Promise<ApiResponse<UserProfile>> => {
     const response = await apiClient.get('/user/profile');
