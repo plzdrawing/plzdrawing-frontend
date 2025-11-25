@@ -1,13 +1,28 @@
 import { Container } from "../../components/common/container/Container";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation, useIsFocused } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { BackHandler } from "react-native";
 import HomeHeader from "@/src/components/home/HomeHeader";
 import { TalkList, TalkData } from "./components/TalkList";
 import { NoTalk } from "./components/NoTalk";
 
 export default function Talk() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const isFocused = useIsFocused();
+  
+  // 그림톡 페이지에서 뒤로가기 시 그림홈으로 이동
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (isFocused) {
+        (navigation as any).navigate('그림홈');
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [isFocused, navigation]);
   
   const [talks, setTalks] = useState<TalkData[]>([
     {

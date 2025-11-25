@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { BackHandler } from "react-native";
 import styled from "styled-components/native";
 import colors from "@/src/constants/Colors";
 import HomeHeader from "@/src/components/home/HomeHeader";
@@ -16,7 +17,7 @@ import {
 import ProfileInfoSection from "@/src/screens/profile/mypage/ProfileInfoSection";
 import MenuGroup from "@/src/screens/profile/mypage/ProfileMenuGroup";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import Colors from "@/src/constants/Colors";
 
 type RootStackParamList = {
@@ -38,7 +39,21 @@ type ProfileScreenNavigationProp = NativeStackNavigationProp<
 export default function Profile() {
   const [selectedId, setSelectedId] = useState(0);
   const navigation = useNavigation<ProfileScreenNavigationProp>();
+  const isFocused = useIsFocused();
   const [userEmail, setUserEmail] = useState("test@plz.com");
+
+  // 마이 페이지에서 뒤로가기 시 그림홈으로 이동
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (isFocused) {
+        (navigation as any).navigate('그림홈');
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [isFocused, navigation]);
 
   const profleData: BaseProfile = {
     name: "똥강아지",

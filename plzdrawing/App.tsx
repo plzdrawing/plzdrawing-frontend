@@ -4,6 +4,7 @@ import { ActivityIndicator, View, StyleSheet } from "react-native";
 import * as Font from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginSplash from "@/src/screens/auth/LoginSplash";
 import Login from "@/src/screens/auth/Login";
 import MainNavigation from "@/src/navigation/MainNavigation";
@@ -41,12 +42,12 @@ import UserProfile from "@/src/screens/userProfile/UserProfile";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-function AppNavigator() {
+function AppNavigator({ isLoggedIn }: { isLoggedIn: boolean }) {
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName="LoginSplash"
+        initialRouteName={isLoggedIn ? "Main" : "LoginSplash"}
         // initialRouteName="Chatting"
       >
         <Stack.Screen name="Main" component={MainNavigation} />
@@ -103,6 +104,8 @@ function AppNavigator() {
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false); // 폰트 로드 상태
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true); // 인증 확인 상태
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태
 
   // 폰트 로드 함수
   const loadFonts = async () => {
@@ -113,13 +116,27 @@ export default function App() {
     setFontsLoaded(true);
   };
 
+  // 로그인 상태 확인 함수
+  const checkLoginStatus = async () => {
+    try {
+      const token = await AsyncStorage.getItem('accessToken');
+      setIsLoggedIn(!!token);
+    } catch (error) {
+      console.error('Failed to check login status:', error);
+      setIsLoggedIn(false);
+    } finally {
+      setIsCheckingAuth(false);
+    }
+  };
+
   // 앱 로딩 처리
   useEffect(() => {
     loadFonts();
+    checkLoginStatus();
   }, []);
 
-  // 폰트 로딩 중인 경우
-  if (!fontsLoaded) {
+  // 폰트 로딩 중이거나 인증 확인 중인 경우
+  if (!fontsLoaded || isCheckingAuth) {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color="#FFC311" />
@@ -128,7 +145,7 @@ export default function App() {
   }
 
   // AppNavigator로 네비게이션 관리
-  return <AppNavigator />;
+  return <AppNavigator isLoggedIn={isLoggedIn} />;
 }
 
 const styles = StyleSheet.create({

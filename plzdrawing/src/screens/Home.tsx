@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, BackHandler } from "react-native";
 import colors from "@/src/constants/Colors";
 import { Container } from "../components/common/container/Container";
 import HomeHeader from "../components/home/HomeHeader";
@@ -8,9 +8,9 @@ import styled from "styled-components/native";
 import { PencilIcon } from "@/assets/images";
 import HomeCard from "../components/home/HomeCard";
 import ReviewCard from "../components/home/ReviewCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 type RootStackParamList = {
@@ -26,6 +26,20 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 export default function Home() {
   const [selectedId, setSelectedId] = useState(0);
   const navigation = useNavigation<HomeScreenNavigationProp>();
+  const isFocused = useIsFocused();
+
+  // 그림홈에서 뒤로가기 버튼 처리 - 앱 종료 (그림홈이 포커스되어 있을 때만)
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (isFocused) {
+        BackHandler.exitApp();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [isFocused]);
 
   /**
    * Handles navigation to the detail screen.

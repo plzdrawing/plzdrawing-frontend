@@ -5,10 +5,11 @@ import Txt from "@/src/components/common/text/Txt";
 import { Container } from "@/src/components/common/container/Container";
 import { Col } from "@/src/components/common/flex/Flex";
 import AuthButton from "@/src/components/common/button/AuthButton";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation, CommonActions } from "@react-navigation/native";
 import TextField from "@/src/components/common/input/TextField";
 import AlertModal from "@/src/components/common/modal/AlertModal";
 import { authApi } from "@/src/apis/auth";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -44,26 +45,38 @@ export default function Login() {
   };
 
   const handleLoginButtonOnClick = async () => {
-    // if (emailState === "error") {
-    //   return;
-    // }
+    if (emailState === "error") {
+      return;
+    }
 
-    // try {
-    //   const response = await authApi.login({
-    //     provider: "EMAIL",
-    //     email: email,
-    //     password: password,
-    //   });
+    try {
+      const response = await authApi.login({
+        provider: "EMAIL",
+        email: email,
+        password: password,
+      });
 
-    //   // 로그인 성공
-    //   navigation.navigate("Main");
-    // } catch (error) {
-    //   // 로그인 실패 (네트워크 오류, 401, 500 등)
-    //   console.error("Login failed:", error);
-    //   // 일치하지 않을 경우 모달 띄우기
-    //   setModalVisible(true);
-    // }
-    navigation.navigate("Main");
+      // 로그인 성공 - 토큰 저장
+      if (response.data?.accessToken) {
+        await AsyncStorage.setItem('accessToken', response.data.accessToken);
+        if (response.data.refreshToken) {
+          await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
+        }
+      }
+
+      // 로그인 성공 후 뒤로가기 방지를 위해 reset 사용
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Main' }],
+        })
+      );
+    } catch (error) {
+      // 로그인 실패 (네트워크 오류, 401, 500 등)
+      console.error("Login failed:", error);
+      // 일치하지 않을 경우 모달 띄우기
+      setModalVisible(true);
+    }
   };
 
   const handleConfirm = () => {
