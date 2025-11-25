@@ -39,7 +39,7 @@ const ChatInput = (props: ChatInputProps) => {
   return (
     <Col>
       <Row
-        padding="13px 32px"
+        padding="12px 18px"
         alignItems="center"
         justifyContent="space-between"
         gap={6}
@@ -47,7 +47,7 @@ const ChatInput = (props: ChatInputProps) => {
       >
         <TouchableOpacity onPress={handleOpenMenu}>
           <IconContainer color={Colors.colors.main_yellow}>
-            <AddIcon />
+            <CameraIcon />
           </IconContainer>
         </TouchableOpacity>
         <ChattingTextInput
@@ -66,7 +66,7 @@ const ChatInput = (props: ChatInputProps) => {
       {isOpenMenu && (
         <Col padding="15px 32px" gap={12}>
           <Row gap={14} alignItems="center">
-            <IconContainer color={Colors.colors.light_gray1} width="1px">
+            <IconContainer color={Colors.colors.light_gray1} width={1}>
               <FileIcon />
             </IconContainer>
             <Txt variant="bodyText" color="black">
@@ -74,7 +74,7 @@ const ChatInput = (props: ChatInputProps) => {
             </Txt>
           </Row>
           <Row gap={14} alignItems="center">
-            <IconContainer color={Colors.colors.light_gray1} width="1px">
+            <IconContainer color={Colors.colors.light_gray1} width={1}>
               <PictureIcon />
             </IconContainer>
             <Txt variant="bodyText" color="black">
@@ -82,7 +82,7 @@ const ChatInput = (props: ChatInputProps) => {
             </Txt>
           </Row>
           <Row gap={14} alignItems="center">
-            <IconContainer color={Colors.colors.light_gray1} width="1px">
+            <IconContainer color={Colors.colors.light_gray1} width={1}>
               <CameraIcon />
             </IconContainer>
             <Txt variant="bodyText" color="black">
@@ -90,7 +90,7 @@ const ChatInput = (props: ChatInputProps) => {
             </Txt>
           </Row>
           <Row gap={14} alignItems="center">
-            <IconContainer color={Colors.colors.light_gray1} width="1px">
+            <IconContainer color={Colors.colors.light_gray1} width={1}>
               <DrawerIcon />
             </IconContainer>
             <Txt variant="bodyText" color="black">
@@ -118,13 +118,13 @@ const ChattingTextInput = styled(TextInput)`
   padding: 13.5px 16px;
 `;
 
-const IconContainer = styled.View`
+const IconContainer = styled.View<{ color: string; width?: number }>`
   width: 45px;
   height: 45px;
   justify-content: center;
   align-items: center;
-  background-color: ${(props: { color: string }) => props.color};
-  border-width: ${(props: { width: string }) => props.width};
+  background-color: ${(props) => props.color};
+  border-width: ${(props) => props.width || 0};
   border-color: ${Colors.colors.light_gray2};
   border-radius: 12px;
 `;

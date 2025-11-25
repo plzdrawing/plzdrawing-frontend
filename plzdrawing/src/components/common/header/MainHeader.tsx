@@ -65,7 +65,7 @@ const MainHeader = ({ title, subTitle, state, onClick }: MainHeaderProps) => {
           </Txt>
         </Row>
       </Row>
-      {state && (
+      {/* {state && (
         <StateBox state={state}>
           <Txt
             variant="bodyText"
@@ -76,7 +76,7 @@ const MainHeader = ({ title, subTitle, state, onClick }: MainHeaderProps) => {
             {getType()}
           </Txt>
         </StateBox>
-      )}
+      )} */}
     </Container>
   );
 };

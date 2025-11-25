@@ -12,7 +12,7 @@ interface ReceiverBoxProps extends ViewProps {
 const ReceiverBox = (props: ReceiverBoxProps) => {
   const { message } = props;
   return (
-    <Row justifyContent="flex-start" alignItems="flex-start" gap={17}>
+    <Row justifyContent="flex-start" alignItems="flex-start" gap={17} style={{ maxWidth: '100%' }}>
       <ProfileImage />
       <ChattingTextBox>
         <Txt>{message}</Txt>
@@ -24,21 +24,23 @@ const ReceiverBox = (props: ReceiverBoxProps) => {
 const ProfileImage = styled.Image`
   width: 40px;
   height: 40px;
-  border-radius: 5px;
+  border-radius: 12px;
   background-color: ${Colors.colors.light_gray2};
 `;
 
 const ChattingTextBox = styled.View`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   text-align: left;
   color: ${Colors.colors.black};
-  background-color: ${Colors.colors.white};
+  background-color: ${Colors.colors.sub_yellow};
   border-radius: 10px;
-  border-width: 1px;
+  border-width: 1;
   border-color: ${Colors.colors.main_yellow};
   padding: 10px 20px;
+  max-width: 70%;
+  flex-shrink: 1;
 `;
 
 export default ReceiverBox;

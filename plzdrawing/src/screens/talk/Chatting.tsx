@@ -14,10 +14,13 @@ import {
 import SenderBox from "@/src/components/chat/SenderBox";
 import ReceiverBox from "@/src/components/chat/ReceiverBox";
 import AlertModal from "@/src/components/common/modal/AlertModal";
+import TalkProcess from "@/src/components/chat/TalkProcess";
+import RequestBox from "@/src/components/chat/RequestBox";
 
 interface Message {
-  message: string;
   isSender: boolean;
+  message: string;
+  type?: "request" | "accept" | "reject" | "completePayment" | "check" | "feedback";
 }
 
 export default function Chatting() {
@@ -28,10 +31,15 @@ export default function Chatting() {
   const [sendMessage, setSendMessage] = useState("");
   const [isOpenedMenu, setIsOpenedMenu] = useState(false);
   const [messageList, setMessageList] = useState<Message[]>([
-    { message: "안녕하세요", isSender: true },
-    { message: "안녕하세요", isSender: false },
-    { message: "안녕하세요", isSender: false },
-    { message: "안녕하세요", isSender: false },
+    { isSender: false, message: "안녕하세요" },
+    { isSender: false, message: "안녕하세요" },
+    { isSender: true, message: "안녕하세요" },
+    { isSender: true, message: "안녕하세요", type: "request" },
+    { isSender: false, message: "안녕하세요", type: "accept" },
+    { isSender: false, message: "안녕하세요", type: "reject" },
+    { isSender: true, message: "안녕하세요", type: "completePayment"},
+    { isSender: false, message: "안녕하세요", type: "check" },
+    { isSender: true, message: "안녕하세요", type: "feedback" },
   ]);
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -93,6 +101,12 @@ export default function Chatting() {
         }}
       >
         <ContentContainer>
+          <TalkProcess 
+            imageUrl=""
+            title="귀여운 그림"
+            price={500}
+            process="inProgress"
+          />
           <ScrollContainer
             ref={scrollViewRef}
             contentContainerStyle={{ flexGrow: 1 }}
@@ -104,20 +118,32 @@ export default function Chatting() {
               }}
             >
               <ChattingContainer>
-                {messageList.map((message, index) =>
-                  message.isSender ? (
+                {messageList.map((message, index) => {
+                  if (message.type) {
+                    return (
+                      <RequestBox
+                        key={index}
+                        type={message.type}
+                        imageUrl=""
+                        title="귀여운 그림"
+                        price={1000}
+                        description="30분 예상 / 수정..."
+                      />
+                    );
+                  }
+                  return message.isSender ? (
                     <SenderBox key={index} message={message.message} />
                   ) : (
                     <ReceiverBox key={index} message={message.message} />
-                  )
-                )}
+                  );
+                })}
               </ChattingContainer>
             </TouchableWithoutFeedback>
           </ScrollContainer>
           <ChatInput
             message={sendMessage}
             setMessage={setSendMessage}
-            handleSendMessage={() => setModalVisible(true)}
+            handleSendMessage={handleSendMessage}
             isOpenMenu={isOpenedMenu}
             setIsOpenMenu={setIsOpenedMenu}
           />
@@ -142,12 +168,10 @@ const ScrollContainer = styled.ScrollView`
 
 const ChattingContainer = styled.View`
   display: flex;
-  justify-content: flex-end;
   align-items: flex-end;
   padding: 17px 32px;
   gap: 17px;
   width: 100%;
-  flex: 1;
   background-color: ${Colors.colors.light_gray1};
 `;
 

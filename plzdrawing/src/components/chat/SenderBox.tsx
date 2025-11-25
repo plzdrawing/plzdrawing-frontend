@@ -23,12 +23,15 @@ const SenderBox = (props: SenderBoxProps) => {
 const ChattingTextBox = styled.View`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   text-align: left;
   color: ${Colors.colors.black};
-  background-color: ${Colors.colors.sub_yellow};
+  background-color: ${Colors.colors.white};
   border-radius: 10px;
+  border-width: 1;
+  border-color: ${Colors.colors.main_yellow};
   padding: 10px 20px;
+  max-width: 70%;
 `;
 
 export default SenderBox;

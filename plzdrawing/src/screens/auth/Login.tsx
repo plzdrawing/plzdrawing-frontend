@@ -44,25 +44,26 @@ export default function Login() {
   };
 
   const handleLoginButtonOnClick = async () => {
-    if (emailState === "error") {
-      return;
-    }
+    // if (emailState === "error") {
+    //   return;
+    // }
 
-    try {
-      const response = await authApi.login({
-        provider: "EMAIL",
-        email: email,
-        password: password,
-      });
+    // try {
+    //   const response = await authApi.login({
+    //     provider: "EMAIL",
+    //     email: email,
+    //     password: password,
+    //   });
 
-      // 로그인 성공
-      navigation.navigate("Main");
-    } catch (error) {
-      // 로그인 실패 (네트워크 오류, 401, 500 등)
-      console.error("Login failed:", error);
-      // 일치하지 않을 경우 모달 띄우기
-      setModalVisible(true);
-    }
+    //   // 로그인 성공
+    //   navigation.navigate("Main");
+    // } catch (error) {
+    //   // 로그인 실패 (네트워크 오류, 401, 500 등)
+    //   console.error("Login failed:", error);
+    //   // 일치하지 않을 경우 모달 띄우기
+    //   setModalVisible(true);
+    // }
+    navigation.navigate("Main");
   };
 
   const handleConfirm = () => {

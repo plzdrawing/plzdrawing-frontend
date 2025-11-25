@@ -47,6 +47,7 @@ function AppNavigator() {
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
         initialRouteName="LoginSplash"
+        // initialRouteName="Chatting"
       >
         <Stack.Screen name="Main" component={MainNavigation} />
         <Stack.Screen name="LoginSplash" component={LoginSplash} />
