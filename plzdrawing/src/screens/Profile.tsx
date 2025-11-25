@@ -21,6 +21,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import Colors from "@/src/constants/Colors";
 import { userApi } from "@/src/apis/user";
+import { authApi } from "@/src/apis/auth";
+import { CommonActions } from "@react-navigation/native";
 
 type RootStackParamList = {
   Profile: undefined;
@@ -128,21 +130,52 @@ export default function Profile() {
     return () => backHandler.remove();
   }, [isFocused, navigation]);
 
+  // 로그아웃 처리
+  const handleLogout = async () => {
+    try {
+      // 로그아웃 API 호출
+      await authApi.logout();
+      
+      // AsyncStorage에서 토큰 삭제
+      await AsyncStorage.removeItem('accessToken');
+      await AsyncStorage.removeItem('refreshToken');
+      
+      // 로그인 화면으로 이동 (뒤로가기 방지)
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'LoginSplash' }],
+        })
+      );
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // 에러가 발생해도 로컬 토큰은 삭제하고 로그인 화면으로 이동
+      await AsyncStorage.removeItem('accessToken');
+      await AsyncStorage.removeItem('refreshToken');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'LoginSplash' }],
+        })
+      );
+    }
+  };
+
   const settingsMenuItems: ProfileMenuItem[] = [
     { icon: <AlarmIcon />, text: "알림 설정", onPress: () => {navigation.navigate("AlarmSetting")} },
-    { icon: <LanguageIcon />, text: "언어 설정", onPress: () => {} },
+    // { icon: <LanguageIcon />, text: "언어 설정", onPress: () => {} },
   ];
 
   const supportMenuItems: ProfileMenuItem[] = [
     { icon: <MegaphoneIcon />, text: "공지사항", onPress: () => {navigation.navigate("Notice");} },
     { icon: <QuestionIcon />, text: "고객센터", onPress: () => {navigation.navigate("CustomerService")} },
     { icon: <QuestionIcon />, text: "1:1 문의하기", onPress: () => {} },
-    { icon: <MultipleFileIcon />, text: "이용약관", onPress: () => {navigation.navigate("Tos");} },
+    { icon: <MultipleFileIcon />, text: "앱 관리", onPress: () => {navigation.navigate("Tos");} },
     { icon: <MenuCircleIcon />, text: "결제내역", onPress: () => {navigation.navigate("Payments");} },
   ];
 
   const accountMenuItems: ProfileMenuItem[] = [
-    { icon: <MenuCircleIcon />, text: "회원정보 수정", onPress: () => {navigation.navigate("EditAccount")} },
+    // { icon: <MenuCircleIcon />, text: "회원정보 수정", onPress: () => {navigation.navigate("EditAccount")} },
     { icon: <PasswordChangeIcon />, text: "비밀번호 변경",
       onPress: () => {
         if (userEmail) { // 이메일이 있는지 확인
@@ -155,7 +188,7 @@ export default function Profile() {
   ];
 
   const loginMenuItems: ProfileMenuItem[] = [
-    { text: "로그아웃", onPress: () => {} },
+    { text: "로그아웃", onPress: handleLogout },
     { text: "회원탈퇴", onPress: () => {} },
   ];
 
@@ -178,14 +211,10 @@ export default function Profile() {
             onEditPress={() => navigation.navigate("ProfileEdit")}
           />
 
-          <MenuGroup
-            title="설정"
-            items={settingsMenuItems}
-            showSeparator={false}
-          />
+          <MenuGroup title="설정" items={settingsMenuItems} />
           <MenuGroup title="정보 및 지원" items={supportMenuItems} />
           <MenuGroup title="계정 설정" items={accountMenuItems} />
-          <MenuGroup title="로그인" items={loginMenuItems} />
+          <MenuGroup title="계정" items={loginMenuItems} />
         </Col>
       </ScrollContainer>
     </Container>

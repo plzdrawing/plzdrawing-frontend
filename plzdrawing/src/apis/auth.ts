@@ -46,6 +46,12 @@ export const authApi = {
     const response = await apiClient.patch('/api/auth/email/v1/password/update', data);
     return response.data;
   },
+
+  // 로그아웃
+  logout: async (): Promise<ApiResponse> => {
+    const response = await apiClient.post('/api/auth/v1/logout');
+    return response.data;
+  },
 };
 
 // 이메일 인증 코드 전송 API
