@@ -18,11 +18,12 @@ import {
 import ProfileInfoSection from "@/src/screens/profile/mypage/ProfileInfoSection";
 import MenuGroup from "@/src/screens/profile/mypage/ProfileMenuGroup";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import { useNavigation, useIsFocused, useFocusEffect } from "@react-navigation/native";
 import Colors from "@/src/constants/Colors";
 import { userApi } from "@/src/apis/user";
 import { authApi } from "@/src/apis/auth";
 import { CommonActions } from "@react-navigation/native";
+import React from "react";
 
 type RootStackParamList = {
   Profile: undefined;
@@ -52,12 +53,13 @@ export default function Profile() {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // 사용자 정보 조회
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await userApi.getMe();
-        console.log('User data response:', response);
+  // 사용자 정보 조회 - 화면이 포커스될 때마다 새로고침
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchUserData = async () => {
+        try {
+          const response = await userApi.getMe();
+          console.log('User data response:', response);
         
         // any로 캐스팅하여 실제 API 응답 구조 처리
         const data = response as any;
@@ -115,7 +117,8 @@ export default function Profile() {
     };
 
     fetchUserData();
-  }, []);
+    }, [])
+  );
 
   // 마이 페이지에서 뒤로가기 시 그림홈으로 이동
   useEffect(() => {

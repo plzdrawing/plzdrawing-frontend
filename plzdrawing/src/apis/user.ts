@@ -37,6 +37,17 @@ export const userApi = {
     return response.data;
   },
 
+  // 프로필 수정 (PATCH)
+  updateMyProfile: async (data: {
+    nickname: string;
+    introduction: string;
+    hashtags: string;
+    profileImageUrl?: string;
+  }): Promise<ApiResponse> => {
+    const response = await apiClient.patch('/api/member/v1/profile', data);
+    return response.data;
+  },
+
   // 사용자의 그림 목록 조회
   getUserDrawings: async (
     userId: string,

@@ -5,9 +5,11 @@ import { RootStackParamList } from "@/src/types/navigation";
 import Colors from "@/src/constants/Colors";
 import Txt from "@/src/components/common/text/Txt";
 import TextField from "@/src/components/common/input/TextField";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BaseProfile } from "@/src/types/profile";
 import ProfileImageUploader from "@/src/components/common/input/ProfileImgUploader";
+import { userApi } from "@/src/apis/user";
+import DefaultButton from "@/src/components/common/button/DefaultButton";
 
 type ProfileEditProps = NativeStackScreenProps<
   RootStackParamList,
@@ -15,16 +17,100 @@ type ProfileEditProps = NativeStackScreenProps<
 >;
 
 export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
-  const [nicknameText, setNicknameText] = useState("");
-  const [nicknameState, setNicknameState] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [nicknameState, setNicknameState] = useState<"empty" | "filled" | "error">("empty");
+  const [introduction, setIntroduction] = useState("");
+  const [introductionState, setIntroductionState] = useState<"empty" | "filled" | "error">("empty");
+  const [hashtags, setHashtags] = useState("");
+  const [hashtagState, setHashtagState] = useState<"empty" | "filled" | "error">("empty");
   const [newImageUri, setNewImageUri] = useState<string | null>(null);
-
-  const profleData: BaseProfile = {
-    name: "똥강아지",
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  
+  // 초기 데이터
+  const [initialData, setInitialData] = useState({
+    nickname: "",
+    introduction: "",
+    hashtags: "",
     imageUrl: "",
-    description: "나는야 그림쟁이",
-    hashtag: ["#귀여운", "#낙서"],
+  });
+
+  // 사용자 데이터 불러오기
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await userApi.getMe();
+        const data = response as any;
+        
+        if (data && data.nickname) {
+          const hashtagsStr = (data.hashtags || []).join(" ");
+          setNickname(data.nickname || "");
+          setIntroduction(data.introduction || "");
+          setHashtags(hashtagsStr);
+          
+          setInitialData({
+            nickname: data.nickname || "",
+            introduction: data.introduction || "",
+            hashtags: hashtagsStr,
+            imageUrl: data.profileImageUrl || "",
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  // 변경사항 확인
+  const hasChanges = () => {
+    return (
+      nickname !== initialData.nickname ||
+      introduction !== initialData.introduction ||
+      hashtags !== initialData.hashtags ||
+      newImageUri !== null
+    );
   };
+
+  // 저장 처리
+  const handleSave = async () => {
+    if (!hasChanges()) return;
+    
+    setIsSaving(true);
+    try {
+      await userApi.updateMyProfile({
+        nickname: nickname || initialData.nickname,
+        introduction: introduction || initialData.introduction,
+        hashtags: hashtags || initialData.hashtags,
+        profileImageUrl: newImageUri || initialData.imageUrl,
+      });
+      
+      // 성공 후 Profile 페이지로 이동
+      navigation.goBack();
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      alert('프로필 수정에 실패했습니다.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Container>
+        <HomeDetailHeader
+          title="프로필 수정"
+          onBackPress={() => navigation.goBack()}
+        />
+        <Txt variant="bodyText" style={{ textAlign: 'center', marginTop: 50 }}>
+          로딩 중...
+        </Txt>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -37,36 +123,50 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
         style={{ padding: 32 }}
       >
         <ProfileImageUploader
-          initialImageUrl={profleData.imageUrl}
+          initialImageUrl={initialData.imageUrl}
           onImageSelected={setNewImageUri}
         />
         <Txt variant="bodySubText" style={{ marginBottom: 20, marginTop: 20 }}>
           닉네임
         </Txt>
         <TextField
-          placeholder={profleData.name}
+          placeholder={initialData.nickname || "닉네임을 입력하세요"}
+          state={nicknameState}
           setState={setNicknameState}
-          value={nicknameText}
-          onChangeText={setNicknameText}
+          value={nickname}
+          onChangeText={setNickname}
         />
         <Txt variant="bodySubText" style={{ marginBottom: 20, marginTop: 20 }}>
           한 줄 소개
         </Txt>
         <TextField
-          placeholder={profleData.description}
-          setState={setNicknameState}
-          value={nicknameText}
-          onChangeText={setNicknameText}
+          placeholder={initialData.introduction || "자기소개를 입력하세요"}
+          state={introductionState}
+          setState={setIntroductionState}
+          value={introduction}
+          onChangeText={setIntroduction}
         />
         <Txt variant="bodySubText" style={{ marginBottom: 20, marginTop: 20 }}>
           해시태그
         </Txt>
         <TextField
-          placeholder={profleData.hashtag.join(" ")}
-          setState={setNicknameState}
-          value={nicknameText}
-          onChangeText={setNicknameText}
+          placeholder={initialData.hashtags || "#태그를 입력하세요"}
+          state={hashtagState}
+          setState={setHashtagState}
+          value={hashtags}
+          onChangeText={setHashtags}
         />
+        
+        <ButtonContainer>
+          <DefaultButton
+            title={isSaving ? "저장 중..." : "확인"}
+            onPress={handleSave}
+            disabled={!hasChanges() || isSaving}
+            isLoading={isSaving}
+            isValid={hasChanges()}
+            variant="primary"
+          />
+        </ButtonContainer>
       </ScrollContainer>
     </Container>
   );
@@ -80,4 +180,10 @@ const Container = styled.View`
 const ScrollContainer = styled.ScrollView`
   width: 100%;
   flex: 1;
+`;
+
+const ButtonContainer = styled.View`
+  margin-top: 40px;
+  margin-bottom: 20px;
+  width: 100%;
 `;
