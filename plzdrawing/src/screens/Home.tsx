@@ -1,17 +1,16 @@
+import React, { useState, useEffect } from "react";
 import { TouchableOpacity, BackHandler } from "react-native";
-import colors from "@/src/constants/Colors";
-import { Container } from "../components/common/container/Container";
-import HomeHeader from "../components/home/HomeHeader";
-import { Col } from "../components/common/flex/Flex";
-import SearchFilter from "../components/home/SearchFilter";
 import styled from "styled-components/native";
-import { PencilIcon } from "@/assets/images";
-import HomeCard from "../components/home/HomeCard";
-import ReviewCard from "../components/home/ReviewCard";
-import { useState, useEffect } from "react";
-import React from "react";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Container } from "@/src/components/common/container/Container";
+import HomeHeader from "@/src/components/home/HomeHeader";
+import { Col } from "@/src/components/common/flex/Flex";
+import SearchFilter from "@/src/components/home/SearchFilter";
+import HomeCard from "@/src/components/home/HomeCard";
+import ReviewCard from "@/src/components/home/ReviewCard";
+import Colors from "@/src/constants/Colors";
+import { PencilIcon } from "@/assets/images";
 
 type RootStackParamList = {
   Home: undefined;
@@ -62,7 +61,7 @@ export default function Home() {
         alignItems="center"
         padding="24px 32px"
         gap={20}
-        style={{ backgroundColor: colors.colors.light_gray1, height: "100%" }}
+        style={{ backgroundColor: Colors.colors.light_gray1, height: "100%" }}
       >
         <SearchFilter selectedId={selectedId} />
         <ScrollContainer showsVerticalScrollIndicator={false}>
@@ -101,8 +100,8 @@ const PlusButton = styled.TouchableOpacity`
   width: 57px;
   height: 57px;
   border-radius: 28.5px;
-  background-color: ${colors.colors.sub_yellow};
-  border: 1px solid ${colors.colors.main_yellow};
+  background-color: ${Colors.colors.sub_yellow};
+  border: 1px solid ${Colors.colors.main_yellow};
   display: flex;
   justify-content: center;
   align-items: center;

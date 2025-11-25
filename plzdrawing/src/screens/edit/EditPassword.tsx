@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import Colors from "@/src/constants/Colors";
-import styled from "styled-components/native";
-import Txt from "@/src/components/common/text/Txt";
-import TextField from "@/src/components/common/input/TextField";
-import DefaultButton from "@/src/components/common/button/DefaultButton";
-import ProfileEditHeader from "./components/EditHeader";
 import { Alert } from "react-native";
+import styled from "styled-components/native";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types/navigation';
 import { authApi } from "@/src/apis/auth";
+import Txt from "@/src/components/common/text/Txt";
+import TextField from "@/src/components/common/input/TextField";
+import DefaultButton from "@/src/components/common/button/DefaultButton";
+import ProfileEditHeader from "./components/EditHeader";
+import Colors from "@/src/constants/Colors";
 
 type EditPasswordNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 

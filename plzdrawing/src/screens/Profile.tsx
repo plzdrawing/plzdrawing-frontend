@@ -1,11 +1,17 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { BackHandler } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import styled from "styled-components/native";
-import colors from "@/src/constants/Colors";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, useIsFocused, useFocusEffect, CommonActions } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { userApi } from "@/src/apis/user";
+import { authApi } from "@/src/apis/auth";
 import HomeHeader from "@/src/components/home/HomeHeader";
 import { Col } from "@/src/components/common/flex/Flex";
+import ProfileInfoSection from "@/src/screens/profile/mypage/ProfileInfoSection";
+import MenuGroup from "@/src/screens/profile/mypage/ProfileMenuGroup";
 import { BaseProfile, ProfileMenuItem } from "@/src/types/profile";
+import Colors from "@/src/constants/Colors";
 import {
   AlarmIcon,
   LanguageIcon,
@@ -15,15 +21,6 @@ import {
   PasswordChangeIcon,
   QuestionIcon,
 } from "@/assets/images";
-import ProfileInfoSection from "@/src/screens/profile/mypage/ProfileInfoSection";
-import MenuGroup from "@/src/screens/profile/mypage/ProfileMenuGroup";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useNavigation, useIsFocused, useFocusEffect } from "@react-navigation/native";
-import Colors from "@/src/constants/Colors";
-import { userApi } from "@/src/apis/user";
-import { authApi } from "@/src/apis/auth";
-import { CommonActions } from "@react-navigation/native";
-import React from "react";
 
 type RootStackParamList = {
   Profile: undefined;
@@ -41,6 +38,7 @@ type ProfileScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   "Profile"
 >;
+
 export default function Profile() {
   const [selectedId, setSelectedId] = useState(0);
   const navigation = useNavigation<ProfileScreenNavigationProp>();
@@ -199,7 +197,7 @@ export default function Profile() {
           justifyContent="flex-start"
           padding="32px"
           gap={18}
-          style={{ flex: 1, backgroundColor: colors.colors.light_gray1, paddingTop: 16 }}
+          style={{ flex: 1, backgroundColor: Colors.colors.light_gray1, paddingTop: 16 }}
         >
           <ProfileInfoSection
             profile={userProfile}
