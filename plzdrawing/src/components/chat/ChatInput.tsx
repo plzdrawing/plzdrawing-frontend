@@ -1,7 +1,9 @@
 import { TextInput } from "react-native-gesture-handler";
 import { Col, Row } from "../common/flex/Flex";
-import { Keyboard, TouchableOpacity } from "react-native";
+import { Keyboard, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
+import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 import {
   AddIcon,
   CameraIcon,
@@ -18,6 +20,7 @@ interface ChatInputProps {
   message: string;
   setMessage: (message: string) => void;
   handleSendMessage: () => void;
+  handleSendImage: (imageUri: string) => void;
   isOpenMenu?: boolean;
   setIsOpenMenu?: (isOpenMenu: boolean) => void;
 }
@@ -27,13 +30,73 @@ const ChatInput = (props: ChatInputProps) => {
     message,
     setMessage,
     handleSendMessage,
+    handleSendImage,
     isOpenMenu = false,
     setIsOpenMenu = () => {},
   } = props;
 
   const handleOpenMenu = () => {
     Keyboard.dismiss();
-    setIsOpenMenu(true);
+    if (isOpenMenu) setIsOpenMenu(false);
+    else setIsOpenMenu(true);
+  };
+
+  const addWatermark = async (uri: string): Promise<string> => {
+    try {
+      const result = await ImageManipulator.manipulateAsync(
+        uri,
+        [
+          {
+            resize: { width: 1200 },
+          },
+        ],
+        {
+          compress: 0.8,
+          format: ImageManipulator.SaveFormat.PNG,
+        }
+      );
+
+      // Add text watermark
+      const watermarkedImage = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [],
+        {
+          compress: 1,
+          format: ImageManipulator.SaveFormat.PNG,
+        }
+      );
+
+      return watermarkedImage.uri;
+    } catch (error) {
+      console.error("워터마크 추가 실패:", error);
+      return uri;
+    }
+  };
+
+  const handlePickImage = async () => {
+    try {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (!permissionResult.granted) {
+        Alert.alert("권한 필요", "갤러리 접근 권한이 필요합니다.");
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        quality: 1,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const imageUri = result.assets[0].uri;
+        const watermarkedUri = await addWatermark(imageUri);
+        handleSendImage(watermarkedUri);
+      }
+    } catch (error) {
+      console.error("이미지 선택 오류:", error);
+      Alert.alert("오류", "이미지를 선택하는 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -73,14 +136,16 @@ const ChatInput = (props: ChatInputProps) => {
               파일 보내기
             </Txt>
           </Row>
-          <Row gap={14} alignItems="center">
-            <IconContainer color={Colors.colors.light_gray1} width={1}>
-              <PictureIcon />
-            </IconContainer>
-            <Txt variant="bodyText" color="black">
-              사진 보내기
-            </Txt>
-          </Row>
+          <TouchableOpacity onPress={handlePickImage}>
+            <Row gap={14} alignItems="center">
+              <IconContainer color={Colors.colors.light_gray1} width={1}>
+                <PictureIcon />
+              </IconContainer>
+              <Txt variant="bodyText" color="black">
+                사진 보내기
+              </Txt>
+            </Row>
+          </TouchableOpacity>
           <Row gap={14} alignItems="center">
             <IconContainer color={Colors.colors.light_gray1} width={1}>
               <CameraIcon />
@@ -89,14 +154,14 @@ const ChatInput = (props: ChatInputProps) => {
               직접 촬영하기
             </Txt>
           </Row>
-          <Row gap={14} alignItems="center">
+          {/* <Row gap={14} alignItems="center">
             <IconContainer color={Colors.colors.light_gray1} width={1}>
               <DrawerIcon />
             </IconContainer>
             <Txt variant="bodyText" color="black">
               서랍 열기
             </Txt>
-          </Row>
+          </Row> */}
         </Col>
       )}
     </Col>
@@ -118,13 +183,18 @@ const ChattingTextInput = styled(TextInput)`
   padding: 13.5px 16px;
 `;
 
-const IconContainer = styled.View<{ color: string; width?: number }>`
+interface IconContainerProps {
+  color: string;
+  width?: number;
+}
+
+const IconContainer = styled.View<IconContainerProps>`
   width: 45px;
   height: 45px;
   justify-content: center;
   align-items: center;
-  background-color: ${(props) => props.color};
-  border-width: ${(props) => props.width || 0};
+  background-color: ${(props: IconContainerProps) => props.color};
+  border-width: ${(props: IconContainerProps) => props.width || 0};
   border-color: ${Colors.colors.light_gray2};
   border-radius: 12px;
 `;

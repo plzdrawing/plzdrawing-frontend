@@ -23,7 +23,7 @@ const ProfileInfoSection = ({
     <Row gap={17} style={{ marginTop: 20 }}>
       {profile.imageUrl && !imageLoadError ? (
         <ProfileImg 
-          source={{ uri: profile.imageUrl }} 
+          // source={{ uri: profile.imageUrl }}
           onError={(error) => {
             console.log('Image load error:', error.nativeEvent.error);
             setImageLoadError(true);
@@ -31,11 +31,14 @@ const ProfileInfoSection = ({
           onLoad={() => console.log('Image loaded successfully')}
         />
       ) : (
-        <ProfileImgPlaceholder>
-          <Txt variant="auxiliaryTextLight" color="dark_gray2">
-            {imageLoadError ? '이미지 로드 실패' : '이미지 없음'}
-          </Txt>
-        </ProfileImgPlaceholder>
+        // <ProfileImgPlaceholder>
+        //   <Txt variant="auxiliaryTextLight" color="dark_gray2">
+        //     {imageLoadError ? '이미지 로드 실패' : '이미지 없음'}
+        //   </Txt>
+        // </ProfileImgPlaceholder>
+        <ProfileImg
+          source={{ uri: "https://i.namu.wiki/i/vDDaVK4wm1-vPZgAOI65rbhLhr1vPCzBgoRKSS7mEFx4IH2vtHvvMN41Umw-taptksIW_WqnjwOdcGbAMpAmrQ.webp" }}
+        />
       )}
       <Col>
         <Txt variant="mainTitleBold">{profile.name}</Txt>

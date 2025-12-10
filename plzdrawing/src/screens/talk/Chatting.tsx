@@ -16,10 +16,12 @@ import ReceiverBox from "@/src/components/chat/ReceiverBox";
 import AlertModal from "@/src/components/common/modal/AlertModal";
 import TalkProcess from "@/src/components/chat/TalkProcess";
 import RequestBox from "@/src/components/chat/RequestBox";
+import * as ScreenCapture from "expo-screen-capture";
 
 interface Message {
   isSender: boolean;
   message: string;
+  imageUri?: string;
   type?: "request" | "accept" | "reject" | "completePayment" | "check" | "feedback";
 }
 
@@ -31,15 +33,15 @@ export default function Chatting() {
   const [sendMessage, setSendMessage] = useState("");
   const [isOpenedMenu, setIsOpenedMenu] = useState(false);
   const [messageList, setMessageList] = useState<Message[]>([
-    { isSender: false, message: "안녕하세요" },
-    { isSender: false, message: "안녕하세요" },
-    { isSender: true, message: "안녕하세요" },
-    { isSender: true, message: "안녕하세요", type: "request" },
-    { isSender: false, message: "안녕하세요", type: "accept" },
-    { isSender: false, message: "안녕하세요", type: "reject" },
-    { isSender: true, message: "안녕하세요", type: "completePayment"},
-    { isSender: false, message: "안녕하세요", type: "check" },
-    { isSender: true, message: "안녕하세요", type: "feedback" },
+    // { isSender: false, message: "안녕하세요" },
+    // { isSender: false, message: "안녕하세요" },
+    // { isSender: true, message: "안녕하세요" },
+    // { isSender: true, message: "안녕하세요", type: "request" },
+    // { isSender: false, message: "안녕하세요", type: "accept" },
+    // { isSender: false, message: "안녕하세요", type: "reject" },
+    // { isSender: true, message: "안녕하세요", type: "completePayment"},
+    // { isSender: false, message: "안녕하세요", type: "check" },
+    // { isSender: true, message: "안녕하세요", type: "feedback" },
   ]);
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -52,6 +54,14 @@ export default function Chatting() {
     setSendMessage("");
   };
 
+  const handleSendImage = (imageUri: string) => {
+    setMessageList([
+      ...messageList,
+      { message: "", isSender: true, imageUri },
+    ]);
+    setIsOpenedMenu(false);
+  };
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -59,6 +69,20 @@ export default function Chatting() {
 
     return () => clearTimeout(timeout);
   }, [messageList]);
+
+  useEffect(() => {
+    // 스크린샷 방지 활성화
+    const preventScreenCapture = async () => {
+      const hasPermissions = await ScreenCapture.preventScreenCaptureAsync();
+    };
+    
+    preventScreenCapture();
+
+    // 컴포넌트 언마운트 시 스크린샷 방지 해제
+    return () => {
+      ScreenCapture.allowScreenCaptureAsync();
+    };
+  }, []);
 
   useEffect(() => {
     // 📌 키보드가 올라올 때 → 즉시 스크롤을 아래로 이동
@@ -132,7 +156,7 @@ export default function Chatting() {
                     );
                   }
                   return message.isSender ? (
-                    <SenderBox key={index} message={message.message} />
+                    <SenderBox key={index} message={message.message} imageUri={message.imageUri} />
                   ) : (
                     <ReceiverBox key={index} message={message.message} />
                   );
@@ -144,6 +168,7 @@ export default function Chatting() {
             message={sendMessage}
             setMessage={setSendMessage}
             handleSendMessage={handleSendMessage}
+            handleSendImage={handleSendImage}
             isOpenMenu={isOpenedMenu}
             setIsOpenMenu={setIsOpenedMenu}
           />
