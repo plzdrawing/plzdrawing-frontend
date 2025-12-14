@@ -35,7 +35,7 @@ export default function UserDetail({
         <Txt variant='bodyText'>{userIntroduction}</Txt>
         <Txt color='dark_gray2' variant='bodyText'>{userTags.join(' ')}</Txt>
       </ProfileMeta>
-      {isOwner && (
+      {/* {isOwner && (
         <PostButtonContainer>
           <PrimaryButton
             title='프로필 편집'
@@ -43,7 +43,7 @@ export default function UserDetail({
             onPress={() => {}}
           />
         </PostButtonContainer>
-      )}
+      )} */}
       <FilterButtonContainer>
         <FilterButton 
           isSelected={selectedFilter === '그림'}

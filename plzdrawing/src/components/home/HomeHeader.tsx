@@ -19,6 +19,8 @@ interface HomeHeaderProps {
   title2?: string;
   selectedId?: number;
   setSelectedId?: (id: number) => void;
+  onProfilePress?: () => void;
+  onSettingsPress?: () => void;
 }
 
 const HomeHeader = ({
@@ -26,11 +28,23 @@ const HomeHeader = ({
   title2,
   selectedId,
   setSelectedId,
+  onProfilePress,
+  onSettingsPress,
 }: HomeHeaderProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleAlarmPress = () => {
-    navigation.navigate("Alarm");
+    if (onProfilePress) {
+      onProfilePress();
+    } else {
+      navigation.navigate("Alarm");
+    }
+  };
+
+  const handleMenuPress = () => {
+    if (onSettingsPress) {
+      onSettingsPress();
+    }
   };
 
   return (
@@ -68,9 +82,13 @@ const HomeHeader = ({
         )}
       </Row>
       <Row justifyContent="center" gap={15} style={{ width: "auto" }}>
-        <AlarmIcon width={20} height={20} style={{ marginBottom: 14 }} onPress={handleAlarmPress} />
+        <TouchableOpacity onPress={handleAlarmPress}>
+          <AlarmIcon width={20} height={20} style={{ marginBottom: 14 }} />
+        </TouchableOpacity>
         {!title2 && (
-          <MenuIcon width={20} height={20} style={{ marginBottom: 14 }} />
+          <TouchableOpacity onPress={handleMenuPress}>
+            <MenuIcon width={20} height={20} style={{ marginBottom: 14 }} />
+          </TouchableOpacity>
         )}
       </Row>
     </Container>

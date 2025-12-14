@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ScrollView } from "react-native";
 import { Container } from "@/src/components/common/container/Container";
 import colors from "@/src/constants/Colors";
@@ -6,55 +6,80 @@ import Header from "@/src/components/common/header/Header";
 import UserDetail from "./UserDetail";
 import UserDrawings from "./UserDrawings";
 import UserReviews from "./UserReviews";
+import { userApi } from "@/src/apis/user";
 import { GreeSad } from "@/assets/images";
 
 type FilterType = '그림' | '후기';
 
-export default function UserProfile() {
+interface UserProfileProps {
+  isFromMyPage?: boolean;
+  userId?: string;
+}
+
+export default function UserProfile({ isFromMyPage = false, userId }: UserProfileProps) {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('그림');
-  
-  const user = {
-    id: "1",
-    name: "홍길동",
-    intro: "안녕하세요. 동물 그림쟁입니다:)",
-    tags: ["#귀여운", "#낙서", "#동물그림"],
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState({
+    id: "",
+    name: "",
+    intro: "",
+    tags: [] as string[],
     drawings: [],
-    // drawings: Array.from({ length: 5 }, (_, index) => ({
-    //   id: `drawing-${index}`,
-    //   imageUrl: '',
-    //   likes: 43,
-    //   comments: 12,
-    //   description: '많이 찾아주시는 고양이 그림 낙서형태로 그려봤어요 :)',
-    //   date: '2025년 6월 18일',
-    // })),
     reviews: {
-      drawNum: 7,
+      drawNum: 0,
       rejectNum: 0,
-      rating: 5.0,
-      reviewNum: 2,
-      reviewKeywords: ["귀여워요", "원하는 대로 그려줘요", "친절해요"],
-      reviews: [
-        {
-          id: 1,
-          userProfile: "https://example.com/user1.jpg",
-          userName: "홍길동",
-          date: "5분 전",
-          content: "요청대로 그려줘요 :) 친절하시구 만족합니당 ㅎㅎ",
-        },
-        {
-          id: 2,
-          userProfile: "https://example.com/user2.jpg",
-          userName: "홍길동",
-          date: "하루 전",
-          content: "요청대로 그려줘요 :) 친절하시구 만족합니당 ㅎㅎ",
-        },
-      ],
+      rating: 0,
+      reviewNum: 0,
+      reviewKeywords: [],
+      reviews: [],
     },
+  });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await userApi.getMe();
+        const data = response as any;
+        
+        if (data && (data.nickname || data.name)) {
+          setUser({
+            id: data.id || "",
+            name: data.nickname || data.name || "사용자",
+            intro: data.introduction || "",
+            tags: data.hashtags || [],
+            drawings: [],
+            reviews: {
+              drawNum: 0,
+              rejectNum: 0,
+              rating: 0,
+              reviewNum: 0,
+              reviewKeywords: [],
+              reviews: [],
+            },
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
+
+  if (isLoading) {
+    return (
+      <Container>
+        {!isFromMyPage && <Header backgroundColor={colors.colors.light_gray1} />}
+      </Container>
+    );
   }
 
   return (
     <Container>
-      <Header backgroundColor={colors.colors.light_gray1} />
+      {!isFromMyPage && <Header backgroundColor={colors.colors.light_gray1} />}
       <ScrollView 
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
@@ -65,7 +90,7 @@ export default function UserProfile() {
           userTags={user.tags}
           selectedFilter={selectedFilter}
           onFilterChange={setSelectedFilter}
-          isOwner={true}
+          isOwner={isFromMyPage}
         />
         {selectedFilter === '그림'
           ? <UserDrawings

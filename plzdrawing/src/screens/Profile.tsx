@@ -10,7 +10,9 @@ import HomeHeader from "@/src/components/home/HomeHeader";
 import { Col } from "@/src/components/common/flex/Flex";
 import ProfileInfoSection from "@/src/screens/profile/mypage/ProfileInfoSection";
 import MenuGroup from "@/src/screens/profile/mypage/ProfileMenuGroup";
+import UserProfile from "@/src/screens/userProfile/UserProfile";
 import { BaseProfile, ProfileMenuItem } from "@/src/types/profile";
+import { RootStackParamList } from "@/src/types/navigation";
 import Colors from "@/src/constants/Colors";
 import {
   AlarmIcon,
@@ -22,22 +24,7 @@ import {
   QuestionIcon,
 } from "@/assets/images";
 
-type RootStackParamList = {
-  Profile: undefined;
-  AlarmSetting: undefined;
-  CustomerService: undefined;
-  Notice: undefined;
-  ProfileEdit: undefined;
-  Tos: undefined;
-  EditAccount: undefined;
-  EditPassword: undefined;
-  Payments: undefined;
-};
-
-type ProfileScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "Profile"
->;
+type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function Profile() {
   const [selectedId, setSelectedId] = useState(0);
@@ -166,7 +153,7 @@ export default function Profile() {
   const supportMenuItems: ProfileMenuItem[] = [
     { icon: <MegaphoneIcon />, text: "공지사항", onPress: () => {navigation.navigate("Notice");} },
     { icon: <QuestionIcon />, text: "고객센터", onPress: () => {navigation.navigate("CustomerService")} },
-    { icon: <QuestionIcon />, text: "1:1 문의하기", onPress: () => {} },
+    { icon: <QuestionIcon />, text: "1:1 문의", onPress: () => {} },
     { icon: <MultipleFileIcon />, text: "앱 관리", onPress: () => {navigation.navigate("Tos");} },
     { icon: <MenuCircleIcon />, text: "결제내역", onPress: () => {navigation.navigate("Payments");} },
   ];
@@ -188,34 +175,39 @@ export default function Profile() {
   return (
     <Container>
       <HomeHeader
-        title="마이"
+        title="프로필"
+        title2="설정"
         selectedId={selectedId}
         setSelectedId={setSelectedId}
       />
-      <ScrollContainer showsVerticalScrollIndicator={false}>
-        <Col
-          justifyContent="flex-start"
-          padding="32px"
-          gap={18}
-          style={{ flex: 1, backgroundColor: Colors.colors.light_gray1, paddingTop: 16 }}
-        >
-          <ProfileInfoSection
-            profile={userProfile}
-            onEditPress={() => navigation.navigate("ProfileEdit")}
-          />
+      {selectedId === 0 ? (
+        <UserProfile isFromMyPage={true} />
+      ) : (
+        <ScrollContainer showsVerticalScrollIndicator={false}>
+          <Col
+            justifyContent="flex-start"
+            padding="32px"
+            gap={18}
+            style={{ flex: 1, backgroundColor: Colors.colors.light_gray1, paddingTop: 16 }}
+          >
+            <ProfileInfoSection
+              profile={userProfile}
+              onEditPress={() => navigation.navigate("ProfileEdit")}
+            />
 
-          <MenuGroup title="설정" items={settingsMenuItems} />
-          <MenuGroup title="정보 및 지원" items={supportMenuItems} />
-          <MenuGroup title="계정 설정" items={accountMenuItems} />
-          <MenuGroup title="계정" items={loginMenuItems} />
-        </Col>
-      </ScrollContainer>
+            <MenuGroup title="설정" items={settingsMenuItems} />
+            <MenuGroup title="정보 및 지원" items={supportMenuItems} />
+            <MenuGroup title="계정 설정" items={accountMenuItems} />
+            <MenuGroup title="계정" items={loginMenuItems} />
+          </Col>
+        </ScrollContainer>
+      )}
     </Container>
   );
 }
 
 const Container = styled.View`
-  padding-top: 60px;
+  padding-top: 24px;
   flex: 1;
   background-color: ${Colors.colors.white};
 `;
