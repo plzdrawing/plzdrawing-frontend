@@ -1,24 +1,18 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
-import Colors from "@/src/constants/Colors";
-import { SafeAreaView } from "react-native-safe-area-context";
+import tw from '@/src/lib/tailwind';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ContainerProps {
   children: React.ReactNode;
-  style?: any;
+  className?: string;
 }
 
-export const Container = ({ children, style }: ContainerProps) => {
+export default function Container({ children, className }: ContainerProps) {
   return (
     <SafeAreaView
-      style={{
-        flex: 1,
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
-        backgroundColor: `${Colors.colors.background}`,
-        position: "relative",
-        ...style,
-      }}
+      style={[
+        tw`flex-1 bg-white relative`,
+        className ? tw`${className}` : tw`items-start justify-start`
+      ]}
     >
       {children}
     </SafeAreaView>

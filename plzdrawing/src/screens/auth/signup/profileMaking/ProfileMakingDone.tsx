@@ -5,7 +5,7 @@ import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import { Container } from "@/src/components/common/container/Container";
-import PrimaryButton from "@/src/components/common/button/PrimaryButton";
+import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
 import styled from "styled-components/native";
 
 export default function ProfileMakingDone() {

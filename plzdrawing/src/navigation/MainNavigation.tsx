@@ -1,9 +1,8 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Community from "@/src/screens/Community";
-import Home from "@/src/screens/Home";
-import Talk from "@/src/screens/talk/Talk";
-import Profile from "@/src/screens/Profile";
+import Home from "@/src/screens/home/Home";
+import Talk from "@/src/screens/talk/talks/Talk";
+import Profile from "@/src/screens/my/Profile";
 import Txt from "../components/common/text/Txt";
 import { FooterTalk, FooterHome, FooterMy } from "@/assets/images";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

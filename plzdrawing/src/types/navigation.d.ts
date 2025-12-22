@@ -1,6 +1,6 @@
 // 네비게이션에 사용할 ParamList 정의
-import { Home } from '@/src/screens/Home';
-import HomeDrawingCardDetail from '../screens/post/HomeDrawingCardDetail';
+import { Home } from '@/src/screens/home/Home';
+import HomeDrawingCardDetail from '../screens/home/post/HomeDrawingCardDetail';
 
 type Agreements = {
   terms: boolean;
@@ -46,7 +46,6 @@ export type RootStackParamList = {
 // 바텀네비게이션 타입 정의
 export type BottomTabParamList = {
   Home: undefined;
-  Community: undefined;
   Talk: undefined;
   Profile: undefined;
 };

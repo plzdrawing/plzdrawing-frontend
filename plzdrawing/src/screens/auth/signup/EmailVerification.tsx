@@ -1,6 +1,6 @@
 import colors from "@/src/constants/Colors";
 import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
-import PrimaryButton from "@/src/components/common/button/PrimaryButton";
+import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
 import { Container } from "@/src/components/common/container/Container";
 import { Col, Row } from "@/src/components/common/flex/Flex";
 import Header from "@/src/components/common/header/Header";
