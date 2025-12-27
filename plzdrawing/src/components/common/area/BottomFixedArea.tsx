@@ -4,6 +4,7 @@ import {
   Dimensions,
   Keyboard,
   KeyboardAvoidingView,
+  Platform,
   StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -27,7 +28,8 @@ export default function BottomFixedArea({ children }: BottomFixedAreaProps) {
 
   return (
     <KeyboardAvoidingView 
-      behavior={'padding'}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={0}
       style={[
         tw`absolute bottom-0 w-full flex-col z-100`,
         styles.fixedContainer
