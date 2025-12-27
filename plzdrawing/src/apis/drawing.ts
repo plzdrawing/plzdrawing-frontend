@@ -1,37 +1,40 @@
-import apiClient from './client';
+import apiClient from './apiClient';
 import {
-  ApiResponse,
-  PaginatedResponse,
-  Drawing,
-  CreateDrawingRequest,
-} from './types';
+  UploadContentRequest,
+  UploadContentResponse,
+  UpdateContentRequest,
+  PageResponseLatestContentsResponse,
+  PageResponseContentsDto,
+} from './api';
 
 export const drawingApi = {
-  // 그림 목록 조회 (홈 화면용)
-  getDrawings: async (
-    page: number = 1,
-    limit: number = 12,
-    filters?: {
-      category?: string;
-      sortBy?: 'latest' | 'popular' | 'likes';
-      search?: string;
+  // 콘텐츠 업로드
+  uploadContent: async (data: UploadContentRequest, images: File[]) => {
+    const formData = new FormData();
+    formData.append('request', new Blob([JSON.stringify(data)], { type: 'application/json' }));
+    images.forEach((image) => {
+      formData.append('images', image);
+    });
+
+    const response = await apiClient.post<UploadContentResponse>('/api/content', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  // 콘텐츠 수정
+  updateContent: async (contentId: number, data: UpdateContentRequest, images?: File[]) => {
+    const formData = new FormData();
+    formData.append('request', new Blob([JSON.stringify(data)], { type: 'application/json' }));
+    if (images) {
+      images.forEach((image) => {
+        formData.append('images', image);
+      });
     }
-  ): Promise<PaginatedResponse<Drawing>> => {
-    const response = await apiClient.get('/drawings', {
-      params: { page, limit, ...filters },
-    });
-    return response.data;
-  },
 
-  // 특정 그림 상세 조회
-  getDrawing: async (drawingId: string): Promise<ApiResponse<Drawing>> => {
-    const response = await apiClient.get(`/drawings/${drawingId}`);
-    return response.data;
-  },
-
-  // 그림 업로드
-  createDrawing: async (data: CreateDrawingRequest): Promise<ApiResponse<Drawing>> => {
-    const response = await apiClient.post('/drawings', data, {
+    const response = await apiClient.patch('/api/content', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -39,50 +42,43 @@ export const drawingApi = {
     return response.data;
   },
 
-  // 그림 수정
-  updateDrawing: async (
-    drawingId: string,
-    data: { description?: string; imageFile?: FormData }
-  ): Promise<ApiResponse<Drawing>> => {
-    const response = await apiClient.put(`/drawings/${drawingId}`, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+  // 콘텐츠 삭제
+  deleteContent: async (contentId: number) => {
+    const response = await apiClient.delete(`/api/content/${contentId}`);
+    return response.data;
+  },
+
+  // 최신 콘텐츠 목록 조회
+  getLatestContents: async (page: number = 1, size: number = 10) => {
+    const response = await apiClient.get<PageResponseLatestContentsResponse>('/api/content', {
+      params: { page, size },
     });
     return response.data;
   },
 
-  // 그림 삭제
-  deleteDrawing: async (drawingId: string): Promise<ApiResponse> => {
-    const response = await apiClient.delete(`/drawings/${drawingId}`);
-    return response.data;
-  },
-
-  // 그림 좋아요/좋아요 취소
-  toggleLike: async (drawingId: string): Promise<ApiResponse<{ liked: boolean; likeCount: number }>> => {
-    const response = await apiClient.post(`/drawings/${drawingId}/like`);
-    return response.data;
-  },
-
-  // 내가 좋아요한 그림 목록
-  getLikedDrawings: async (
-    page: number = 1,
-    limit: number = 12
-  ): Promise<PaginatedResponse<Drawing>> => {
-    const response = await apiClient.get('/drawings/liked', {
-      params: { page, limit },
+  // 콘텐츠 검색
+  searchContents: async (params: {
+    page?: number;
+    size?: number;
+    keyword?: string;
+    sortBy?: 'latest' | 'popular';
+  }) => {
+    const response = await apiClient.get<PageResponseContentsDto>('/api/content/search', {
+      params,
     });
     return response.data;
   },
 
-  // 그림 검색
-  searchDrawings: async (
-    query: string,
-    page: number = 1,
-    limit: number = 12
-  ): Promise<PaginatedResponse<Drawing>> => {
-    const response = await apiClient.get('/drawings/search', {
-      params: { query, page, limit },
+  // 특정 콘텐츠 상세 조회
+  getContentDetail: async (contentId: number) => {
+    const response = await apiClient.get(`/api/content/v1/${contentId}`);
+    return response.data;
+  },
+
+  // 내 콘텐츠 목록 조회
+  getMyContents: async (page: number = 0, size: number = 12) => {
+    const response = await apiClient.get('/api/content/v1/my', {
+      params: { page, size },
     });
     return response.data;
   },

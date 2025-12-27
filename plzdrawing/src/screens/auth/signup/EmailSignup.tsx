@@ -15,7 +15,7 @@ import AlertModal from '@/src/components/common/modal/AlertModal';
 
 import { BackArrowIcon } from '@/assets/images';
 
-import { sendVerificationEmail } from '@/src/apis/auth';
+import { authApi } from '@/src/apis/auth';
 
 export default function EmailSignup() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -70,8 +70,8 @@ export default function EmailSignup() {
     if (isValidEmail) {
       setIsLoading(true); // 로딩 시작
       try {
-        // 2단계에서 만든 API 함수 호출
-        await sendVerificationEmail(email);
+        // API 호출
+        await authApi.sendEmailVerification({ email });
 
         // API 호출 성공 시
         console.log("인증번호 전송 성공!");

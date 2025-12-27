@@ -14,7 +14,7 @@ import AlertModal from '@/src/components/common/modal/AlertModal';
 
 import { BackArrowIcon } from '@/assets/images';
 
-import { authApi } from '@/src/apis/auth';
+import { authController } from '@/src/apis/controller/auth';
 
 export default function EmailLogin() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -54,13 +54,14 @@ export default function EmailLogin() {
     }
 
     try {
-      await authApi.login({
+      const response = await authController.login({
         provider: 'EMAIL',
         email: email,
         password: password,
       });
 
       // 로그인 성공 - 토큰은 interceptor에서 자동 저장됨
+      console.log('login success:', response);
       navigation.dispatch(
         CommonActions.reset({
           index: 0,

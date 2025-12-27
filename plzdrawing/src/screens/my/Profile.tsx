@@ -4,8 +4,6 @@ import styled from "styled-components/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useIsFocused, useFocusEffect, CommonActions } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { userApi } from "@/src/apis/user";
-import { authApi } from "@/src/apis/auth";
 import HomeHeader from "@/src/screens/home/home/HomeHeader";
 import { Col } from "@/src/components/common/flex/Flex";
 import ProfileInfoSection from "@/src/screens/my/profile/mypage/ProfileInfoSection";
@@ -23,6 +21,10 @@ import {
   PasswordChangeIcon,
   QuestionIcon,
 } from "@/assets/images";
+
+import { userApi } from "@/src/apis/user";
+import { authApi } from "@/src/apis/auth";
+import { authController } from '@/src/apis/controller/auth';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -42,7 +44,7 @@ export default function Profile() {
     React.useCallback(() => {
       const fetchUserData = async () => {
         try {
-          const response = await userApi.getMe();
+          const response = await userApi.getMyProfile();
           console.log('User data response:', response);
         
         // any로 캐스팅하여 실제 API 응답 구조 처리
@@ -118,13 +120,14 @@ export default function Profile() {
   const handleLogout = async () => {
     try {
       // 로그아웃 API 호출
-      await authApi.logout();
+      await authController.logout();
       
       // AsyncStorage에서 토큰 삭제
       await AsyncStorage.removeItem('accessToken');
       await AsyncStorage.removeItem('refreshToken');
       
       // 로그인 화면으로 이동 (뒤로가기 방지)
+      console.log('logout success');
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
