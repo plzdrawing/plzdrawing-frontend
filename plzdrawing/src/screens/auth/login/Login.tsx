@@ -53,7 +53,7 @@ export default function Login() {
           title='이메일 로그인'
           onClick={handleLoginEmail}
         />
-        <View style={tw`h-[1px] w-full bg-separator`} />
+        <View style={tw`h-[1px] w-full bg-light-gray-3`} />
       </View>
 
       <View style={tw`mt-[50px] gap-[17px]`}>

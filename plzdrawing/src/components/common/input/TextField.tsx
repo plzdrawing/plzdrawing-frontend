@@ -1,64 +1,52 @@
-import Colors from "@/src/constants/Colors";
-import React, { useState } from "react";
+import tw from '@/src/lib/tailwind';
+import { useState } from 'react';
+import FontStyles from '@/src/constants/Fonts';
+
 import {
-  StyleSheet,
   View,
   TextInput,
   TextInputProps,
   TouchableOpacity,
-} from "react-native";
-import styled from "styled-components/native";
-import Txt from "../text/Txt";
-import { Col } from "../flex/Flex";
-import { HidePassword } from "@/assets/images";
+} from 'react-native';
+import Txt from '@/src/components/common/text/Txt';
 
-// Props 타입 정의
+import {
+  ShowPasswordOn,
+  ShowPasswordOff
+} from '@/assets/images';
+
 interface TextFieldProps extends TextInputProps {
   id?: string;
   content?: string;
-  type?: "text" | "password";
-  state?: "empty" | "filled" | "error";
-  setState: (state: "empty" | "filled" | "error") => void;
+  type?: 'text' | 'password';
+  state?: 'empty' | 'filled' | 'error';
+  setState: (state: 'empty' | 'filled' | 'error') => void;
   validation?: (text: string) => void;
   errorMessage?: string;
 }
 
-const TextField = (props: TextFieldProps) => {
+export default function TextField(props: TextFieldProps) {
   const {
     placeholder,
     content,
     type,
-    state = "normal",
+    state = 'normal',
     setState,
     errorMessage,
     validation,
     ...rest
   } = props;
-  const colors = Colors.colors;
-  const [value, setValue] = useState(content || "");
+
+  const [value, setValue] = useState(content || '');
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  const getBorderColor = () => {
-    if (isFocused) {
-      return colors.main_yellow;
-    }
-    switch (state) {
-      case "filled":
-        return colors.main_yellow;
-      case "error":
-        return colors.error_red;
-      default:
-        return colors.light_gray2;
-    }
-  };
-
   const handleChange = (text: string) => {
     setValue(text);
-    if (text.length <= 0 || text === "") {
-      setState("empty");
+    if (text.length <= 0 || text === '') {
+      setState('empty');
     } else {
-      setState("filled");
+      setState('filled');
     }
     if (validation) {
       validation(text);
@@ -69,69 +57,62 @@ const TextField = (props: TextFieldProps) => {
     setShowPassword(!showPassword);
   };
 
+  const getBorderColor = () => {
+    if (state === 'error') {
+      return tw`border-error-red`;
+    } else if (isFocused) {
+      return tw`border-sub-yellow`;
+    } else {
+      return tw`border-light-gray-2`;
+    }
+  };
+
   return (
-    <Col gap={7}>
-      <InputContainer borderColor={getBorderColor()}>
-        <StyledTextInput
+    <View style={tw`gap-[9px]`}>
+      <View style={[
+        tw`flex-row items-center relative w-full rounded-[12px] border bg-white`,
+        getBorderColor()
+      ]}>
+        <TextInput
+          style={[
+            tw`flex-1 text-[14px] px-[20px] py-[17.5px] color-black`,
+            FontStyles.bodySubText,
+          ]}
+          multiline={false}
+          numberOfLines={1}
           placeholder={placeholder}
-          placeholderTextColor={colors.dark_gray1}
+          placeholderTextColor={tw.color('dark-gray-1')}
           value={value}
-          secureTextEntry={type === "password" && !showPassword}
+          secureTextEntry={type === 'password' && !showPassword}
           onChangeText={handleChange}
-          color={colors.black}
           onFocus={() => {
             setIsFocused(true);
-            setState("filled");
+            setState('filled');
           }}
           onBlur={() => {
             setIsFocused(false);
             if (value.length <= 0) {
-              setState("empty");
+              setState('empty');
             }
           }}
           {...rest}
         />
-        {type === "password" && (
-          <PasswordToggle onPress={togglePasswordVisibility}>
-            <HidePassword />
-          </PasswordToggle>
-        )}
-      </InputContainer>
 
-      {state === "error" && (
-        <Txt variant="bodySubText" color="error_red" style={{ marginLeft: 20 }}>
+        {type === 'password' && (
+          <TouchableOpacity 
+            style={tw`justify-center items-center mr-[20px]`}
+            onPress={togglePasswordVisibility}
+          >
+            {isFocused ? <ShowPasswordOn /> : <ShowPasswordOff />}
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {state === 'error' && (
+        <Txt variant='bodySubText' color='error_red' style={tw`ml-[20px]`}>
           {errorMessage}
         </Txt>
       )}
-    </Col>
+    </View>
   );
 };
-
-const InputContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  position: relative;
-  width: 100%;
-  border-radius: 10px;
-  border-width: 1px;
-  border-color: ${(props: { borderColor: string }) => props.borderColor};
-  background-color: ${Colors.colors.white};
-`;
-
-const StyledTextInput = styled(TextInput)`
-  flex: 1;
-  font-size: 14px;
-  color: ${(props: { color: string }) => props.color};
-  font-family: "SsurroundAir";
-  padding: 12px 16px;
-  height: 48px;
-`;
-
-const PasswordToggle = styled(TouchableOpacity)`
-  height: 48px;
-  justify-content: center;
-  align-items: center;
-  margin-right: 20;
-`;
-
-export default TextField;

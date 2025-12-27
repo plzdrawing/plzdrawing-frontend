@@ -1,24 +1,31 @@
-import React, { useState, useEffect } from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NavigationProp, useNavigation, CommonActions } from "@react-navigation/native";
-import { RootStackParamList } from "@/src/types/navigation";
-import { authApi } from "@/src/apis/auth";
-import { Container } from "@/src/components/common/container/Container";
-import Header from "@/src/components/common/header/Header";
-import { Col } from "@/src/components/common/flex/Flex";
-import Txt from "@/src/components/common/text/Txt";
-import TextField from "@/src/components/common/input/TextField";
-import AuthButton from "@/src/components/ui/button/AuthButton";
+import tw from '@/src/lib/tailwind';
+import { useState, useEffect } from 'react';
+
+import { NavigationProp, useNavigation, CommonActions } from '@react-navigation/native';
+import { RootStackParamList } from '@/src/types/navigation';
+
+import { View, Keyboard } from 'react-native';
+import Header from '@/src/components/common/header/Header';
+import Container from '@/src/components/common/container/Container';
+import Txt from '@/src/components/common/text/Txt';
+import TextField from '@/src/components/common/input/TextField';
+import Button from '@/src/components/ui/button/Button';
 import AlertModal from "@/src/components/common/modal/AlertModal";
 
-export default function Login() {
+import { BackArrowIcon } from '@/assets/images';
+
+import { authApi } from '@/src/apis/auth';
+
+export default function EmailLogin() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const [email, setEmail] = useState("");
-  const [emailState, setEmailState] = useState<"empty" | "filled" | "error">("empty");
-  const [emailError, setEmailError] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordState, setPasswordState] = useState<"empty" | "filled" | "error">("empty");
+  const [email, setEmail] = useState('');
+  const [emailState, setEmailState] = useState<'empty' | 'filled' | 'error'>('empty');
+  const [emailError, setEmailError] = useState('');
+
+  const [password, setPassword] = useState('');
+  const [passwordState, setPasswordState] = useState<'empty' | 'filled' | 'error'>('empty');
+  
   const [modalVisible, setModalVisible] = useState(false);
 
   const validateEmail = (email: string) => {
@@ -28,30 +35,27 @@ export default function Login() {
 
   useEffect(() => {
     if (!email) {
-      setEmailState("empty");
-      setEmailError("");
+      setEmailState('empty');
+      setEmailError('');
     } else if (validateEmail(email)) {
-      setEmailState("filled");
-      setEmailError("");
+      setEmailState('filled');
+      setEmailError('');
     } else {
-      setEmailState("error");
-      setEmailError("이메일 양식에 맞지 않아요.");
+      setEmailState('error');
+      setEmailError('이메일 양식에 맞지 않아요.');
     }
   }, [email]);
 
-  const handlePasswordFindButtonOnClick = () => {
-    console.log("비밀번호찾기 버튼 클릭");
-    navigation.navigate("PasswordFind");
-  };
-
-  const handleLoginButtonOnClick = async () => {
-    if (emailState === "error") {
+  const handleLoginClick = async () => {
+    Keyboard.dismiss();
+    
+    if (emailState === 'error') {
       return;
     }
 
     try {
       const response = await authApi.login({
-        provider: "EMAIL",
+        provider: 'EMAIL',
         email: email,
         password: password,
       });
@@ -64,11 +68,14 @@ export default function Login() {
         })
       );
     } catch (error) {
-      // 로그인 실패 (네트워크 오류, 401, 500 등)
-      console.error("Login failed:", error);
-      // 일치하지 않을 경우 모달 띄우기
+      // 로그인 실패
+      console.error('Login failed:', error);
       setModalVisible(true);
     }
+  };
+
+  const handlePasswordFindClick = () => {
+    navigation.navigate('PasswordFind');
   };
 
   const handleConfirm = () => {
@@ -76,64 +83,60 @@ export default function Login() {
   };
 
   return (
-    <Container>
-      <Header type="close" />
-      <Col gap={67} padding="43px 32px">
-        <Txt variant="headLineBold" align="left">
-          안녕하세요 :) {"\n"}
-          '그리'입니다. {"\n"}
+    <>
+      <Header leftIcon={<BackArrowIcon />} />
+      <Container className='px-[32px]'>
+        <Txt variant='headLineBold' style={tw`mb-[67px]`}>
+          안녕하세요 :) {'\n'}
+          '그리'입니다.
         </Txt>
 
-        <Col gap={17}>
-          <Txt variant="bodySubText" align="left">
+        <View style={tw`gap-[17px]`}>
+          <Txt variant='bodySubText'>
             먼저 로그인이 필요해요.
           </Txt>
-
           <TextField
-            placeholder="이메일"
+            placeholder='이메일'
             state={emailState}
             setState={setEmailState}
-            value={email}
-            onChangeText={setEmail}
-            errorMessage="이메일 양식에 맞지 않아요."
+            content={email}
+            validation={(text) => setEmail(text)}
+            errorMessage={emailError}
           />
-
           <TextField
-            placeholder="비밀번호"
+            placeholder='비밀번호'
             state={passwordState}
             setState={setPasswordState}
-            value={password}
-            onChangeText={setPassword}
-            type="password"
-            errorMessage="비밀번호를 다시 한 번 확인해주세요."
+            content={password}
+            validation={(text) => setPassword(text)}
+            type='password'
+            errorMessage='비밀번호를 다시 한 번 확인해주세요.'
           />
-
-          <AuthButton
-            isValid={email.trim() !== "" && password.trim() !== ""}
-            title="로그인"
-            type="login"
-            onClick={handleLoginButtonOnClick}
+          <Button
+            isValid={emailState === "filled" && passwordState === "filled"}
+            variant='default'
+            title='로그인'
+            onClick={handleLoginClick}
           />
-
           <Txt
-            variant="bodySubText"
-            align="center"
-            style={{ textDecorationLine: "underline", width: "100%" }}
-            onPress={handlePasswordFindButtonOnClick}
+            variant='bodySubText'
+            align='center'
+            style={{ textDecorationLine: 'underline' }}
+            onPress={handlePasswordFindClick}
           >
             아이디/비밀번호 찾기
           </Txt>
-        </Col>
-      </Col>
+        </View>
 
-      {modalVisible && (
-        <AlertModal
-          title={"이메일 혹은 비밀번호가\n일치하지 않아요."}
-          buttonTitle="확인"
-          onClick={handleConfirm}
-          textVariant="thirdText"
-        />
-      )}
-    </Container>
+        {modalVisible && (
+          <AlertModal
+            title={'이메일 혹은 비밀번호가\n일치하지 않아요.'}
+            buttonTitle='확인'
+            onClick={handleConfirm}
+            textVariant='thirdText'
+          />
+        )}
+      </Container>
+    </>
   );
 }

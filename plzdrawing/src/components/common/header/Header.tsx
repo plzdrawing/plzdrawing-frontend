@@ -23,7 +23,7 @@ export default function Header({
 }: HeaderProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
-    <View style={tw`w-full flex-row items-center justify-between px-[20px] py-[4px] bg-white`}>
+    <View style={tw`w-full flex-row items-center justify-between px-[20px] pt-[30px] bg-white`}>
       <View style={tw`flex-row items-center gap-[2px]`}>
         {leftIcon && (
           <TouchableOpacity

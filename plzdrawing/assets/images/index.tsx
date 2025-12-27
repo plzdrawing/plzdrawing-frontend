@@ -19,7 +19,8 @@ import AlarmIcon from "@/assets/images/ic-alarm.svg";
 import MenuIcon from "@/assets/images/ic-hamburger.svg";
 import CommentIcon from "@/assets/images/ic-message.svg";
 import LikeIcon from "@/assets/images/ic-heart.svg";
-import HidePassword from "@/assets/images/ic-hide-password.svg";
+import ShowPasswordOn from "@/assets/images/ic-show-password-on.svg";
+import ShowPasswordOff from "@/assets/images/ic-show-password-off.svg";
 import EmptyCheck from "@/assets/images/ic-check-empty.svg";
 import FilledCheck from "@/assets/images/ic-check-filled.svg";
 import PaginationLeftIcon from "@/assets/images/ic-pagination-left.svg";
@@ -64,7 +65,8 @@ export {
   MenuIcon,
   CommentIcon,
   LikeIcon,
-  HidePassword,
+  ShowPasswordOff,
+  ShowPasswordOn,
   PaginationLeftIcon,
   PaginationRightIcon,
   FooterTalk,
