@@ -20,11 +20,11 @@ export default function EmailLogin() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [email, setEmail] = useState('');
-  const [emailState, setEmailState] = useState<'empty' | 'filled' | 'error'>('empty');
+  const [emailState, setEmailState] = useState<'empty' | 'filled' | 'error' | 'failed'>('empty');
   const [emailError, setEmailError] = useState('');
 
   const [password, setPassword] = useState('');
-  const [passwordState, setPasswordState] = useState<'empty' | 'filled' | 'error'>('empty');
+  const [passwordState, setPasswordState] = useState<'empty' | 'filled' | 'error' | 'failed'>('empty');
   
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -54,7 +54,7 @@ export default function EmailLogin() {
     }
 
     try {
-      const response = await authApi.login({
+      await authApi.login({
         provider: 'EMAIL',
         email: email,
         password: password,
@@ -79,6 +79,8 @@ export default function EmailLogin() {
   };
 
   const handleConfirm = () => {
+    setEmailState('failed');
+    setPasswordState('failed');
     setModalVisible(false);
   };
 
@@ -110,7 +112,10 @@ export default function EmailLogin() {
             content={password}
             validation={(text) => setPassword(text)}
             type='password'
-            errorMessage='비밀번호를 다시 한 번 확인해주세요.'
+            errorMessage={passwordState === 'failed'
+                ? '이메일, 비밀번호를 다시 한 번 확인해주세요.'
+                : '비밀번호를 다시 한 번 확인해주세요.'
+            }
           />
           <Button
             isValid={emailState === 'filled' && passwordState === 'filled'}
@@ -124,7 +129,7 @@ export default function EmailLogin() {
             style={{ textDecorationLine: 'underline' }}
             onPress={handlePasswordFindClick}
           >
-            아이디/비밀번호 찾기
+            아이디 찾기 / 비밀번호 찾기
           </Txt>
         </View>
       </Container>

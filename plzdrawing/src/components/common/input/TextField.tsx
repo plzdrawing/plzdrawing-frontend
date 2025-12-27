@@ -19,8 +19,8 @@ interface TextFieldProps extends TextInputProps {
   id?: string;
   content?: string;
   type?: 'text' | 'password';
-  state?: 'empty' | 'filled' | 'error';
-  setState: (state: 'empty' | 'filled' | 'error') => void;
+  state?: 'empty' | 'filled' | 'error' | 'failed';
+  setState: (state: 'empty' | 'filled' | 'error' | 'failed') => void;
   validation?: (text: string) => void;
   errorMessage?: string;
 }
@@ -58,7 +58,7 @@ export default function TextField(props: TextFieldProps) {
   };
 
   const getBorderColor = () => {
-    if (state === 'error') {
+    if (state === 'error' || state === 'failed') {
       return tw`border-error-red`;
     } else if (isFocused) {
       return tw`border-sub-yellow`;
@@ -107,7 +107,7 @@ export default function TextField(props: TextFieldProps) {
         )}
       </View>
 
-      {state === 'error' && (
+      {(state === 'error' || state === 'failed') && errorMessage && (
         <Txt variant='bodySubText' color='error_red' style={tw`ml-[20px]`}>
           {errorMessage}
         </Txt>
