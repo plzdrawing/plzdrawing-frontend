@@ -23,6 +23,7 @@ export default function Txt({
   style,
   color = "black", // 기본 색상
   variant,
+  align = "left",
   height,
   ...props
 }: TextProps) {
@@ -40,7 +41,7 @@ export default function Txt({
           fontFamily: variant
             ? FontStyles[variant].fontFamily
             : FontStyles.default.fontFamily,
-          textAlign: props.align,
+          textAlign: align,
           lineHeight: height
             ? height
             : variant

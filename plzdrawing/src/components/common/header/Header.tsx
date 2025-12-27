@@ -1,64 +1,54 @@
-import React from "react";
-import styled from "styled-components/native";
-import { TouchableOpacity } from "react-native";
+import tw from '@/src/lib/tailwind';
+import { TouchableOpacity, View } from 'react-native';
+
 import { BackArrowIcon, CloseIcon } from "@/assets/images";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
+import Txt from '../text/Txt';
 
 interface HeaderProps {
   title?: string;
-  type?: "close" | "back";
-  onClick?: () => void;
-  backgroundColor?: string;
+  leftIcon?: React.ReactNode;
+  onLeftClick?: () => void;
+  rightIcon?: React.ReactNode;
+  onRightClick?: () => void;
 }
 
-const Header = ({
-  type = "back",
-  onClick,
-  backgroundColor = "#fff",
-}: HeaderProps) => {
+export default function Header({
+  title,
+  leftIcon,
+  onLeftClick,
+  rightIcon,
+  onRightClick,
+}: HeaderProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
-    <Container>
-      <BackButton
-        onPress={
-          onClick
-            ? onClick
-            : () => {
-                navigation.goBack();
-              }
-        }
-      >
-        <IconContainer>
-          {type === "back"
-            ? <BackArrowIcon width={24} height={24} />
-            : <CloseIcon width={24} height={24} />
-          }
-        </IconContainer>
-      </BackButton>
-    </Container>
+    <View style={tw`w-full flex-row items-center justify-between px-[20px] py-[4px] bg-white`}>
+      <View style={tw`flex-row items-center gap-[2px]`}>
+        {leftIcon && (
+          <TouchableOpacity
+            onPress={onLeftClick ? onLeftClick : () => navigation.goBack()}
+            style={tw`w-[40px] h-[40px] flex-row items-center justify-center`}
+          >
+            {leftIcon}
+          </TouchableOpacity>
+        )}
+
+        {title && (
+          <Txt variant='mainTitleBold' align='center'>
+            {title}
+          </Txt>
+        )}
+      </View>
+
+      {rightIcon && (
+        <TouchableOpacity
+          onPress={onRightClick}
+          style={tw`w-[40px] h-[40px] flex-row items-center justify-center`}
+        >
+          {rightIcon}
+        </TouchableOpacity>
+      )}
+    </View>
   );
 };
-
-const Container = styled.View`
-  width: 100%;
-  flex-direction: row;
-  align-items: center;
-  padding: 4px 30px;
-  background-color: ${(props: { backgroundColor: string }) =>
-    props.backgroundColor};
-`;
-
-const BackButton = styled(TouchableOpacity)`
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
-const IconContainer = styled.View`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export default Header;

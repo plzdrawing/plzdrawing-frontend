@@ -15,6 +15,7 @@ module.exports = {
         'light-gray-3': '#DCDFDF',
         'dark-gray-1': '#A8A8A8',
         'dark-gray-2': '#767A7A',
+        'separator': '#DCDFDF',
 
         'highlight-orange': '#FFA011',
         'main-yellow': '#FFC311',

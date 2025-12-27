@@ -1,15 +1,14 @@
 import tw from '@/src/lib/tailwind';
-import { View } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '@/src/types/navigation';
 
+import { View } from 'react-native';
 import Container from '@/src/components/common/container/Container';
 import Txt from '@/src/components/common/text/Txt';
 import BottomFixedArea from '@/src/components/common/area/BottomFixedArea';
 import Button from '@/src/components/ui/button/Button';
 
 import { GreeNormal } from '@/assets/images';
-
-import { RootStackParamList } from '@/src/types/navigation';
 
 export default function LoginSplash() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
