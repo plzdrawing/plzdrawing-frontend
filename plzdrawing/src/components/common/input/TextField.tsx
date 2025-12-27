@@ -87,7 +87,6 @@ export default function TextField(props: TextFieldProps) {
           onChangeText={handleChange}
           onFocus={() => {
             setIsFocused(true);
-            setState('filled');
           }}
           onBlur={() => {
             setIsFocused(false);

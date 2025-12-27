@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ScrollView } from "react-native";
-import { Container } from "@/src/components/common/container/Container";
+import Container from "@/src/components/common/container/Container";
 import colors from "@/src/constants/Colors";
 import Header from "@/src/components/common/header/Header";
 import UserDetail from "./UserDetail";
@@ -72,14 +72,14 @@ export default function UserProfile({ isFromMyPage = false, userId }: UserProfil
   if (isLoading) {
     return (
       <Container>
-        {!isFromMyPage && <Header backgroundColor={colors.colors.light_gray1} />}
+        {!isFromMyPage && <Header />}
       </Container>
     );
   }
 
   return (
     <Container>
-      {!isFromMyPage && <Header backgroundColor={colors.colors.light_gray1} />}
+      {!isFromMyPage && <Header />}
       <ScrollView 
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}

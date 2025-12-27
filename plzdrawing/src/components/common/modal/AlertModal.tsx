@@ -1,82 +1,41 @@
-import React from "react";
-import styled from "styled-components/native";
-import { Dimensions, TouchableOpacity } from "react-native";
-import { Col } from "../flex/Flex";
-import Txt from "../text/Txt";
-import FontStyles from "@/src/constants/Fonts";
+import tw from '@/src/lib/tailwind';
+import { View, TouchableOpacity, Dimensions } from 'react-native';
+import Txt from '@/src/components/common/text/Txt';
 
-type FontStyleKey = keyof typeof FontStyles;
 interface AlertModalProps {
-  title?: string;
+  modalTitle?: string;
   buttonTitle?: string;
-  content?: React.ReactNode;
-  onClick?: () => void;
-  textVariant?: FontStyleKey;
+  onClickButton?: () => void;
 }
 
-const AlertModal = ({
-  title,
+const { width, height } = Dimensions.get('window');
+
+export default function AlertModal({
+  modalTitle,
   buttonTitle,
-  content,
-  onClick,
-  textVariant = "subtitleBold",
-}: AlertModalProps) => {
+  onClickButton,
+}: AlertModalProps) {
   return (
-    <ModalView>
-      <Container>
-        <Col
-          justifyContent="center"
-          alignItems="center"
-          style={{ width: "100%", height: 95 }}
-        >
-          <Txt variant={textVariant} align="center" style={{ width: "100%" }}>
-            {title}
+    <View style={[
+      tw`absolute top-0 left-0 justify-center items-center bg-black/30 z-[1000]`,
+      { width, height }
+    ]}>
+      <View style={tw`w-[326px] h-[150px] flex-col justify-between items-center bg-white rounded-[12px]`}>
+        <View style={tw`justify-center items-center w-full h-[95px]`}>
+          <Txt variant='subtitleBold' align='center'>
+            {modalTitle}
           </Txt>
-          {content && content}
-        </Col>
-        <CheckButton onPress={onClick}>
-          <Txt variant="bodyText" align="center" style={{ width: "100%" }}>
+        </View>
+        
+        <TouchableOpacity 
+          style={tw`w-full border-t border-light-gray-3 rounded-b-[12px] h-[55px] justify-center items-center`}
+          onPress={onClickButton}
+        >
+          <Txt variant='bodyText' align='center'>
             {buttonTitle}
           </Txt>
-        </CheckButton>
-      </Container>
-    </ModalView>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
-
-const Container = styled.View`
-  width: 326px;
-  height: 150px;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 12px;
-`;
-
-const CheckButton = styled(TouchableOpacity)`
-  width: 100%;
-  height: 55px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  border-top-width: 1px;
-  border-color: #dcdfdf;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-`;
-const { width, height } = Dimensions.get("window");
-const ModalView = styled.View`
-  width: ${width}px;
-  height: ${height}px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-`;
-
-export default AlertModal;

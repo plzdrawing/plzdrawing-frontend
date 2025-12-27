@@ -3,7 +3,7 @@ import { TouchableOpacity, BackHandler } from "react-native";
 import styled from "styled-components/native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Container } from "@/src/components/common/container/Container";
+import Container from "@/src/components/common/container/Container";
 import HomeHeader from "@/src/screens/home/home/HomeHeader";
 import { Col } from "@/src/components/common/flex/Flex";
 import SearchFilter from "@/src/screens/home/home/SearchFilter";
@@ -49,7 +49,7 @@ export default function Home() {
   };
 
   return (
-    <Container style={{ paddingBottom: 10 }}>
+    <Container>
       <HomeHeader
         title="그려드려요"
         title2="그림쟁이후기"

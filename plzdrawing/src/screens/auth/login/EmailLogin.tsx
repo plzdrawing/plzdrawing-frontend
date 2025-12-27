@@ -10,7 +10,7 @@ import Container from '@/src/components/common/container/Container';
 import Txt from '@/src/components/common/text/Txt';
 import TextField from '@/src/components/common/input/TextField';
 import Button from '@/src/components/ui/button/Button';
-import AlertModal from "@/src/components/common/modal/AlertModal";
+import AlertModal from '@/src/components/common/modal/AlertModal';
 
 import { BackArrowIcon } from '@/assets/images';
 
@@ -113,7 +113,7 @@ export default function EmailLogin() {
             errorMessage='비밀번호를 다시 한 번 확인해주세요.'
           />
           <Button
-            isValid={emailState === "filled" && passwordState === "filled"}
+            isValid={emailState === 'filled' && passwordState === 'filled'}
             variant='default'
             title='로그인'
             onClick={handleLoginClick}
@@ -127,16 +127,15 @@ export default function EmailLogin() {
             아이디/비밀번호 찾기
           </Txt>
         </View>
-
-        {modalVisible && (
-          <AlertModal
-            title={'이메일 혹은 비밀번호가\n일치하지 않아요.'}
-            buttonTitle='확인'
-            onClick={handleConfirm}
-            textVariant='thirdText'
-          />
-        )}
       </Container>
+
+      {modalVisible && (
+        <AlertModal
+          modalTitle={'이메일 혹은 비밀번호가\n일치하지 않아요.'}
+          buttonTitle='확인'
+          onClickButton={handleConfirm}
+        />
+      )}
     </>
   );
 }
