@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { TextInput } from "react-native";
 import styled from "styled-components/native";
 import Colors from "@/src/constants/Colors";
-import Txt from "../text/Txt";
-import { Col } from "../flex/Flex";
+import Txt from "../../common/text/Txt";
+import { Col } from "../../common/flex/Flex";
 
 interface PriceTextFieldProps {
   label?: string;

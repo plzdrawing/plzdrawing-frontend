@@ -4,7 +4,7 @@ import Txt from "@/src/components/common/text/Txt";
 import { Container } from "@/src/components/common/container/Container";
 import { Col } from "@/src/components/common/flex/Flex";
 import styled from "styled-components/native";
-import TextField from "@/src/components/common/input/TextField";
+import TextField from "@/src/components/ui/input/TextField";
 import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
 import {

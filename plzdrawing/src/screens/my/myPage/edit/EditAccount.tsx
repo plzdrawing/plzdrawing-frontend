@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types/navigation';
 import Txt from "@/src/components/common/text/Txt";
-import TextField from "@/src/components/common/input/TextField";
+import TextField from "@/src/components/ui/input/TextField";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
 import ProfileEditHeader from "./components/EditHeader";
 import Colors from "@/src/constants/Colors";

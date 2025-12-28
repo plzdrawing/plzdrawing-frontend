@@ -9,7 +9,7 @@ import Header from "@/src/components/common/header/Header";
 import Txt from "@/src/components/common/text/Txt";
 import { NavigationProp, useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
-import TextField from "@/src/components/common/input/TextField";
+import TextField from "@/src/components/ui/input/TextField";
 import AlertModal from "@/src/components/common/modal/AlertModal";
 import { EmptyCheck, FilledCheck } from "@/assets/images";
 

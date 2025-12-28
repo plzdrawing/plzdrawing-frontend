@@ -14,8 +14,8 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { DrawingInfo } from "@/src/types/post";
-import TextAreaField from "@/src/components/common/input/TextAreaField";
-import ImageUploader from "@/src/components/common/input/ImgUploader";
+import TextAreaField from "@/src/components/ui/input/TextAreaField";
+import ImageUploader from "@/src/components/ui/input/ImgUploader";
 
 type HomeRequestScreenProps = NativeStackScreenProps<
   RootStackParamList,

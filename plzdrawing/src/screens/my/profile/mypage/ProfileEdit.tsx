@@ -4,10 +4,10 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
 import Colors from "@/src/constants/Colors";
 import Txt from "@/src/components/common/text/Txt";
-import TextField from "@/src/components/common/input/TextField";
+import TextField from "@/src/components/ui/input/TextField";
 import { useState, useEffect } from "react";
 import { BaseProfile } from "@/src/types/profile";
-import ProfileImageUploader from "@/src/components/common/input/ProfileImgUploader";
+import ProfileImageUploader from "@/src/components/ui/input/ProfileImgUploader";
 import { userApi } from "@/src/apis/user";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
 

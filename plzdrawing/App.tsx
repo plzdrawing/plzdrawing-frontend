@@ -48,7 +48,7 @@ function AppNavigator({ isLoggedIn }: { isLoggedIn: boolean }) {
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
         initialRouteName={isLoggedIn ? "Main" : "LoginSplash"}
-        // initialRouteName="Chatting"
+        // initialRouteName="EmailVerification"
       >
         <Stack.Screen name="Main" component={MainNavigation} />
         <Stack.Screen name="LoginSplash" component={LoginSplash} />

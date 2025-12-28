@@ -8,14 +8,14 @@ import { View, Keyboard } from 'react-native';
 import Header from '@/src/components/common/header/Header';
 import Container from '@/src/components/common/container/Container';
 import Txt from '@/src/components/common/text/Txt';
-import TextField from '@/src/components/common/input/TextField';
+import TextField from '@/src/components/ui/input/TextField';
 import BottomFixedArea from '@/src/components/common/area/BottomFixedArea';
 import Button from '@/src/components/ui/button/Button';
 import AlertModal from '@/src/components/common/modal/AlertModal';
 
 import { BackArrowIcon } from '@/assets/images';
 
-import { authApi } from '@/src/apis/auth';
+import { emailController } from '@/src/apis/controller/email';
 
 export default function EmailSignup() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -71,15 +71,15 @@ export default function EmailSignup() {
       setIsLoading(true); // 로딩 시작
       try {
         // API 호출
-        await authApi.sendEmailVerification({ email });
+        await emailController.sendEmailCode({ email });
 
         // API 호출 성공 시
-        console.log("인증번호 전송 성공!");
+        console.log('인증번호 전송');
         setSuccessModalVisible(true);
 
       } catch (error: any) {
         // API 호출 실패 시 (네트워크, 서버 에러 등)
-        console.error("API Error:", error);
+        console.error('API Error:', error);
         // 서버에서 보낸 에러 메시지가 있다면 사용, 없다면 기본 메시지
         setErrorModalVisible(true);
       } finally {
@@ -87,8 +87,8 @@ export default function EmailSignup() {
       }
     } else {
       // 이메일 형식이 올바르지 않은 경우 (기존 로직)
-      setEmailError("이메일 형식이 올바르지 않습니다.");
-      setEmailState("error");
+      setEmailError('이메일 형식이 올바르지 않습니다.');
+      setEmailState('error');
     }
   };
 
