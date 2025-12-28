@@ -1,34 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { BackHandler } from "react-native";
-import styled from "styled-components/native";
+import { useState, useEffect, useCallback } from 'react';
+
+import { BackHandler } from 'react-native';
+import { useNavigation, useIsFocused, useFocusEffect, CommonActions } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation, useIsFocused, useFocusEffect, CommonActions } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import HomeHeader from "@/src/screens/home/home/HomeHeader";
-import { Col } from "@/src/components/common/flex/Flex";
-import ProfileInfoSection from "@/src/screens/my/profile/mypage/ProfileInfoSection";
-import MenuGroup from "@/src/screens/my/profile/mypage/ProfileMenuGroup";
-import UserProfile from "@/src/screens/my/userProfile/UserProfile";
+
+import UserProfile from "@/src/screens/my/pages/profilePage/Profile";
 import { BaseProfile, ProfileMenuItem } from "@/src/types/profile";
 import { RootStackParamList } from "@/src/types/navigation";
-import Colors from "@/src/constants/Colors";
-import {
-  AlarmIcon,
-  LanguageIcon,
-  MegaphoneIcon,
-  MenuCircleIcon,
-  MultipleFileIcon,
-  PasswordChangeIcon,
-  QuestionIcon,
-} from "@/assets/images";
+
+import Container from "@/src/components/common/container/Container";
+import TabHeader from '@/src/components/common/header/TabHeader';
+import Setting from '@/src/screens/my/pages/settingPage/Setting';
 
 import { userApi } from "@/src/apis/user";
-import { authApi } from "@/src/apis/auth";
 import { authController } from '@/src/apis/controller/auth';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-export default function Profile() {
+export default function My() {
   const [selectedId, setSelectedId] = useState(0);
   const navigation = useNavigation<ProfileScreenNavigationProp>();
   const isFocused = useIsFocused();
@@ -37,11 +27,10 @@ export default function Profile() {
     imageUrl: "",
     hashtag: [],
   });
-  const [isLoading, setIsLoading] = useState(true);
 
   // 사용자 정보 조회 - 화면이 포커스될 때마다 새로고침
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       const fetchUserData = async () => {
         try {
           const response = await userApi.getMyProfile();
@@ -94,8 +83,6 @@ export default function Profile() {
           imageUrl: "",
           hashtag: ["#프로필", "#미작성"],
         });
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -119,14 +106,11 @@ export default function Profile() {
   // 로그아웃 처리
   const handleLogout = async () => {
     try {
-      // 로그아웃 API 호출
       await authController.logout();
       
-      // AsyncStorage에서 토큰 삭제
       await AsyncStorage.removeItem('accessToken');
       await AsyncStorage.removeItem('refreshToken');
       
-      // 로그인 화면으로 이동 (뒤로가기 방지)
       console.log('logout success');
       navigation.dispatch(
         CommonActions.reset({
@@ -136,7 +120,6 @@ export default function Profile() {
       );
     } catch (error) {
       console.error('Logout failed:', error);
-      // 에러가 발생해도 로컬 토큰은 삭제하고 로그인 화면으로 이동
       await AsyncStorage.removeItem('accessToken');
       await AsyncStorage.removeItem('refreshToken');
       navigation.dispatch(
@@ -148,74 +131,25 @@ export default function Profile() {
     }
   };
 
-  const settingsMenuItems: ProfileMenuItem[] = [
-    { icon: <AlarmIcon />, text: "알림 설정", onPress: () => {navigation.navigate("AlarmSetting")} },
-    // { icon: <LanguageIcon />, text: "언어 설정", onPress: () => {} },
-  ];
-
-  const supportMenuItems: ProfileMenuItem[] = [
-    { icon: <MegaphoneIcon />, text: "공지사항", onPress: () => {navigation.navigate("Notice");} },
-    { icon: <QuestionIcon />, text: "고객센터", onPress: () => {navigation.navigate("CustomerService")} },
-    { icon: <QuestionIcon />, text: "1:1 문의", onPress: () => {} },
-    { icon: <MultipleFileIcon />, text: "앱 관리", onPress: () => {navigation.navigate("Tos");} },
-    { icon: <MenuCircleIcon />, text: "결제내역", onPress: () => {navigation.navigate("Payments");} },
-  ];
-
-  const accountMenuItems: ProfileMenuItem[] = [
-    // { icon: <MenuCircleIcon />, text: "회원정보 수정", onPress: () => {navigation.navigate("EditAccount")} },
-    { icon: <PasswordChangeIcon />, text: "비밀번호 변경",
-      onPress: () => {
-        navigation.navigate("EditPassword");
-      }
-    },
-  ];
-
-  const loginMenuItems: ProfileMenuItem[] = [
-    { text: "로그아웃", onPress: handleLogout },
-    { text: "회원탈퇴", onPress: () => {} },
-  ];
-
   return (
-    <Container>
-      <HomeHeader
-        title="프로필"
-        title2="설정"
+    <Container className='w-full'>
+      <TabHeader
+        title1='프로필'
+        title2='설정'
         selectedId={selectedId}
         setSelectedId={setSelectedId}
+        onRightClick={() => navigation.navigate('Alarm')}
       />
-      {selectedId === 0 ? (
-        <UserProfile isFromMyPage={true} />
-      ) : (
-        <ScrollContainer showsVerticalScrollIndicator={false}>
-          <Col
-            justifyContent="flex-start"
-            padding="32px"
-            gap={18}
-            style={{ flex: 1, backgroundColor: Colors.colors.light_gray1, paddingTop: 16 }}
-          >
-            <ProfileInfoSection
-              profile={userProfile}
-              onEditPress={() => navigation.navigate("ProfileEdit")}
-            />
-
-            <MenuGroup title="설정" items={settingsMenuItems} />
-            <MenuGroup title="정보 및 지원" items={supportMenuItems} />
-            <MenuGroup title="계정 설정" items={accountMenuItems} />
-            <MenuGroup title="계정" items={loginMenuItems} />
-          </Col>
-        </ScrollContainer>
-      )}
+      {selectedId === 0
+        ? <UserProfile 
+            isFromMyPage={true}
+            userProfile={userProfile}
+          />
+        : <Setting 
+            userProfile={userProfile}
+            onLogout={handleLogout}
+          />
+      }
     </Container>
   );
 }
-
-const Container = styled.View`
-  padding-top: 24px;
-  flex: 1;
-  background-color: ${Colors.colors.white};
-`;
-
-const ScrollContainer = styled.ScrollView`
-  width: 100%;
-  flex: 1;
-`;

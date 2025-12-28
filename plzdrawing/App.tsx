@@ -38,7 +38,7 @@ import EditAccount from "@/src/screens/my/myPage/edit/EditAccount";
 import EditPassword from "@/src/screens/my/myPage/edit/EditPassword";
 import EditSuccess from "@/src/screens/my/myPage/edit/components/EditSuccess";
 import Payments from "@/src/screens/my/myPage/payments/Payments";
-import UserProfile from "@/src/screens/my/userProfile/UserProfile";
+import UserProfile from "@/src/screens/my/pages/profilePage/Profile";
 
 const Stack = createStackNavigator<RootStackParamList>();
 

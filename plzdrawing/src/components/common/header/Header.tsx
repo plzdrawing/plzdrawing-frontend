@@ -1,10 +1,9 @@
 import tw from '@/src/lib/tailwind';
-import { TouchableOpacity, View } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '@/src/types/navigation';
 
-import { BackArrowIcon, CloseIcon } from "@/assets/images";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "@/src/types/navigation";
-import Txt from '../text/Txt';
+import { View, TouchableOpacity } from 'react-native';
+import Txt from '@/src/components/common/text/Txt';
 
 interface HeaderProps {
   title?: string;
@@ -22,6 +21,7 @@ export default function Header({
   onRightClick,
 }: HeaderProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <View style={tw`w-full flex-row items-center justify-between px-[20px] pt-[30px] bg-white`}>
       <View style={tw`flex-row items-center gap-[2px]`}>
