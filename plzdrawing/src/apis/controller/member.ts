@@ -19,8 +19,11 @@ export const memberController = {
   },
 
   // 프로필 수정: PATCH
-  editProfile: async (data: UpdateProfileRequest) => {
-    const response = await apiClient.patch('/api/member/v1/profile', data);
+  editProfile: async (multipartFile: File, profile: UpdateProfileRequest) => {
+    const response = await apiClient.patch('/api/member/v1/profile', {
+      multipartFile,
+      ...profile,
+    });
     return response.data;
   },
 

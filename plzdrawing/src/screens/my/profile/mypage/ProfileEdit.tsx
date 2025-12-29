@@ -8,8 +8,9 @@ import TextField from "@/src/components/ui/input/TextField";
 import { useState, useEffect } from "react";
 import { BaseProfile } from "@/src/types/profile";
 import ProfileImageUploader from "@/src/components/ui/input/ProfileImgUploader";
-import { userApi } from "@/src/apis/user";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
+
+import { memberController } from "@/src/apis/controller/member";
 
 type ProfileEditProps = NativeStackScreenProps<
   RootStackParamList,
@@ -18,11 +19,11 @@ type ProfileEditProps = NativeStackScreenProps<
 
 export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
   const [nickname, setNickname] = useState("");
-  const [nicknameState, setNicknameState] = useState<"empty" | "filled" | "error">("empty");
+  const [nicknameState, setNicknameState] = useState<"empty" | "filled" | "error" | 'failed'>("empty");
   const [introduction, setIntroduction] = useState("");
-  const [introductionState, setIntroductionState] = useState<"empty" | "filled" | "error">("empty");
+  const [introductionState, setIntroductionState] = useState<"empty" | "filled" | "error" | 'failed'>("empty");
   const [hashtags, setHashtags] = useState("");
-  const [hashtagState, setHashtagState] = useState<"empty" | "filled" | "error">("empty");
+  const [hashtagState, setHashtagState] = useState<"empty" | "filled" | "error" | 'failed'>("empty");
   const [newImageUri, setNewImageUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -31,7 +32,7 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
   const [initialData, setInitialData] = useState({
     nickname: "",
     introduction: "",
-    hashtags: "",
+    hashtags: [] as string[],
     imageUrl: "",
   });
 
@@ -39,7 +40,7 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await userApi.getMe();
+        const response = await memberController.checkMyPage();
         const data = response as any;
         
         if (data && data.nickname) {
@@ -70,7 +71,7 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
     return (
       nickname !== initialData.nickname ||
       introduction !== initialData.introduction ||
-      hashtags !== initialData.hashtags ||
+      hashtags !== initialData.hashtags.join(" ") ||
       newImageUri !== null
     );
   };
@@ -81,12 +82,29 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
     
     setIsSaving(true);
     try {
-      await userApi.updateMyProfile({
-        nickname: nickname || initialData.nickname,
-        introduction: introduction || initialData.introduction,
-        hashtags: hashtags || initialData.hashtags,
-        profileImageUrl: newImageUri || initialData.imageUrl,
-      });
+      const imageFile = newImageUri 
+        ? { uri: newImageUri, name: 'profile.jpg', type: 'image/jpeg' } as unknown as File 
+        : undefined;
+      
+      if (imageFile) {
+        await memberController.editProfile(
+          imageFile,
+          {
+            nickname: nickname || initialData.nickname,
+            introduce: introduction || initialData.introduction,
+            hashTag: hashtags.split(" ") || initialData.hashtags,
+          }
+        );
+      } else {
+        await memberController.editProfile(
+          {} as File,
+          {
+            nickname: nickname || initialData.nickname,
+            introduce: introduction || initialData.introduction,
+            hashTag: hashtags.split(" ") || initialData.hashtags,
+          }
+        );
+      }
       
       // 성공 후 Profile 페이지로 이동
       navigation.goBack();
@@ -150,7 +168,7 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
           해시태그
         </Txt>
         <TextField
-          placeholder={initialData.hashtags || "#태그를 입력하세요"}
+          placeholder={initialData.hashtags.join(" ") || "#태그를 입력하세요"}
           state={hashtagState}
           setState={setHashtagState}
           value={hashtags}

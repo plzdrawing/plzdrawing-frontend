@@ -12,7 +12,8 @@ import styled from "styled-components/native";
 import { NavigationProp, useRoute, RouteProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import AlertModal from "@/src/components/ui/modal/AlertModal";
-import { authApi } from "@/src/apis/auth";
+
+import { emailController } from '@/src/apis/controller/email';
 
 type PasswordFindVerificationRouteProp = RouteProp<RootStackParamList, 'PasswordFindVerification'>;
 
@@ -79,7 +80,7 @@ export default function PasswordFindVerification() {
     setVerificationCode(["", "", "", "", "", ""]);
     // [추가] 인증번호 재전송 API 호출
     try {
-      await authApi.requestPasswordReissue({ email });
+      await emailController.sendNewPasswordCode({ email });
     } catch (error) {
       console.error("Resend code failed:", error);
     }
@@ -92,7 +93,7 @@ export default function PasswordFindVerification() {
     }
 
     try {
-      await authApi.verifyPasswordReissue({
+      await emailController.verifyNewPasswordCode({
         email: email,
         authCode: code,
       });

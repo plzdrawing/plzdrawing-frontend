@@ -9,8 +9,6 @@ import UserDrawings from "../../userProfile/UserDrawings";
 import UserReviews from "../../userProfile/UserReviews";
 import { BaseProfile } from "@/src/types/profile";
 
-import { userApi } from "@/src/apis/user";
-
 type FilterType = '그림' | '후기';
 
 interface ProfileProps {
@@ -51,40 +49,6 @@ export default function Profile({
       }));
     }
   }, [userProfile]);
-
-  // isFromMyPage가 아닐 때만 userId로 데이터 fetch
-  useEffect(() => {
-    if (!isFromMyPage && userId) {
-      const fetchUserData = async () => {
-        try {
-          const response = await userApi.getUserProfile(Number(userId));
-          const data = response as any;
-          
-          if (data && (data.nickname || data.name)) {
-            setUser({
-              id: data.id || "",
-              name: data.nickname || data.name || "사용자",
-              intro: data.introduction || "",
-              tags: data.hashtags || [],
-              drawings: [],
-              reviews: {
-                drawNum: 0,
-                rejectNum: 0,
-                rating: 0,
-                reviewNum: 0,
-                reviewKeywords: [],
-                reviews: [],
-              },
-            });
-          }
-        } catch (error) {
-          console.error('Failed to fetch user data:', error);
-        }
-      };
-
-      fetchUserData();
-    }
-  }, [userId, isFromMyPage]);
 
   return (
     <>

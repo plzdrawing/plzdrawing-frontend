@@ -17,8 +17,10 @@ import {
   RouteProp,
 } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
-import { authApi } from "@/src/apis/auth";
+
 import AlertModal from "@/src/components/ui/modal/AlertModal";
+
+import { emailController } from '@/src/apis/controller/email';
 
 type PasswordChangeRouteProp = RouteProp<RootStackParamList, 'PasswordChange'>;
 
@@ -62,8 +64,7 @@ export default function PasswordChange() {
     }
 
     try {
-      await authApi.updatePassword({
-        email: email,
+      await emailController.updatePassword({
         nowPassword: currentPassword,
         newPassword: newPassword,
       });

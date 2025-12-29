@@ -4,12 +4,13 @@ import styled from "styled-components/native";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types/navigation';
-import { authApi } from "@/src/apis/auth";
+
 import Txt from "@/src/components/ui/Txt";
 import TextField from "@/src/components/ui/input/TextField";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
 import ProfileEditHeader from "./components/EditHeader";
 import Colors from "@/src/constants/Colors";
+import { emailController } from "@/src/apis/controller/email";
 
 type EditPasswordNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -19,15 +20,15 @@ export default function EditPassword() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [pwdTextFieldState, setPwdTextFieldState] = useState<
-    "empty" | "filled" | "error"
+    "empty" | "filled" | "error" | 'failed'
   >("empty");
 
   const [newPwdtextFieldState, setNewPwdTextFieldState] = useState<
-    "empty" | "filled" | "error"
+    "empty" | "filled" | "error" | 'failed'
   >("empty");
 
   const [newPwdChecktextFieldState, setNewPwdCheckTextFieldState] = useState<
-    "empty" | "filled" | "error"
+    "empty" | "filled" | "error" | 'failed'
   >("empty");
 
   const [newPassword, setNewPassword] = useState("");
@@ -92,7 +93,7 @@ export default function EditPassword() {
 
     try {
       // API 호출 (JWT 토큰으로 사용자 식별)
-      await authApi.updatePassword({
+      await emailController.updatePassword({
         nowPassword: currentPassword,
         newPassword: newPassword,
       });

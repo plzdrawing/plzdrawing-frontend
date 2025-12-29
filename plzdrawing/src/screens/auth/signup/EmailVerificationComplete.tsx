@@ -79,7 +79,7 @@ export default function VerificationComplete() {
 
         <AgreementSection>
           <TouchableOpacity onPress={handleAllAgreements}>
-            <View style={tw`gap-[12px]`}>
+            <View style={tw`gap-[12px] flex-row`}>
               <Checkbox checked={agreements.all}></Checkbox>
               <Txt variant="bodySubText">약관 전체 동의</Txt>
             </View>
@@ -89,7 +89,7 @@ export default function VerificationComplete() {
 
           <View style={tw`gap-[16px]`}>
             <TouchableOpacity onPress={() => handleSingleAgreement("terms")}>
-              <View style={tw`gap-[12px]`}>
+              <View style={tw`gap-[12px] flex-row`}>
                 <Checkbox checked={agreements.terms}></Checkbox>
                 <Txt variant="bodySubText">
                   [필수] 약관동의 (개인정보 수집 및 이용)
@@ -98,7 +98,7 @@ export default function VerificationComplete() {
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => handleSingleAgreement("privacy")}>
-              <View style={tw`gap-[12px]`}>
+              <View style={tw`gap-[12px] flex-row`}>
                 <Checkbox checked={agreements.privacy}></Checkbox>
                 <Txt variant="bodySubText">[필수] 이용정책 동의</Txt>
               </View>
@@ -107,7 +107,7 @@ export default function VerificationComplete() {
             <TouchableOpacity
               onPress={() => handleSingleAgreement("marketing")}
             >
-              <View style={tw`gap-[12px]`}>
+              <View style={tw`gap-[12px] flex-row`}>
                 <Checkbox checked={agreements.marketing}></Checkbox>
                 <Txt variant="bodySubText">[선택] 할인, 이벤트 소식 받기</Txt>
               </View>

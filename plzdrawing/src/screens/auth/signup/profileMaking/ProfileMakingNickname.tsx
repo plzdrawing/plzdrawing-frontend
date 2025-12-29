@@ -8,10 +8,10 @@ import styled from "styled-components/native";
 import TextField from "@/src/components/ui/input/TextField";
 import BottomFixedArea from "@/src/components/layout/BottomFixedArea";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
+import { View } from 'react-native';
 import { NavigationProp, useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
-import { authApi } from "@/src/apis/auth";
-import { View } from 'react-native/Libraries/Components/View/View';
+import { authController } from "@/src/apis/controller/auth";
 
 type ProfileMakingNicknameRouteProp = RouteProp<RootStackParamList, 'ProfileMakingNickname'>;
 
@@ -35,7 +35,7 @@ export default function ProfileMakingNickname() {
     console.log("약관 동의:", agreements);
 
     try {
-      await authApi.signup({
+      await authController.signup({
         email: email,
         password: password,
         nickName: nickName,
@@ -68,6 +68,8 @@ export default function ProfileMakingNickname() {
             placeholder="별명은 이후에 변경할 수 있어요."
             state={textFieldState}
             setState={setTextFieldState}
+            content={nickName}
+            validation={(text) => setNickName(text)}
           />
         </View>
       </View>

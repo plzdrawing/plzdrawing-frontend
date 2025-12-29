@@ -13,7 +13,7 @@ import Container from "@/src/components/layout/Container";
 import TabHeader from '@/src/components/layout/header/TabHeader';
 import Setting from '@/src/screens/my/pages/settingPage/Setting';
 
-import { userApi } from "@/src/apis/user";
+import { memberController } from '@/src/apis/controller/member';
 import { authController } from '@/src/apis/controller/auth';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -33,7 +33,7 @@ export default function My() {
     useCallback(() => {
       const fetchUserData = async () => {
         try {
-          const response = await userApi.getMyProfile();
+          const response = await memberController.checkMyPage();
           console.log('User data response:', response);
         
         // any로 캐스팅하여 실제 API 응답 구조 처리
