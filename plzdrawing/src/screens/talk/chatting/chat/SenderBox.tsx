@@ -1,9 +1,10 @@
+import tw from '@/src/lib/tailwind';
+
 import Colors from "@/src/constants/Colors";
 import { useState } from "react";
 import styled from "styled-components/native";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 import { ViewProps, Image, View, Text } from "react-native";
-import { Row } from "@/src/components/common/flex/Flex";
 
 interface SenderBoxProps extends ViewProps {
   message: string;
@@ -13,7 +14,7 @@ interface SenderBoxProps extends ViewProps {
 const SenderBox = (props: SenderBoxProps) => {
   const { message, imageUri } = props;
   return (
-    <Row justifyContent="flex-end" alignItems="center">
+    <View style={tw`flex-row justify-end items-center`}>
       {imageUri ? (
         <ImageContainer>
           <StyledImage source={{ uri: imageUri }} />
@@ -28,7 +29,7 @@ const SenderBox = (props: SenderBoxProps) => {
           <Txt>{message}</Txt>
         </ChattingTextBox>
       )}
-    </Row>
+    </View>
   );
 };
 

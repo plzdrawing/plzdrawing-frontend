@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container } from "@/src/components/common/container/Container";
+import { Container } from "@/src/components/layout/Container";
 import AlarmHeader from "./components/AlarmHeader";
 import { AlarmData, AlarmList } from "./components/AlarmList";
 

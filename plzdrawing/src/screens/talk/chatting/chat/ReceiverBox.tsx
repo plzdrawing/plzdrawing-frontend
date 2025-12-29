@@ -1,9 +1,10 @@
+import tw from '@/src/lib/tailwind';
+
 import Colors from "@/src/constants/Colors";
 import { useState } from "react";
 import styled from "styled-components/native";
-import Txt from "@/src/components/common/text/Txt";
-import { ViewProps } from "react-native";
-import { Row } from "@/src/components/common/flex/Flex";
+import Txt from "@/src/components/ui/Txt";
+import { View, ViewProps } from "react-native";
 
 interface ReceiverBoxProps extends ViewProps {
   message: string;
@@ -12,12 +13,12 @@ interface ReceiverBoxProps extends ViewProps {
 const ReceiverBox = (props: ReceiverBoxProps) => {
   const { message } = props;
   return (
-    <Row justifyContent="flex-start" alignItems="flex-start" gap={17} style={{ maxWidth: '100%' }}>
+    <View style={tw`flex-row justify-start items-start gap-[17px] max-w-full`}>
       <ProfileImage />
       <ChattingTextBox>
         <Txt>{message}</Txt>
       </ChattingTextBox>
-    </Row>
+    </View>
   );
 };
 

@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import colors from "@/src/constants/Colors";
-import Txt from "@/src/components/common/text/Txt";
-import { Container } from "@/src/components/common/container/Container";
+import Txt from "@/src/components/ui/Txt";
+import { Container } from "@/src/components/layout/Container";
 import PaymentsHeader from "./components/PaymentsHeader";
 import PaymentsList from "./components/PaymentsList";
 import PaymentsItem from "./components/PaymentsItem";

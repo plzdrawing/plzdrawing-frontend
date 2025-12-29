@@ -1,4 +1,4 @@
-import { Container } from "../../../components/common/container/Container";
+import Container from "../../../components/layout/Container";
 import { NavigationProp, useNavigation, useIsFocused } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import { useState, useEffect } from "react";

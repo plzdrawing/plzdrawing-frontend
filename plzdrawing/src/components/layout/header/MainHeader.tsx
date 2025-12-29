@@ -1,11 +1,12 @@
+import tw from '@/src/lib/tailwind';
+
 import React from "react";
 import styled from "styled-components/native";
-import { TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { BackArrowIcon, CloseIcon } from "@/assets/images";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
-import { Row } from "../flex/Flex";
-import Txt from "../text/Txt";
+import Txt from "@/src/components/ui/Txt";
 import Colors from "@/src/constants/Colors";
 
 interface MainHeaderProps {
@@ -37,7 +38,7 @@ const MainHeader = ({ title, subTitle, state, onClick }: MainHeaderProps) => {
 
   return (
     <Container>
-      <Row style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <BackButton
           onPress={
             onClick
@@ -51,20 +52,15 @@ const MainHeader = ({ title, subTitle, state, onClick }: MainHeaderProps) => {
             <BackArrowIcon width={24} height={24} />
           </IconContainer>
         </BackButton>
-        <Row
-          gap={2}
-          padding="0px 14px"
-          justifyContent="flex-start"
-          alignItems="flex-end"
-        >
+        <View style={tw`gap-2 px-14 justify-start items-end`}>
           <Txt variant="subtitleBold" align="left" height={24}>
             {title}
           </Txt>
           <Txt variant="bodyText" align="left" style={{ paddingBottom: 1 }}>
             {subTitle}
           </Txt>
-        </Row>
-      </Row>
+        </View>
+      </View>
       {/* {state && (
         <StateBox state={state}>
           <Txt

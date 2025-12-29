@@ -1,7 +1,10 @@
+import tw from '@/src/lib/tailwind';
 import { useState } from "react";
+
 import styled from "styled-components/native";
-import { Col } from "@/src/components/common/flex/Flex";
-import Txt from "@/src/components/common/text/Txt";
+
+import { View, ScrollView } from "react-native";
+import Txt from "@/src/components/ui/Txt";
 import Colors from "@/src/constants/Colors";
 
 const ScrollFilter = () => {
@@ -24,13 +27,7 @@ const ScrollFilter = () => {
     <Container>
       <ScrollContainer horizontal={true} showsHorizontalScrollIndicator={false}>
         {filterList.map((item, index) => (
-          <Col
-            key={index}
-            gap={10}
-            justifyContent="center"
-            alignItems="center"
-            style={{ width: "auto", marginRight: 20 }}
-          >
+          <View key={index} style={tw`mr-5 gap-[5px] justify-center items-center`}>
             <FilterImage
               source={{ uri: item.image }}
               selected={filter === item.name}
@@ -42,7 +39,7 @@ const ScrollFilter = () => {
             >
               {item.name}
             </Txt>
-          </Col>
+          </View>
         ))}
       </ScrollContainer>
     </Container>

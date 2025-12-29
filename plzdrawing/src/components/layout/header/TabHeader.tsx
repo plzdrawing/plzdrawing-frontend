@@ -3,7 +3,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/types/navigation';
 
 import { View, TouchableOpacity } from 'react-native';
-import Txt from '@/src/components/common/text/Txt';
+import Txt from '@/src/components/ui/Txt';
 
 import { AlarmIcon } from '@/assets/images';
 

@@ -1,7 +1,7 @@
 import tw from '@/src/lib/tailwind';
 import { useRef } from 'react';
 import { View, TextInput } from 'react-native';
-import Txt from '@/src/components/common/text/Txt';
+import Txt from '@/src/components/ui/Txt';
 
 interface CodeFieldProps {
   state?: 'default' | 'error';

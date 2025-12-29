@@ -1,6 +1,8 @@
+import tw from '@/src/lib/tailwind';
+
 import React, { useEffect } from "react";
 import styled from "styled-components/native";
-import { TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import {
   AlarmIcon,
   BackArrowIcon,
@@ -11,8 +13,7 @@ import {
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import Colors from "@/src/constants/Colors";
-import { Col, Row } from "@/src/components/common/flex/Flex";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 
 interface HomeHeaderProps {
   title: string;
@@ -49,39 +50,31 @@ const HomeHeader = ({
 
   return (
     <Container>
-      <Row gap={30} style={{ width: "auto" }}>
+      <View style={tw`flex-row gap-[30px]`} >
         <ButtonContainer onPress={() => setSelectedId && setSelectedId(0)}>
-          <Col
-            alignItems="center"
-            gap={10}
-            style={{ width: "auto", marginBottom: -2 }}
-          >
+          <View style={tw`items-center gap-[10px] w-auto mb-[-2px]`}>
             <Txt
               variant={selectedId === 0 ? "mainTitleBold" : "mainTitleLight"}
             >
               {title}
             </Txt>
             {selectedId === 0 && <SelectBar />}
-          </Col>
+          </View>
         </ButtonContainer>
         {title2 && (
           <ButtonContainer onPress={() => setSelectedId && setSelectedId(1)}>
-            <Col
-              alignItems="center"
-              gap={10}
-              style={{ width: "auto", marginBottom: -2 }}
-            >
+            <View style={tw`items-center gap-[10px] w-auto mb-[-2px]`}>
               <Txt
                 variant={selectedId === 1 ? "mainTitleBold" : "mainTitleLight"}
               >
                 {title2}
               </Txt>
               {selectedId === 1 && <SelectBar />}
-            </Col>
+            </View>
           </ButtonContainer>
         )}
-      </Row>
-      <Row justifyContent="center" gap={15} style={{ width: "auto" }}>
+      </View>
+      <View style={tw`justify-center gap-15 w-auto`}>
         <TouchableOpacity onPress={handleAlarmPress}>
           <AlarmIcon width={20} height={20} style={{ marginBottom: 14 }} />
         </TouchableOpacity>
@@ -90,7 +83,7 @@ const HomeHeader = ({
             <MenuIcon width={20} height={20} style={{ marginBottom: 14 }} />
           </TouchableOpacity>
         )}
-      </Row>
+      </View>
     </Container>
   );
 };

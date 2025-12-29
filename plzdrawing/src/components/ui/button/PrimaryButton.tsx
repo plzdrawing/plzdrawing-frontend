@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
 import { Pressable, TouchableOpacityProps } from "react-native";
-import Txt from "../../common/text/Txt"; // Txt 컴포넌트 경로에 맞게 수정
+import Txt from "../Txt"; // Txt 컴포넌트 경로에 맞게 수정
 import Colors from "@/src/constants/Colors";
 
 interface PrimaryButtonProps extends TouchableOpacityProps {

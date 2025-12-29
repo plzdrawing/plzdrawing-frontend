@@ -1,16 +1,17 @@
+import tw from '@/src/lib/tailwind';
+
 import React, { useState, useEffect } from "react";
-import { Keyboard } from "react-native";
+import { Keyboard, View } from "react-native";
 import styled from "styled-components/native";
-import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
+import BottomFixedArea from "@/src/components/layout/BottomFixedArea";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
-import { Container } from "@/src/components/common/container/Container";
-import { Col, Row } from "@/src/components/common/flex/Flex";
-import Header from "@/src/components/common/header/Header";
-import Txt from "@/src/components/common/text/Txt";
+import Container from "@/src/components/layout/Container";
+import Header from "@/src/components/layout/header/Header";
+import Txt from "@/src/components/ui/Txt";
 import { NavigationProp, useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import TextField from "@/src/components/ui/input/TextField";
-import AlertModal from "@/src/components/common/modal/AlertModal";
+import AlertModal from "@/src/components/ui/modal/AlertModal";
 import { EmptyCheck, FilledCheck } from "@/assets/images";
 
 type PwdSettingRouteProp = RouteProp<RootStackParamList, 'PwdSetting'>;
@@ -22,10 +23,10 @@ export default function PwdSetting() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordState, setPasswordState] = useState<
-    "empty" | "filled" | "error"
+    "empty" | "filled" | "error" | "failed"
   >("empty");
   const [confirmState, setConfirmState] = useState<
-    "empty" | "filled" | "error"
+    "empty" | "filled" | "error" | "failed"
   >("empty");
   const [passwordError, setPasswordError] = useState("");
   const [confirmError, setConfirmError] = useState("");
@@ -138,13 +139,13 @@ export default function PwdSetting() {
 
   return (
     <Container>
-      <Header type="back" />
-      <Col gap={isKeyboardVisible ? 28 : 98} padding="43px 32px">
+      <Header />
+      <View style={tw`gap-[${isKeyboardVisible ? 28 : 98}px] p-[43px_32px]`}>
         <Txt variant="headLineBold" align="left">
           비밀번호를 설정해주세요.
         </Txt>
-        <Col gap={37}>
-          <Col gap={17}>
+        <View style={tw`gap-[37px]`}>
+          <View style={tw`gap-[17px]`}>
             <Txt variant="bodySubText" align="left">
               비밀번호
             </Txt>
@@ -159,23 +160,23 @@ export default function PwdSetting() {
             />
 
             {showPasswordChecks && (
-              <Col gap={7} padding={"0 0 0 20px"}>
-                <Row gap={17}>
+              <View style={tw`gap-[7px] p-[0_0_0_20px]`}>
+                <View style={tw`gap-[17px]`}>
                   {lengthCheck ? <FilledCheck /> : <EmptyCheck />}
                   <Txt variant="bodySubText" color="icon_default">
                     최소 8자 이상
                   </Txt>
-                </Row>
-                <Row gap={17}>
+                </View>
+                <View style={tw`gap-[17px]`}>
                   {combinationCheck ? <FilledCheck /> : <EmptyCheck />}
                   <Txt variant="bodySubText" color="icon_default">
                     영문, 숫자, 특수문자 3가지 조합
                   </Txt>
-                </Row>
-              </Col>
+                </View>
+              </View>
             )}
-          </Col>
-          <Col gap={17}>
+          </View>
+          <View style={tw`gap-[17px]`}>
             <Txt variant="bodySubText" align="left">
               비밀번호 확인
             </Txt>
@@ -188,9 +189,9 @@ export default function PwdSetting() {
               errorMessage="비밀번호가 일치하지 않아요"
               type="password"
             />
-          </Col>
-        </Col>
-      </Col>
+          </View>
+        </View>
+      </View>
       <BottomFixedArea>
         <ButtonContainer>
           <PrimaryButton
@@ -204,9 +205,9 @@ export default function PwdSetting() {
       </BottomFixedArea>
       {modalVisible && (
         <AlertModal
-          title="비밀번호 설정이 완료되었어요 :)"
+          modalTitle="비밀번호 설정이 완료되었어요 :)"
           buttonTitle="확인"
-          onClick={() => {
+          onClickButton={() => {
             setModalVisible(false);
             navigation.navigate("ProfileMakingSplash", {
               email,
@@ -214,7 +215,6 @@ export default function PwdSetting() {
               agreements
             });
           }}
-          textVariant="thirdText"
         />
       )}
     </Container>

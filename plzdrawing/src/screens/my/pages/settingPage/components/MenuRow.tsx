@@ -1,7 +1,7 @@
 ﻿import tw from '@/src/lib/tailwind';
 
 import { View, TouchableOpacity } from 'react-native';
-import Txt from '@/src/components/common/text/Txt';
+import Txt from '@/src/components/ui/Txt';
 import { ProfileMenuItem } from '@/src/types/profile';
 
 export default function MenuRow({

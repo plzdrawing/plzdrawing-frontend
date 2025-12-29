@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import styled from "styled-components/native";
 import Colors from "@/src/constants/Colors";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 
 interface UserInfoProps {
   profileImage: string;

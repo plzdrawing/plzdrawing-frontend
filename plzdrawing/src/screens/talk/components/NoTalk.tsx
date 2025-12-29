@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import Txt from '@/src/components/common/text/Txt';
+import Txt from '@/src/components/ui/Txt';
 import { NoTalkImage } from '@/assets/images'; 
 
 export const NoTalk: React.FC = () => {

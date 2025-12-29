@@ -1,12 +1,13 @@
+import tw from '@/src/lib/tailwind';
+
 import colors from "@/src/constants/Colors";
-import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
+import BottomFixedArea from "@/src/components/layout/BottomFixedArea";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
-import { Container } from "@/src/components/common/container/Container";
-import { Col, Row } from "@/src/components/common/flex/Flex";
-import Header from "@/src/components/common/header/Header";
-import Txt from "@/src/components/common/text/Txt";
+import Container from "@/src/components/layout/Container";
+import Header from "@/src/components/layout/header/Header";
+import Txt from "@/src/components/ui/Txt";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import { NavigationProp, useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
@@ -65,55 +66,55 @@ export default function VerificationComplete() {
 
   return (
     <Container>
-      <Header type="back" />
-      <Col gap={30} padding="43px 32px">
-        <Col gap={12}>
+      <Header />
+      <View style={tw`gap-[30px] p-[43px_32px]`}>
+        <View style={tw`gap-[12px]`}>
           <Txt variant="headLineBold" align="left">
             환영합니다 :)
           </Txt>
           <Txt variant="bodySubText" align="left">
             인증이 완료되었어요.
           </Txt>
-        </Col>
+        </View>
 
         <AgreementSection>
           <TouchableOpacity onPress={handleAllAgreements}>
-            <Row gap={12}>
+            <View style={tw`gap-[12px]`}>
               <Checkbox checked={agreements.all}></Checkbox>
               <Txt variant="bodySubText">약관 전체 동의</Txt>
-            </Row>
+            </View>
           </TouchableOpacity>
 
           <Divider />
 
-          <Col gap={16}>
+          <View style={tw`gap-[16px]`}>
             <TouchableOpacity onPress={() => handleSingleAgreement("terms")}>
-              <Row gap={12}>
+              <View style={tw`gap-[12px]`}>
                 <Checkbox checked={agreements.terms}></Checkbox>
                 <Txt variant="bodySubText">
                   [필수] 약관동의 (개인정보 수집 및 이용)
                 </Txt>
-              </Row>
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => handleSingleAgreement("privacy")}>
-              <Row gap={12}>
+              <View style={tw`gap-[12px]`}>
                 <Checkbox checked={agreements.privacy}></Checkbox>
                 <Txt variant="bodySubText">[필수] 이용정책 동의</Txt>
-              </Row>
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() => handleSingleAgreement("marketing")}
             >
-              <Row gap={12}>
+              <View style={tw`gap-[12px]`}>
                 <Checkbox checked={agreements.marketing}></Checkbox>
                 <Txt variant="bodySubText">[선택] 할인, 이벤트 소식 받기</Txt>
-              </Row>
+              </View>
             </TouchableOpacity>
-          </Col>
+          </View>
         </AgreementSection>
-      </Col>
+      </View>
 
       <BottomFixedArea>
         <ButtonContainer>

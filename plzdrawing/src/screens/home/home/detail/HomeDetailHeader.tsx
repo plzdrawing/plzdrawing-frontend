@@ -2,7 +2,7 @@
 import styled from "styled-components/native";
 import Colors from "@/src/constants/Colors";
 import { BackArrowIcon } from "@/assets/images";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 
 interface HomeDetailHeaderProps {
   authorName?: string;

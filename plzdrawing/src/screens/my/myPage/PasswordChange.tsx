@@ -1,11 +1,13 @@
-import Header from "@/src/components/common/header/Header";
+import tw from '@/src/lib/tailwind';
+
+import { View } from "react-native";
+import Header from "@/src/components/layout/header/Header";
 import React, { useState } from "react";
-import Txt from "@/src/components/common/text/Txt";
-import { Container } from "@/src/components/common/container/Container";
-import { Col } from "@/src/components/common/flex/Flex";
+import Txt from "@/src/components/ui/Txt";
+import Container from "@/src/components/layout/Container";
 import styled from "styled-components/native";
 import TextField from "@/src/components/ui/input/TextField";
-import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
+import BottomFixedArea from "@/src/components/layout/BottomFixedArea";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
 import {
   CommonActions,
@@ -16,21 +18,21 @@ import {
 } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import { authApi } from "@/src/apis/auth";
-import AlertModal from "@/src/components/common/modal/AlertModal";
+import AlertModal from "@/src/components/ui/modal/AlertModal";
 
 type PasswordChangeRouteProp = RouteProp<RootStackParamList, 'PasswordChange'>;
 
 export default function PasswordChange() {
   const [pwdTextFieldState, setPwdTextFieldState] = useState<
-    "empty" | "filled" | "error"
+    "empty" | "filled" | "error" | 'failed'
   >("empty");
 
   const [newPwdtextFieldState, setNewPwdTextFieldState] = useState<
-    "empty" | "filled" | "error"
+    "empty" | "filled" | "error" | 'failed'
   >("empty");
 
   const [newPwdChecktextFieldState, setNewPwdCheckTextFieldState] = useState<
-    "empty" | "filled" | "error"
+    "empty" | "filled" | "error" | 'failed'
   >("empty");
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -108,18 +110,18 @@ export default function PasswordChange() {
 
   return (
     <Container>
-      <Header type="back" />
-      <Col gap={73} padding="43px 32px">
-        <Col gap={7}>
+      <Header />
+      <View style={tw`gap-[73px] p-[43px_32px]`}>
+        <View style={tw`gap-[7px]`}>
           <Txt variant="headLineBold" align="left">
             비밀번호 변경하기
           </Txt>
           <Txt variant="bodySubText" align="left">
             영문 + 숫자 + 특수문자 8자 이상 설정해주세요.
           </Txt>
-        </Col>
+        </View>
 
-        <Col gap={17}>
+        <View style={tw`gap-[17px]`}>
           <Txt variant="bodySubText" align="left">
             비밀번호
           </Txt>
@@ -151,8 +153,8 @@ export default function PasswordChange() {
             validation={validatePasswordCheck}
             errorMessage={newPwdCheckErrorMessage}
           />
-        </Col>
-      </Col>
+        </View>
+      </View>
       <BottomFixedArea>
         <ButtonContainer>
           <PrimaryButton

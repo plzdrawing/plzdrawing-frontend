@@ -1,14 +1,16 @@
-﻿import React, { useState } from "react";
+﻿import tw from '@/src/lib/tailwind';
+import React, { useState } from "react";
+
+import { View, TouchableOpacity } from "react-native";
 import Colors from "@/src/constants/Colors";
 import styled from "styled-components/native";
 import HomeDetailHeader from "@/src/screens/home/home/detail/HomeDetailHeader";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 import ImageUploader from "@/src/components/ui/input/ImgUploader";
 import TextField from "@/src/components/ui/input/TextField";
-import { Row } from "@/src/components/common/flex/Flex";
 
 type DrawingCardUploadScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -116,7 +118,7 @@ function DrawingCardUpload({
           >
             그림 수정 시, 추가금 요청이 가능합니다.
           </Txt>
-          <Row gap={7} justifyContent="flex-start" alignItems="center">
+          <View style={tw`flex-row gap-[7px] justify-start items-center`}>
             {filterList.map((item, index) => (
               <ButtonContainer
                 key={index}
@@ -131,7 +133,7 @@ function DrawingCardUpload({
                 </Txt>
               </ButtonContainer>
             ))}
-          </Row>
+          </View>
         </ContentContainer>
       </StyledScrollView>
 

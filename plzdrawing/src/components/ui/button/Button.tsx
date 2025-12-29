@@ -1,6 +1,6 @@
 import tw from '@/src/lib/tailwind';
 import { Pressable, PressableProps } from 'react-native';
-import Txt from '@/src/components/common/text/Txt';
+import Txt from '@/src/components/ui/Txt';
 import { 
   KaKaoLoginIcon, 
   GoogleLoginIcon, 

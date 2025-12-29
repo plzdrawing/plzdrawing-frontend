@@ -1,3 +1,5 @@
+import tw from '@/src/lib/tailwind';
+
 import {
   StyleSheet,
   View,
@@ -8,12 +10,11 @@ import {
 } from "react-native";
 import colors from "@/src/constants/Colors";
 import React from "react";
-import Txt from "../../components/common/text/Txt";
+import Txt from "../../components/ui/Txt";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../types/navigation";
-import { Container } from "../../components/common/container/Container";
-import Header from "../../components/common/header/Header";
-import { Col, Row } from "../../components/common/flex/Flex";
+import Container from "../../components/layout/Container";
+import Header from "../../components/layout/header/Header";
 
 interface PainterProfileProps {
   profile: string;
@@ -31,42 +32,42 @@ export default function PainterProfile({
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    <Container style={styles.container}>
-      <Header type="back" />
-      <Col alignItems="center">
+    <Container>
+      <Header />
+      <View style={{ alignItems: "center" }}>
         <View style={styles.profileImageContainer}>
           <Image source={{ uri: profile }} style={styles.profileImage} />
         </View>
-        <Row justifyContent="center" margin={"9px 0"}>
+        <View style={{ flexDirection: "row", justifyContent: "center", margin: 9 }}>
           <Txt variant="subtitleBold">{username}</Txt>
           <Txt variant="subtitleBold"> 님</Txt>
-        </Row>
-        <Col alignItems="center">
+        </View>
+        <View style={{ alignItems: "center" }}>
           <Txt variant="bodyText">{description}</Txt>
-          <Row style={styles.hashtagsContainer}>
+          <View style={styles.hashtagsContainer}>
             {hashtags.map((tag, index) => (
               <Txt variant="bodyText" color="dark_gray2" key={index}>
                 {tag}
               </Txt>
             ))}
-          </Row>
-        </Col>
-        <Col padding={"20px 58px 42px 58px"}>
+          </View>
+        </View>
+        <View style={tw`px-[58px] pt-[20px] pb-[42px]`}>
           <TouchableOpacity style={styles.buttonContainer}>
             <Txt>게시글 보러가기</Txt>
           </TouchableOpacity>
-        </Col>
-      </Col>
+        </View>
+      </View>
 
       <View style={styles.tabContainer}>
-        <Row>
+        <View style={{ flexDirection: "row" }}>
           <View style={styles.activeTab}>
             <Txt variant="bodyText">그림</Txt>
           </View>
           <View style={styles.tab}>
             <Txt variant="bodyText">후기</Txt>
           </View>
-        </Row>
+        </View>
       </View>
     </Container>
   );

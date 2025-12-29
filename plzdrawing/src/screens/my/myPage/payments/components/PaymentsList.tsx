@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SectionList } from 'react-native';
 import styled from 'styled-components/native';
 import colors from '@/src/constants/Colors';
-import Txt from '@/src/components/common/text/Txt';
+import Txt from '@/src/components/ui/Txt';
 import PaymentsItem from './PaymentsItem';
 import PaymentsDetail from './PaymentsDetail';
 import { GreeSad } from '@/assets/images';

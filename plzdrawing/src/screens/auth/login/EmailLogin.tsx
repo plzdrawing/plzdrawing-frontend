@@ -5,12 +5,12 @@ import { NavigationProp, useNavigation, CommonActions } from '@react-navigation/
 import { RootStackParamList } from '@/src/types/navigation';
 
 import { View, Keyboard } from 'react-native';
-import Header from '@/src/components/common/header/Header';
-import Container from '@/src/components/common/container/Container';
-import Txt from '@/src/components/common/text/Txt';
+import Header from '@/src/components/layout/header/Header';
+import Container from '@/src/components/layout/Container';
+import Txt from '@/src/components/ui/Txt';
 import TextField from '@/src/components/ui/input/TextField';
 import Button from '@/src/components/ui/button/Button';
-import AlertModal from '@/src/components/common/modal/AlertModal';
+import AlertModal from '@/src/components/ui/modal/AlertModal';
 
 import { BackArrowIcon } from '@/assets/images';
 

@@ -1,11 +1,12 @@
-﻿import styled from "styled-components/native";
+﻿import tw from '@/src/lib/tailwind';
+
+import styled from "styled-components/native";
 import HomeDetailHeader from "@/src/screens/home/home/detail/HomeDetailHeader";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
 import colors from "@/src/constants/Colors";
 import { View, StyleSheet } from "react-native";
-import Txt from "@/src/components/common/text/Txt";
-import { Col, Row } from "@/src/components/common/flex/Flex";
+import Txt from "@/src/components/ui/Txt";
 import ToggleSwitch from "@/src/components/ui/button/TogleSwitch";
 import { useState } from "react";
 
@@ -29,16 +30,16 @@ export default function AlarmSetting({ route, navigation }: AlarmSettingProps) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ padding: 32, marginTop: 36 }}
       >
-        <Row style={[styles.rowContainer, { marginBottom: 17 }]}>
+        <View style={[styles.rowContainer, { marginBottom: 17 }]}>
           <Txt variant="bodyText">푸시 알림 동의</Txt>
           <ToggleSwitch
             value={isNotificationsEnabled}
             onValueChange={setIsNotificationsEnabled}
           />
-        </Row>
+        </View>
         <View style={styles.separator} />
-        <Row style={[styles.rowContainer, { marginTop: 17, marginBottom: 17 }]}>
-          <Col style={{ width: "80%" }}>
+        <View style={[styles.rowContainer, { marginTop: 17, marginBottom: 17 }]}>
+          <View style={{ width: "80%" }}>
             <Txt variant="bodyText" style={{ marginBottom: 7 }}>
               광고성 수신 약관 동의
             </Txt>
@@ -49,15 +50,15 @@ export default function AlarmSetting({ route, navigation }: AlarmSettingProps) {
             >
               약관보기
             </Txt>
-          </Col>
+          </View>
           <ToggleSwitch
             value={isMarketingEnabled}
             onValueChange={setIsMarketingEnabled}
           />
-        </Row>
+        </View>
         <View style={styles.separator} />
-        <Row style={[styles.rowContainer, { marginTop: 17, marginBottom: 17 }]}>
-          <Col style={{ width: "80%" }}>
+        <View style={[styles.rowContainer, { marginTop: 17, marginBottom: 17 }]}>
+          <View style={{ width: "80%" }}>
             <Txt variant="bodyText" style={{ marginBottom: 7 }}>
               위치 서비스 약관 동의
             </Txt>
@@ -68,12 +69,12 @@ export default function AlarmSetting({ route, navigation }: AlarmSettingProps) {
             >
               약관보기
             </Txt>
-          </Col>
+          </View>
           <ToggleSwitch
             value={isLocationEnabled}
             onValueChange={setIsLocationEnabled}
           />
-        </Row>
+        </View>
         <View style={styles.separator} />
       </ScrollContainer>
     </Container>

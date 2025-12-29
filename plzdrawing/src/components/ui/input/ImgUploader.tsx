@@ -4,7 +4,7 @@ import { Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { CameraIcon } from "@/assets/images";
 import Colors from "@/src/constants/Colors";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 
 interface ImageUploaderProps {
   onImagesChange: (uris: string[]) => void;

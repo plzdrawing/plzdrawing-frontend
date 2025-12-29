@@ -7,7 +7,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import Txt from '@/src/components/common/text/Txt';
+import Txt from '@/src/components/ui/Txt';
 import Button from '@/src/components/ui/button/Button';
 
 type FilterType = '그림' | '후기';

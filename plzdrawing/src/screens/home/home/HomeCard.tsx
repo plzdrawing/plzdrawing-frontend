@@ -1,28 +1,29 @@
+import tw from '@/src/lib/tailwind';
+
 import Colors from "@/src/constants/Colors";
 import styled from "styled-components/native";
-import Txt from "@/src/components/common/text/Txt";
-import { Col, Row } from "@/src/components/common/flex/Flex";
+import Txt from "@/src/components/ui/Txt";
 import { CommentIcon, LikeIcon } from "@/assets/images";
-import { Dimensions } from "react-native";
+import { View, Dimensions } from "react-native";
 
 const HomeCard = () => {
   const { width } = Dimensions.get("window");
 
   return (
     <CardContainer>
-      <Col gap={17}>
-        <Col gap={7}>
-          <Row justifyContent="flex-start" gap={8.5} alignItems="center">
+      <View style={tw`gap-[17px]`}>
+        <View style={tw`gap-[7px]`}>
+          <View style={tw`flex-row justify-start gap-[8.5px] items-center`}>
             <ImageContainer />
-            <Row justifyContent="flex-start" gap={7} alignItems="center">
+            <View style={tw`flex-row justify-start gap-[7px] items-center`}>
               <Txt variant="subtitleBold" color="black">
                 홍길동
               </Txt>
               <Txt variant="secondaryText" color="dark_gray2">
                 그림 5회/후기 3개/ 별점 4.5점
               </Txt>
-            </Row>
-          </Row>
+            </View>
+          </View>
           <Txt variant="secondaryText" color="dark_gray2">
             5분전
           </Txt>
@@ -33,46 +34,46 @@ const HomeCard = () => {
             소소한 그림 그려드려요!소소한 그림 그려드려요! 소소한 그림
             그려드려요!
           </Txt>
-        </Col>
+        </View>
         <DrawingContainer source={require("@/assets/images/sample.png")} />
-        <Row justifyContent="space-between" alignItems="center">
-          <Col style={{ width: "auto" }}>
+        <View style={tw`flex-row justify-between items-center`}>
+          <View style={{ width: "auto" }}>
             <Txt variant="secondaryText" color="dark_gray2">
               예상 소요시간
             </Txt>
             <Txt variant="auxiliaryTextLight" color="black">
               1시간 내외
             </Txt>
-          </Col>
+          </View>
           <RequestButton>
             <Txt variant="bodyText" color="dark_gray2">
               요청하기
             </Txt>
           </RequestButton>
-        </Row>
-        <Col style={{ width: "auto" }}>
+        </View>
+        <View style={{ width: "auto" }}>
           <Txt variant="secondaryText" color="dark_gray2">
             예상금액
           </Txt>
           <Txt variant="subtitleBold" color="black">
             \3,000
           </Txt>
-        </Col>
-        <Row style={{ width: "auto" }} justifyContent="flex-start" gap={12}>
-          <Row style={{ width: "auto" }} alignItems="center" gap={7}>
+        </View>
+        <View style={{ width: "auto" }}>
+          <View style={tw`flex-row justify-start gap-[7px]`}>
             <CommentIcon />
             <Txt variant="secondaryText" color="dark_gray2">
               12
             </Txt>
-          </Row>
-          <Row style={{ width: "auto" }} alignItems="center" gap={7}>
+          </View>
+          <View style={tw`flex-row justify-start gap-[7px]`}>
             <LikeIcon />
             <Txt variant="secondaryText" color="dark_gray2">
               25
             </Txt>
-          </Row>
-        </Row>
-      </Col>
+          </View>
+        </View>
+      </View>
     </CardContainer>
   );
 };

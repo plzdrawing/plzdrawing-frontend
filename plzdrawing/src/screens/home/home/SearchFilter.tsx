@@ -1,7 +1,10 @@
+import tw from '@/src/lib/tailwind';
 import { useState, useEffect } from "react";
+
 import styled from "styled-components/native";
-import { Col, Row } from "@/src/components/common/flex/Flex";
-import Txt from "@/src/components/common/text/Txt";
+
+import { View } from "react-native";
+import Txt from "@/src/components/ui/Txt";
 import Colors from "@/src/constants/Colors";
 
 interface SearchFilterProps {
@@ -23,7 +26,7 @@ const SearchFilter = ({ selectedId }: SearchFilterProps) => {
   };
 
   return (
-    <Row gap={9} justifyContent="flex-start" alignItems="center">
+    <View style={tw`flex-row gap-9 justify-start items-center`}>
       {filterList.map((item, index) => (
         <ButtonContainer
           key={index}
@@ -38,7 +41,7 @@ const SearchFilter = ({ selectedId }: SearchFilterProps) => {
           </Txt>
         </ButtonContainer>
       ))}
-    </Row>
+    </View>
   );
 };
 

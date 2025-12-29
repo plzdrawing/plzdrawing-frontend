@@ -1,6 +1,6 @@
-import { Container } from "../../../components/common/container/Container";
-import MainHeader from "@/src/components/common/header/MainHeader";
-import Txt from "@/src/components/common/text/Txt";
+import Container from "../../../components/layout/Container";
+import MainHeader from "@/src/components/layout/header/MainHeader";
+import Txt from "@/src/components/ui/Txt";
 import Colors from "@/src/constants/Colors";
 import ChatInput from "@/src/screens/talk/chatting/chat/ChatInput";
 import styled from "styled-components/native";
@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import SenderBox from "@/src/screens/talk/chatting/chat/SenderBox";
 import ReceiverBox from "@/src/screens/talk/chatting/chat/ReceiverBox";
-import AlertModal from "@/src/components/common/modal/AlertModal";
+import AlertModal from "@/src/components/ui/modal/AlertModal";
 import TalkProcess from "@/src/screens/talk/chatting/chat/TalkProcess";
 import RequestBox from "@/src/screens/talk/chatting/chat/RequestBox";
 import * as ScreenCapture from "expo-screen-capture";
@@ -176,9 +176,9 @@ export default function Chatting() {
       </KeyboardAvoidingView>
       {modalVisible && (
         <AlertModal
-          title="모달"
+          modalTitle="모달"
           buttonTitle="확인"
-          onClick={() => setModalVisible(false)}
+          onClickButton={() => setModalVisible(false)}
         />
       )}
     </Container>

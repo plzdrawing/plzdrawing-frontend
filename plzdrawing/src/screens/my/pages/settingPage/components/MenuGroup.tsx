@@ -1,7 +1,7 @@
 ﻿import tw from '@/src/lib/tailwind';
 
 import { View } from 'react-native';
-import Txt from '@/src/components/common/text/Txt';
+import Txt from '@/src/components/ui/Txt';
 import MenuRow from "@/src/screens/my/pages/settingPage/components/MenuRow";
 import colors from "@/src/constants/Colors";
 import { ProfileMenuItem } from "@/src/types/profile";

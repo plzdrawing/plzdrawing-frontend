@@ -2,7 +2,7 @@ import tw from '@/src/lib/tailwind';
 import { useState, useEffect } from 'react';
 
 import { ScrollView } from 'react-native';
-import Header from '@/src/components/common/header/Header';
+import Header from '@/src/components/layout/header/Header';
 
 import UserDetail from "@/src/screens/my/pages/profilePage/components/UserDetail";
 import UserDrawings from "../../userProfile/UserDrawings";

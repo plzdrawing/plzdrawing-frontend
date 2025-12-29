@@ -2,7 +2,7 @@
 
 import { View, Image } from 'react-native';
 
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
 import { BaseProfile } from "@/src/types/profile";
 import colors from "@/src/constants/Colors";

@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "@/src/screens/home/Home";
 import Talk from "@/src/screens/talk/talks/Talk";
 import My from "@/src/screens/my/My";
-import Txt from "../components/common/text/Txt";
+import Txt from "../components/ui/Txt";
 import { FooterTalk, FooterHome, FooterMy } from "@/assets/images";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

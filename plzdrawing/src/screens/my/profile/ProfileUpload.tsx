@@ -5,10 +5,10 @@ import HomeDetailHeader from "@/src/screens/home/home/detail/HomeDetailHeader";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 import ImageUploader from "@/src/components/ui/input/ImgUploader";
 import TextField from "@/src/components/ui/input/TextField";
-import AlertModal from "@/src/components/common/modal/AlertModal";
+import AlertModal from "@/src/components/ui/modal/AlertModal";
 
 type ProfileUploadScreenProps = NativeStackScreenProps<
   RootStackParamList,

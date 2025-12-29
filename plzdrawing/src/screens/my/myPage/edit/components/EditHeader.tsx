@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import Colors from "@/src/constants/Colors";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 import { BackArrowIcon } from "@/assets/images";
 
 interface ProfileEditHeaderProps {

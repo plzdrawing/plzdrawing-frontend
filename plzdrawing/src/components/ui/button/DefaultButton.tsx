@@ -7,7 +7,7 @@ import {
   TouchableNativeFeedback,
   View,
 } from "react-native";
-import Txt from "../../common/text/Txt";
+import Txt from "../Txt";
 import colors from "@/src/constants/Colors";
 
 interface DefaultButtonProps {

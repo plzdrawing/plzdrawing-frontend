@@ -1,10 +1,10 @@
-import Header from "@/src/components/common/header/Header";
+import Header from "@/src/components/layout/header/Header";
 import React from "react";
-import Txt from "@/src/components/common/text/Txt";
-import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
+import Txt from "@/src/components/ui/Txt";
+import BottomFixedArea from "@/src/components/layout/BottomFixedArea";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
-import { Container } from "@/src/components/common/container/Container";
+import Container from "@/src/components/layout/Container";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
 import styled from "styled-components/native";
 

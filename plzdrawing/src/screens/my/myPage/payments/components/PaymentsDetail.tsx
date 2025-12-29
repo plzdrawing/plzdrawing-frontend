@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SectionList } from 'react-native';
 import styled from 'styled-components/native';
 import colors from '@/src/constants/Colors';
-import Txt from '@/src/components/common/text/Txt';
+import Txt from '@/src/components/ui/Txt';
 import DefaultButton from '@/src/components/ui/button/DefaultButton';
 import PrimaryButton from '@/src/components/ui/button/PrimaryButton';
 import PaymentsItem from './PaymentsItem';

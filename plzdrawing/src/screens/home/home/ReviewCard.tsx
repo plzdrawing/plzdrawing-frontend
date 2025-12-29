@@ -1,68 +1,69 @@
+import tw from '@/src/lib/tailwind';
+
 import React from "react";
 import styled from "styled-components/native";
 import Colors from "@/src/constants/Colors";
-import Txt from "@/src/components/common/text/Txt";
-import { Col, Row } from "@/src/components/common/flex/Flex";
+import Txt from "@/src/components/ui/Txt";
 import { StyleSheet, View } from "react-native";
 import { CommentIcon, LikeIcon } from "@/assets/images";
 
 export default function ReviewCard() {
   return (
     <CardContainer>
-      <Col gap={17}>
+      <View style={tw`flex-col gap-17`}>
         {/* 리뷰어 프로필 */}
-        <Row justifyContent="flex-start" alignItems="center" gap={8.5}>
+        <View style={tw`flex-row justify-start items-center gap-8.5`}>
           <ProfileImage />
-          <Row alignItems="center" justifyContent="flex-start" gap={7}>
+          <View style={tw`items-center justify-start gap-7`}>
             <Txt variant="subtitleBold" color="black">
               홍길동
             </Txt>
             <Txt variant="secondaryText" color="dark_gray2">
               5분 전
             </Txt>
-          </Row>
-        </Row>
+          </View>
+        </View>
 
         {/* 그림쟁이 프로필 */}
         <View style={{ marginHorizontal: 10, width: "90%" }}>
-          <Row justifyContent="flex-start" alignItems="center" gap={8.5} padding={"7px 7px"} style={[styles.borderedRow]}>
+          <View style={[tw`flex-row justify-start items-center gap-8.5 p-7`, styles.borderedRow]}>
             <ProfileImage />
-            <Row alignItems="center" justifyContent="flex-start" gap={7}>
+            <View style={tw`items-center justify-start gap-7`}>
               <Txt variant="subtitleBold" color="black">
                 동길이
               </Txt>
               <Txt variant="secondaryText" color="dark_gray2">
                 그린 그림 5회
               </Txt>
-            </Row>
-          </Row>
+            </View>
+          </View>
         </View>
 
         {/* 리뷰 내용 */}
-        <Col gap={12}>
+        <View style={tw`flex-col gap-12`}>
           <Txt variant="bodyText" color="black">
             너무 빠르고 예쁘게 잘 그려주셨고 요청사항도 잘 들어주셨어요!{"\n"}
             그리고 너무 친절하십니당 &gt; &lt;
           </Txt>
           <ReviewImage source={require("@/assets/images/sample.png")} />
-        </Col>
+        </View>
 
         {/* 하단 아이콘 */}
-         <Row style={{ width: "auto" }} justifyContent="flex-start" gap={12}>
-            <Row style={{ width: "auto" }} alignItems="center" gap={7}>
+         <View style={[tw`w-auto flex-row justify-start`, { gap: 12 }]}>
+            <View style={[tw`w-auto items-center flex-row`, { gap: 7 }]}>
               <CommentIcon />
               <Txt variant="secondaryText" color="dark_gray2">
                 12
               </Txt>
-            </Row>
-            <Row style={{ width: "auto" }} alignItems="center" gap={7}>
+            </View>
+            <View style={[tw`w-auto items-center flex-row`, { gap: 7 }]}>
               <LikeIcon />
               <Txt variant="secondaryText" color="dark_gray2">
                 23
               </Txt>
-            </Row>
-          </Row>
-        </Col>
+            </View>
+          </View>
+        </View>
     </CardContainer>
   );
 };

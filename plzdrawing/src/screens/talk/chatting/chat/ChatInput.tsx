@@ -1,6 +1,7 @@
+import tw from '@/src/lib/tailwind';
+
 import { TextInput } from "react-native-gesture-handler";
-import { Col, Row } from "@/src/components/common/flex/Flex";
-import { Keyboard, TouchableOpacity, Alert } from "react-native";
+import { View, Keyboard, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -14,7 +15,7 @@ import {
 } from "@/assets/images";
 import styled from "styled-components/native";
 import Colors from "@/src/constants/Colors";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 
 interface ChatInputProps {
   message: string;
@@ -100,14 +101,8 @@ const ChatInput = (props: ChatInputProps) => {
   };
 
   return (
-    <Col>
-      <Row
-        padding="12px 18px"
-        alignItems="center"
-        justifyContent="space-between"
-        gap={6}
-        style={{ backgroundColor: Colors.colors.white }}
-      >
+    <View>
+      <View style={tw`p-[12px] px-[18px] items-center justify-between gap-[6px] bg-white`}>
         <TouchableOpacity onPress={handleOpenMenu}>
           <IconContainer color={Colors.colors.main_yellow}>
             <CameraIcon />
@@ -125,35 +120,35 @@ const ChatInput = (props: ChatInputProps) => {
             <SendIcon />
           </IconContainer>
         </TouchableOpacity>
-      </Row>
+      </View>
       {isOpenMenu && (
-        <Col padding="15px 32px" gap={12}>
-          <Row gap={14} alignItems="center">
+        <View style={tw`p-[15px] px-[32px] gap-[12px]`}>
+          <View style={tw`flex-row gap-[14px] items-center`}>
             <IconContainer color={Colors.colors.light_gray1} width={1}>
               <FileIcon />
             </IconContainer>
             <Txt variant="bodyText" color="black">
               파일 보내기
             </Txt>
-          </Row>
+          </View>
           <TouchableOpacity onPress={handlePickImage}>
-            <Row gap={14} alignItems="center">
+            <View style={tw`flex-row gap-[14px] items-center`}>
               <IconContainer color={Colors.colors.light_gray1} width={1}>
                 <PictureIcon />
               </IconContainer>
               <Txt variant="bodyText" color="black">
                 사진 보내기
               </Txt>
-            </Row>
+            </View>
           </TouchableOpacity>
-          <Row gap={14} alignItems="center">
+          <View style={tw`flex-row gap-[14px] items-center`}>
             <IconContainer color={Colors.colors.light_gray1} width={1}>
               <CameraIcon />
             </IconContainer>
             <Txt variant="bodyText" color="black">
               직접 촬영하기
             </Txt>
-          </Row>
+          </View>
           {/* <Row gap={14} alignItems="center">
             <IconContainer color={Colors.colors.light_gray1} width={1}>
               <DrawerIcon />
@@ -162,9 +157,9 @@ const ChatInput = (props: ChatInputProps) => {
               서랍 열기
             </Txt>
           </Row> */}
-        </Col>
+        </View>
       )}
-    </Col>
+    </View>
   );
 };
 

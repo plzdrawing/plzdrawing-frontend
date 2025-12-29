@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import Txt from '@/src/components/common/text/Txt';
+import Txt from '@/src/components/ui/Txt';
 import DefaultButton from '@/src/components/ui/button/DefaultButton';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

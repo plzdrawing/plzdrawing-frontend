@@ -10,7 +10,7 @@ import PostContent from "@/src/screens/home/home/detail/PostContent";
 import DrawingCarousel from "@/src/screens/home/home/detail/DrawingCarousel";
 import DrawingInfoCard from "@/src/screens/home/home/detail/DrawingInfoCard";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 import { TouchableOpacity } from "react-native";
 import { PostData } from "@/src/types/post";
 

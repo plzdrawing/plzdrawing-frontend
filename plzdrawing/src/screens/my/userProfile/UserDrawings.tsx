@@ -3,7 +3,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/types/navigation';
 import styled from 'styled-components/native';
 import colors from '@/src/constants/Colors';
-import Txt from '@/src/components/common/text/Txt';
+import Txt from '@/src/components/ui/Txt';
 import { GreeSad } from '@/assets/images';
 
 interface UserDrawingsProps {

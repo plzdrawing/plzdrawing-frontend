@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { TextInput } from "react-native";
+import { View, TextInput } from "react-native";
 import styled from "styled-components/native";
 import Colors from "@/src/constants/Colors";
-import Txt from "../../common/text/Txt";
-import { Col } from "../../common/flex/Flex";
 
 interface PriceTextFieldProps {
   label?: string;
@@ -77,7 +75,7 @@ const PriceTextField = ({
   };
 
   return (
-    <Col>
+    <View>
       <PriceTextInput
         placeholder={placeholder}
         placeholderTextColor={colors.dark_gray1}
@@ -99,7 +97,7 @@ const PriceTextField = ({
         }}
         {...rest}
       />
-    </Col>
+    </View>
   );
 };
 

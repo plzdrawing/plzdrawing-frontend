@@ -1,16 +1,17 @@
+import tw from '@/src/lib/tailwind';
+
 import colors from "@/src/constants/Colors";
-import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
+import BottomFixedArea from "@/src/components/layout/BottomFixedArea";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
-import { Container } from "@/src/components/common/container/Container";
-import { Col, Row } from "@/src/components/common/flex/Flex";
-import Header from "@/src/components/common/header/Header";
-import Txt from "@/src/components/common/text/Txt";
+import Container from "@/src/components/layout/Container";
+import Header from "@/src/components/layout/header/Header";
+import Txt from "@/src/components/ui/Txt";
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, View, TextInput } from "react-native";
 import styled from "styled-components/native";
 import { NavigationProp, useRoute, RouteProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
-import AlertModal from "@/src/components/common/modal/AlertModal";
+import AlertModal from "@/src/components/ui/modal/AlertModal";
 import { authApi } from "@/src/apis/auth";
 
 type PasswordFindVerificationRouteProp = RouteProp<RootStackParamList, 'PasswordFindVerification'>;
@@ -109,12 +110,12 @@ export default function PasswordFindVerification() {
 
   return (
     <Container>
-      <Header type="back" />
-      <Col gap={98} padding="43px 32px">
+      <Header />
+      <View style={tw`gap-[98px] p-[43px_32px]`}>
         <Txt variant="headLineBold" align="left">
           비밀번호 찾기
         </Txt>
-        <Col gap={8}>
+        <View style={{ gap: 8 }}>
           <VerificationInputContainer>
             {verificationCode.map((code, index) => (
               <Input
@@ -130,7 +131,7 @@ export default function PasswordFindVerification() {
             ))}
           </VerificationInputContainer>
 
-          <Row style={{ justifyContent: "space-between", marginTop: 8 }}>
+          <View style={{ justifyContent: "space-between", marginTop: 8 }}>
             <Txt variant="bodySubText" color="error_red">
               {formatTime(timeLeft)}
             </Txt>
@@ -142,9 +143,9 @@ export default function PasswordFindVerification() {
             >
               인증번호 재전송
             </Txt>
-          </Row>
-        </Col>
-      </Col>
+          </View>
+        </View>
+      </View>
       <BottomFixedArea>
         <ButtonContainer>
           <PrimaryButton
@@ -158,23 +159,21 @@ export default function PasswordFindVerification() {
       </BottomFixedArea>
       {errorModalVisible && (
         <AlertModal
-          title="인증번호가 일치하지 않아요."
+          modalTitle="인증번호가 일치하지 않아요."
           buttonTitle="확인"
-          onClick={() => {
+          onClickButton={() => {
             setErrorModalVisible(false);
           }}
-          textVariant="thirdText"
         />
       )}
       {modalVisible && (
         <AlertModal
-          title={`인증에 성공했어요!\n임시 비밀번호가 발급되었어요 :)`}
+          modalTitle={`인증에 성공했어요!\n임시 비밀번호가 발급되었어요 :)`}
           buttonTitle="확인"
-          onClick={() => {
+          onClickButton={() => {
             setModalVisible(false);
             navigation.navigate("Login");
           }}
-          textVariant="thirdText"
         />
       )}
     </Container>

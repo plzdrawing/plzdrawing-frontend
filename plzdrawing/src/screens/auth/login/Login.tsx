@@ -3,8 +3,8 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/types/navigation';
 
 import { View } from 'react-native';
-import Container from '@/src/components/common/container/Container';
-import Txt from '@/src/components/common/text/Txt';
+import Container from '@/src/components/layout/Container';
+import Txt from '@/src/components/ui/Txt';
 import Button from '@/src/components/ui/button/Button';
 
 export default function Login() {

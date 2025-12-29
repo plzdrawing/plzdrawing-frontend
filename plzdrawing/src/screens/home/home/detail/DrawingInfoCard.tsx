@@ -1,8 +1,10 @@
-﻿import React from "react";
+﻿import tw from '@/src/lib/tailwind';
+
 import styled from "styled-components/native";
-import { Col } from "@/src/components/common/flex/Flex";
+
+import { View } from "react-native";
 import Colors from "@/src/constants/Colors";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 
 interface DrawingInfoCardProps {
   info: {
@@ -18,7 +20,7 @@ const DrawingInfoCard: React.FC<DrawingInfoCardProps> = ({ info }) => {
   return (
     <CardContainer>
       <InfoImage source={{ uri: info.image }} />
-      <Col style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <Txt variant="subtitleBold" style={{ marginBottom: 7 }}>
           {info.title}
         </Txt>
@@ -27,7 +29,7 @@ const DrawingInfoCard: React.FC<DrawingInfoCardProps> = ({ info }) => {
           {"\n"}
           {info.description}
         </Txt>
-      </Col>
+      </View>
     </CardContainer>
   );
 };

@@ -1,5 +1,5 @@
 ﻿import styled from "styled-components/native";
-import Txt from "@/src/components/common/text/Txt";
+import Txt from "@/src/components/ui/Txt";
 
 type DrawingCardInfoBoxProps = {
   label: string;

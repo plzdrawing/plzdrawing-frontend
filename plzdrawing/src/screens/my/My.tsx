@@ -9,8 +9,8 @@ import UserProfile from "@/src/screens/my/pages/profilePage/Profile";
 import { BaseProfile, ProfileMenuItem } from "@/src/types/profile";
 import { RootStackParamList } from "@/src/types/navigation";
 
-import Container from "@/src/components/common/container/Container";
-import TabHeader from '@/src/components/common/header/TabHeader';
+import Container from "@/src/components/layout/Container";
+import TabHeader from '@/src/components/layout/header/TabHeader';
 import Setting from '@/src/screens/my/pages/settingPage/Setting';
 
 import { userApi } from "@/src/apis/user";

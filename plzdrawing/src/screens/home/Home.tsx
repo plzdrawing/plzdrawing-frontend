@@ -1,11 +1,12 @@
+import tw from '@/src/lib/tailwind';
+
 import React, { useState, useEffect } from "react";
-import { TouchableOpacity, BackHandler } from "react-native";
+import { View, TouchableOpacity, BackHandler } from "react-native";
 import styled from "styled-components/native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import Container from "@/src/components/common/container/Container";
+import Container from "@/src/components/layout/Container";
 import HomeHeader from "@/src/screens/home/home/HomeHeader";
-import { Col } from "@/src/components/common/flex/Flex";
 import SearchFilter from "@/src/screens/home/home/SearchFilter";
 import HomeCard from "@/src/screens/home/home/HomeCard";
 import ReviewCard from "@/src/screens/home/home/ReviewCard";
@@ -56,16 +57,10 @@ export default function Home() {
         selectedId={selectedId}
         setSelectedId={setSelectedId}
       />
-      <Col
-        justifyContent="flex-start"
-        alignItems="center"
-        padding="24px 32px"
-        gap={20}
-        style={{ backgroundColor: Colors.colors.light_gray1, height: "100%" }}
-      >
+      <View style={tw`flex-1 w-full`}>
         <SearchFilter selectedId={selectedId} />
         <ScrollContainer showsVerticalScrollIndicator={false}>
-          <Col gap={17} style={{ paddingBottom: 50 }}>
+          <View style={tw`gap-[17px] pb-[50px]`}>
             {selectedId === 0 ? (
               <>
                 {/* Each card is now wrapped in a TouchableOpacity to handle presses */}
@@ -83,9 +78,9 @@ export default function Home() {
                 <ReviewCard />
               </>
             )}
-          </Col>
+          </View>
         </ScrollContainer>
-      </Col>
+      </View>
       <PlusButton>
         <PencilIcon />
       </PlusButton>
