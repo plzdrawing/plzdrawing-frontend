@@ -11,6 +11,7 @@ interface HeaderProps {
   onLeftClick?: () => void;
   rightIcon?: React.ReactNode;
   onRightClick?: () => void;
+  className?: string;
 }
 
 export default function Header({
@@ -19,11 +20,12 @@ export default function Header({
   onLeftClick,
   rightIcon,
   onRightClick,
+  className = '',
 }: HeaderProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    <View style={tw`w-full flex-row items-center justify-between px-[20px] pt-[30px] bg-white`}>
+    <View style={tw`w-full flex-row items-center justify-between px-[20px] pt-[30px] bg-white ${className}`}>
       <View style={tw`flex-row items-center gap-[2px]`}>
         {leftIcon && (
           <TouchableOpacity

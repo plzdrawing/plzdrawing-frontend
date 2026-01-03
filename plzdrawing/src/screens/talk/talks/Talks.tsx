@@ -21,7 +21,7 @@ import {
 } from '@/src/screens/talk/talks/components/TalkList';
 import { NoTalk } from '@/src/screens/talk/talks/components/NoTalk';
 
-export default function Talk() {
+export default function Talks() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const isFocused = useIsFocused();
   

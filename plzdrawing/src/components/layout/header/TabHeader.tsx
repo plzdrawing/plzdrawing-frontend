@@ -22,7 +22,7 @@ export default function TabHeader({
   selectedId = 0,
   setSelectedId,
   rightIcon = <AlarmIcon />,
-  onRightClick = () => navigation.navigate('Alarm'),
+  onRightClick,
 }: TabHeaderProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -55,7 +55,7 @@ export default function TabHeader({
         {title2 && tab(title2, 1)}
       </View>
       <TouchableOpacity
-        onPress={onRightClick}
+        onPress={onRightClick || (() => navigation.navigate('Alarm'))}
         style={tw`w-[20px] h-[18px] mb-[12px]`}
       >
         {rightIcon}

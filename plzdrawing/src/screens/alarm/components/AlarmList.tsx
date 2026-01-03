@@ -1,11 +1,15 @@
-import React from 'react';
-import { FlatList, ListRenderItem } from 'react-native';
-import styled from 'styled-components/native';
-import { AlarmItem } from './AlarmItem';
+import tw from '@/src/lib/tailwind';
+
+import { 
+  FlatList, 
+  ListRenderItem,
+} from 'react-native';
+
+import { AlarmItem } from '@/src/screens/alarm/components/AlarmItem';
 
 export interface AlarmData {
   id: string;
-  alarmName: string;
+  alarmTitle: string;
   lastMessageTime: string;
   unreadCount?: number;
   alarmMessage: string;
@@ -13,34 +17,30 @@ export interface AlarmData {
 
 interface AlarmListProps {
   alarms: AlarmData[];
+  isEditMode?: boolean;
+  onDeleteAlarm?: (id: string) => void;
 }
 
-export const AlarmList: React.FC<AlarmListProps> = ({ alarms }) => {
+export const AlarmList: React.FC<AlarmListProps> = ({ alarms, isEditMode = false, onDeleteAlarm }) => {
   const renderAlarmItem: ListRenderItem<AlarmData> = ({ item }) => (
     <AlarmItem
       id={item.id}
-      alarmName={item.alarmName}
+      alarmTitle={item.alarmTitle}
       lastMessageTime={item.lastMessageTime}
       unreadCount={item.unreadCount}
       alarmMessage={item.alarmMessage}
+      isEditMode={isEditMode}
+      onDelete={onDeleteAlarm}
     />
   );
 
   return (
-    <StyledFlatList
+    <FlatList
       data={alarms}
       renderItem={renderAlarmItem}
       keyExtractor={(item: AlarmData) => item.id}
       showsVerticalScrollIndicator={false}
+      style={tw`flex-1 w-full my-[17px] px-[32px]`}
     />
   );
 };
-
-const StyledFlatList = styled(FlatList<AlarmData>)`
-  display: flex;
-  flex: 1;
-  width: 100%;
-  margin: 17px 0;
-  padding: 0 32px;
-  background-color: var(--1, #F9F9F9);
-`;

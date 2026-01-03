@@ -1,7 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "@/src/screens/home/Home";
-import Talk from "@/src/screens/talk/talks/Talk";
+import Talk from "@/src/screens/talk/talks/Talks";
 import My from "@/src/screens/my/My";
 import Txt from "../components/ui/Txt";
 import { FooterTalk, FooterHome, FooterMy } from "@/assets/images";
@@ -57,7 +57,6 @@ export default function MainNavigation() {
           ),
         }}
       />
-
       <Tab.Screen
         name="마이"
         component={My}
