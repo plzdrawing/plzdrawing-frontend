@@ -1,11 +1,15 @@
-import React from 'react';
-import styled from 'styled-components/native';
-import Txt from '@/src/components/ui/Txt';
-import DefaultButton from '@/src/components/ui/button/DefaultButton';
+import tw from '@/src/lib/tailwind';
+
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types/navigation';
-import Colors from '@/src/constants/Colors';
+
+import { View } from 'react-native';
+import Container from '@/src/components/layout/Container';
+import Txt from '@/src/components/ui/Txt';
+import BottomFixedArea from '@/src/components/layout/BottomFixedArea';
+import Button from '@/src/components/ui/button/Button';
+
 import { GreeSuccess } from '@/assets/images';
 
 type EditSuccessNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -24,56 +28,35 @@ export default function EditSuccess() {
   };
 
   return (
-    <Container>
-      <ContentContainer>
-        <GreeSuccess width={120} height={120} />
-        <Txt variant="subtitleBold" style={{ marginTop: 17, marginBottom: 40 }}>
-          {type === 'profile'
-            ? '회원정보 수정 완료'
-            : '비밀번호 변경 완료'
-          }
-        </Txt>
-        <Txt variant="bodyText">
-          {type === 'profile'
-            ? '회원정보 수정이 성공적으로'
-            : '비밀번호 변경이 성공적으로'
-          }
-        </Txt>
-        <Txt variant="bodyText">
-          완료되었습니다:)
-        </Txt>
+    <Container className='justify-center items-center w-full'>
+      <GreeSuccess width={120} height={120} />
 
-        <ButtonContainer>
-          <DefaultButton
-            title="확인"
-            variant="primary"
-            onPress={handleConfirm}
+      <Txt variant='subtitleBold' style={tw`mt-[17px] mb-[40px]`}>
+        {type === 'profile'
+          ? '회원정보 수정 완료'
+          : '비밀번호 변경 완료'
+        }
+      </Txt>
+
+      <Txt variant='bodyText' color='dark_gray2'>
+        {type === 'profile'
+          ? '회원정보 수정이 성공적으로'
+          : '비밀번호 변경이 성공적으로'
+        }
+      </Txt>
+      <Txt variant='bodyText' color='dark_gray2'>
+        완료되었습니다:)
+      </Txt>
+
+      <BottomFixedArea>
+        <View style={tw`w-full px-[57px] py-[10px]`}>
+          <Button
+            title='확인'
+            variant='default'
+            onClick={handleConfirm}
           />
-        </ButtonContainer>
-      </ContentContainer>
+        </View>
+      </BottomFixedArea>
     </Container>
   )
 }
-
-const Container = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: ${Colors.colors.white};
-  padding: 40px;
-`;
-
-const ContentContainer = styled.View`
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-`;
-
-const ButtonContainer = styled.View`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-`;

@@ -1,5 +1,5 @@
 import Container from "../../../components/layout/Container";
-import MainHeader from "@/src/components/layout/header/MainHeader";
+
 import Txt from "@/src/components/ui/Txt";
 import Colors from "@/src/constants/Colors";
 import ChatInput from "@/src/screens/talk/chatting/chat/ChatInput";
@@ -110,11 +110,6 @@ export default function Chatting() {
 
   return (
     <Container>
-      <MainHeader
-        title="홍길동 님"
-        subTitle="과의 그림톡"
-        state="submitted"
-      ></MainHeader>
       <KeyboardAvoidingView
         behavior="height"
         style={{

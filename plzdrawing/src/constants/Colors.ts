@@ -2,7 +2,7 @@ export default {
   colors: {
     text: "#000000", // Black
     background: "#FFFFFF", // White
-    highright_orange: "#FFA011", // 강조색_orange
+    highlight_orange: "#FFA011", // 강조색_orange
     main_yellow: "#FFC311", // 메인색_yellow1
     sub_yellow: "#FFE18D", // 서브색_yellow2
     sub_green1: "#5ECC90", // 보조색_green

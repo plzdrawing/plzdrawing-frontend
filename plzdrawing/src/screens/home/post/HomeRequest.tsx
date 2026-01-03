@@ -1,12 +1,12 @@
 ﻿import React from "react";
 import Colors from "@/src/constants/Colors";
 import styled from "styled-components/native";
-import HomeDetailHeader from "@/src/screens/home/home/detail/HomeDetailHeader";
+import HomeDetailHeader from "@/src/screens/home/components/detail/HomeDetailHeader";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
 import Txt from "@/src/components/ui/Txt";
-import DrawingInfoCard from "@/src/screens/home/home/detail/DrawingInfoCard";
+import DrawingInfoCard from "@/src/screens/home/components/detail/DrawingInfoCard";
 import {
   Keyboard,
   TouchableOpacity,

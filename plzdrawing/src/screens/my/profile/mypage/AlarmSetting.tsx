@@ -1,7 +1,7 @@
 ﻿import tw from '@/src/lib/tailwind';
 
 import styled from "styled-components/native";
-import HomeDetailHeader from "@/src/screens/home/home/detail/HomeDetailHeader";
+import HomeDetailHeader from "@/src/screens/home/components/detail/HomeDetailHeader";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
 import colors from "@/src/constants/Colors";

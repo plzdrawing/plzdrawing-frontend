@@ -18,7 +18,8 @@ import PencilIcon from "@/assets/images/ic-pencil.svg";
 import AlarmIcon from "@/assets/images/ic-alarm.svg";
 import MenuIcon from "@/assets/images/ic-hamburger.svg";
 import CommentIcon from "@/assets/images/ic-message.svg";
-import LikeIcon from "@/assets/images/ic-heart.svg";
+import LikeIconFilled from "@/assets/images/ic-heart-filled.svg";
+import LikeIconEmpty from "@/assets/images/ic-heart-empty.svg";
 import ShowPasswordOn from "@/assets/images/ic-show-password-on.svg";
 import ShowPasswordOff from "@/assets/images/ic-show-password-off.svg";
 import EmptyCheck from "@/assets/images/ic-check-empty.svg";
@@ -64,7 +65,8 @@ export {
   AlarmIcon,
   MenuIcon,
   CommentIcon,
-  LikeIcon,
+  LikeIconFilled,
+  LikeIconEmpty,
   ShowPasswordOff,
   ShowPasswordOn,
   PaginationLeftIcon,

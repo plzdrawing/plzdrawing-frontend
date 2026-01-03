@@ -56,7 +56,7 @@ export default function TabHeader({
       </View>
       <TouchableOpacity
         onPress={onRightClick}
-        style={tw`w-[20px] h-[18px] items-center justify-center`}
+        style={tw`w-[20px] h-[18px] mb-[12px]`}
       >
         {rightIcon}
       </TouchableOpacity>

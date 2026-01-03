@@ -3,7 +3,7 @@ import { NavigationProp, useNavigation, useIsFocused } from "@react-navigation/n
 import { RootStackParamList } from "@/src/types/navigation";
 import { useState, useEffect } from "react";
 import { BackHandler } from "react-native";
-import HomeHeader from "@/src/screens/home/home/HomeHeader";
+
 import { TalkList, TalkData } from "../components/TalkList";
 import { NoTalk } from "../components/NoTalk";
 
@@ -61,7 +61,7 @@ export default function Talk() {
 
   return (
     <Container>
-      <HomeHeader title="그림톡" />
+      {/* <HomeHeader title="그림톡" /> */}
       {talks.length > 0
         ? <TalkList talks={talks} onTalkPress={handleTalkPress} />
         : <NoTalk />

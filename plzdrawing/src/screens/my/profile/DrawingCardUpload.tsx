@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import Colors from "@/src/constants/Colors";
 import styled from "styled-components/native";
-import HomeDetailHeader from "@/src/screens/home/home/detail/HomeDetailHeader";
+import HomeDetailHeader from "@/src/screens/home/components/detail/HomeDetailHeader";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";

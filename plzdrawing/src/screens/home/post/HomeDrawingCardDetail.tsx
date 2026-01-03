@@ -1,15 +1,15 @@
 ﻿import React from "react";
 import Colors from "@/src/constants/Colors";
 import styled from "styled-components/native";
-import HomeDetailHeader from "@/src/screens/home/home/detail/HomeDetailHeader";
+import HomeDetailHeader from "@/src/screens/home/components/detail/HomeDetailHeader";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
 import Txt from "@/src/components/ui/Txt";
-import PostContent from "@/src/screens/home/home/detail/PostContent";
-import DrawingCarousel from "@/src/screens/home/home/detail/DrawingCarousel";
-import DrawingInfoCard from "@/src/screens/home/home/detail/DrawingInfoCard";
-import DrawingCardInfoBox from "@/src/screens/home/home/detail/DrawingCardInfoBox";
+import PostContent from "@/src/screens/home/components/detail/PostContent";
+import DrawingCarousel from "@/src/screens/home/components/detail/DrawingCarousel";
+import DrawingInfoCard from "@/src/screens/home/components/detail/DrawingInfoCard";
+import DrawingCardInfoBox from "@/src/screens/home/components/detail/DrawingCardInfoBox";
 import { TouchableOpacity } from "react-native";
 import { DrawingCardData } from "@/src/types/post";
 
