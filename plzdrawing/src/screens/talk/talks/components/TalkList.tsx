@@ -1,7 +1,10 @@
-import React from 'react';
-import { FlatList, ListRenderItem } from 'react-native';
-import styled from 'styled-components/native';
-import { TalkItem } from './TalkItem';
+import tw from '@/src/lib/tailwind';
+
+import {
+  FlatList, // https://jjluveeecom.tistory.com/75
+  ListRenderItem,
+} from 'react-native';
+import { TalkItem } from '@/src/screens/talk/talks/components/TalkItem';
 
 export interface TalkData {
   id: string;
@@ -14,10 +17,13 @@ export interface TalkData {
 
 interface TalkListProps {
   talks: TalkData[];
-  onTalkPress: (talkId: string) => void;
+  onClickTalk: (talkId: string) => void;
 }
 
-export const TalkList: React.FC<TalkListProps> = ({ talks, onTalkPress }) => {
+export const TalkList: React.FC<TalkListProps> = ({ 
+  talks, 
+  onClickTalk,
+}) => {
   const renderTalkItem: ListRenderItem<TalkData> = ({ item }) => (
     <TalkItem
       id={item.id}
@@ -26,25 +32,17 @@ export const TalkList: React.FC<TalkListProps> = ({ talks, onTalkPress }) => {
       lastMessage={item.lastMessage}
       lastMessageTime={item.lastMessageTime}
       unreadCount={item.unreadCount}
-      onPress={() => onTalkPress(item.id)}
+      onClickTalk={() => onClickTalk(item.id)}
     />
   );
 
   return (
-    <StyledFlatList
+    <FlatList
       data={talks}
       renderItem={renderTalkItem}
       keyExtractor={(item: TalkData) => item.id}
       showsVerticalScrollIndicator={false}
+      style={tw`px-[32px] pt-[20px]`}
     />
   );
 };
-
-const StyledFlatList = styled(FlatList<TalkData>)`
-  display: flex;
-  flex: 1;
-  width: 100%;
-  margin: 17px 0;
-  padding: 0 32px;
-  background-color: var(--1, #F9F9F9);
-`;

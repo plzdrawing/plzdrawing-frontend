@@ -1,11 +1,25 @@
-import Container from "../../../components/layout/Container";
-import { NavigationProp, useNavigation, useIsFocused } from "@react-navigation/native";
-import { RootStackParamList } from "@/src/types/navigation";
-import { useState, useEffect } from "react";
-import { BackHandler } from "react-native";
+import tw from '@/src/lib/tailwind';
+import { useState, useEffect } from 'react';
 
-import { TalkList, TalkData } from "../components/TalkList";
-import { NoTalk } from "../components/NoTalk";
+import { 
+  NavigationProp, 
+  useNavigation, 
+  useIsFocused,
+} from '@react-navigation/native';
+import { RootStackParamList } from '@/src/types/navigation';
+
+import { 
+  ScrollView,
+  BackHandler,
+} from 'react-native';
+import Container from '@/src/components/layout/Container';
+import TabHeader from '@/src/components/layout/header/TabHeader';
+
+import { 
+  TalkList, 
+  TalkData,
+} from '@/src/screens/talk/talks/components/TalkList';
+import { NoTalk } from '@/src/screens/talk/talks/components/NoTalk';
 
 export default function Talk() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -30,7 +44,7 @@ export default function Talk() {
       unreadCount: 2,
       userName: '홍길동',
       lastMessageTime: '지금',
-      lastMessage: '안녕하세요 :)  요청하신 반려동물 낙서 그림 작업완료했습니다 ! 확인 부탁드려요 !!!!!!!!',
+      lastMessage: '안녕하세요 :)  요청하신 반려동물 낙서 그림 작업완료했습니다 ! 확인 부탁드려요 !!!!!!!! asdf',
     },
     {
       id: '2',
@@ -55,17 +69,23 @@ export default function Talk() {
     },
   ]);
 
-  const handleTalkPress = (talkId: string) => {
-    navigation.navigate("Chatting");
+  // const handleTalkPress = (talkId: string) => {
+  const handleTalkPress = () => {
+    navigation.navigate('Chatting');
   };
 
   return (
     <Container>
-      {/* <HomeHeader title="그림톡" /> */}
-      {talks.length > 0
-        ? <TalkList talks={talks} onTalkPress={handleTalkPress} />
-        : <NoTalk />
-      }
+      <TabHeader title1='그림톡' />
+      <ScrollView
+        style={tw`w-full h-full bg-light-gray-1`}
+        showsVerticalScrollIndicator={false}
+      >
+        {talks.length > 0
+          ? <TalkList talks={talks} onClickTalk={handleTalkPress} />
+          : <NoTalk />
+        }
+      </ScrollView>
     </Container>
   );
 }

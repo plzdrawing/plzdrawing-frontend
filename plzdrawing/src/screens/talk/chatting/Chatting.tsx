@@ -1,16 +1,18 @@
-import Container from "../../../components/layout/Container";
-
-import Txt from "@/src/components/ui/Txt";
-import Colors from "@/src/constants/Colors";
-import ChatInput from "@/src/screens/talk/chatting/chat/ChatInput";
-import styled from "styled-components/native";
+import tw from '@/src/lib/tailwind';
 import { useEffect, useRef, useState } from "react";
+
 import {
   Keyboard,
   KeyboardAvoidingView,
   ScrollView,
   TouchableWithoutFeedback,
-} from "react-native";
+  View,
+  SafeAreaView,
+} from 'react-native';
+
+import Container from '@/src/components/layout/Container';
+import ChatInput from '@/src/screens/talk/chatting/chat/ChatInput';
+
 import SenderBox from "@/src/screens/talk/chatting/chat/SenderBox";
 import ReceiverBox from "@/src/screens/talk/chatting/chat/ReceiverBox";
 import AlertModal from "@/src/components/ui/modal/AlertModal";
@@ -112,23 +114,19 @@ export default function Chatting() {
     <Container>
       <KeyboardAvoidingView
         behavior="height"
-        style={{
-          flex: 1,
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-        }}
+        style={tw`flex-1 w-full flex flex-col`}
       >
-        <ContentContainer>
+        <SafeAreaView style={tw`flex flex-col justify-between flex-1`}>
           <TalkProcess 
             imageUrl=""
             title="귀여운 그림"
             price={500}
             process="inProgress"
           />
-          <ScrollContainer
+          <ScrollView
             ref={scrollViewRef}
             contentContainerStyle={{ flexGrow: 1 }}
+            style={tw`flex-1 w-full bg-light_gray1`}
           >
             <TouchableWithoutFeedback
               onPress={() => {
@@ -136,7 +134,7 @@ export default function Chatting() {
                 Keyboard.dismiss();
               }}
             >
-              <ChattingContainer>
+              <View style={tw`flex items-end p-[17px_32px] gap-[17px] w-full bg-light_gray1`}>
                 {messageList.map((message, index) => {
                   if (message.type) {
                     return (
@@ -156,9 +154,9 @@ export default function Chatting() {
                     <ReceiverBox key={index} message={message.message} />
                   );
                 })}
-              </ChattingContainer>
+              </View>
             </TouchableWithoutFeedback>
-          </ScrollContainer>
+          </ScrollView>
           <ChatInput
             message={sendMessage}
             setMessage={setSendMessage}
@@ -167,7 +165,7 @@ export default function Chatting() {
             isOpenMenu={isOpenedMenu}
             setIsOpenMenu={setIsOpenedMenu}
           />
-        </ContentContainer>
+        </SafeAreaView>
       </KeyboardAvoidingView>
       {modalVisible && (
         <AlertModal
@@ -179,25 +177,3 @@ export default function Chatting() {
     </Container>
   );
 }
-
-const ScrollContainer = styled.ScrollView`
-  flex: 1;
-  width: 100%;
-  background-color: ${Colors.colors.light_gray1};
-`;
-
-const ChattingContainer = styled.View`
-  display: flex;
-  align-items: flex-end;
-  padding: 17px 32px;
-  gap: 17px;
-  width: 100%;
-  background-color: ${Colors.colors.light_gray1};
-`;
-
-const ContentContainer = styled.SafeAreaView`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
-`;

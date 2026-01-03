@@ -8,8 +8,8 @@ import Txt from '@/src/components/ui/Txt';
 import { AlarmIcon } from '@/assets/images';
 
 interface TabHeaderProps {
-  title1: string;
-  title2: string;
+  title1?: string;
+  title2?: string;
   selectedId?: number;
   setSelectedId?: (id: number) => void;
   rightIcon?: React.ReactNode;
@@ -51,8 +51,8 @@ export default function TabHeader({
   return (
     <View style={tw`w-full flex-row items-center justify-between px-[31px] pt-[30px] bg-white border-b border-b-[1px] border-gray-200`}>
       <View style={tw`flex-row items-center gap-[17px]`}>
-        {tab(title1, 0)}
-        {tab(title2, 1)}
+        {title1 && tab(title1, 0)}
+        {title2 && tab(title2, 1)}
       </View>
       <TouchableOpacity
         onPress={onRightClick}

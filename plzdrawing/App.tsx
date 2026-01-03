@@ -28,7 +28,7 @@ import HomeDrawingCardDetail from "@/src/screens/home/post/HomeDrawingCardDetail
 import HomeRequest from "@/src/screens/home/post/HomeRequest";
 import ProfileUpload from "@/src/screens/my/profile/ProfileUpload";
 import DrawingCardUpload from "@/src/screens/my/profile/DrawingCardUpload";
-import Alarm from "@/src/screens/talk/alarm/Alarm";
+import Alarm from "@/src/screens/alarm/Alarm";
 import AlarmSetting from "@/src/screens/my/profile/mypage/AlarmSetting";
 import CustomerService from "@/src/screens/my/profile/mypage/CustomerService";
 import Notice from "@/src/screens/my/profile/mypage/Notice";
