@@ -1,10 +1,16 @@
-﻿import React from "react";
-import styled from "styled-components/native";
-import { Image } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { CameraIcon } from "@/assets/images";
-import Colors from "@/src/constants/Colors";
-import Txt from "@/src/components/ui/Txt";
+﻿import tw from '@/src/lib/tailwind';
+import { useState, useEffect } from 'react';
+
+import { 
+  Image, 
+  View, 
+  TouchableOpacity 
+} from 'react-native';
+import Txt from '@/src/components/ui/Txt';
+
+import * as ImagePicker from 'expo-image-picker';
+
+import { CameraIcon, CloseIcon } from '@/assets/images';
 
 interface ImageUploaderProps {
   onImagesChange: (uris: string[]) => void;
@@ -12,22 +18,20 @@ interface ImageUploaderProps {
   title?: string;
 }
 
-function ImageUploader({
+export default function ImageUploader({
   onImagesChange,
   maxImages = 5,
-  title = "참고 사진이 있나요?",
+  title = '참고 사진이 있나요?',
 }: ImageUploaderProps) {
-  const [images, setImages] = React.useState<string[]>([]);
+  const [images, setImages] = useState<string[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     onImagesChange(images);
   }, [images, onImagesChange]);
 
   const handleAddImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      quality: 1,
+      mediaTypes: ['images'],
     });
 
     if (!result.canceled) {
@@ -46,76 +50,39 @@ function ImageUploader({
     <>
       {!!title && (
         <>
-          <Txt
-            variant="mainTitleBold"
-            style={{ marginTop: 20, marginBottom: 10 }}
-          >
+          <Txt variant='subtitleBold' style={tw`mt-[20px] mb-[7px]`}>
             {title}
           </Txt>
-          <Txt variant="bodyText" style={{ marginBottom: 20 }}>
+          <Txt variant='auxiliaryTextLight' style={tw`mb-[17px]`}>
             최대 {maxImages}개
           </Txt>
         </>
       )}
-      <ImageContainer>
+
+      <View style={tw`flex-row flex-wrap gap-[10px]`}>
         {images.length < maxImages && (
-          <AddImageButton onPress={handleAddImage}>
+          <TouchableOpacity 
+            onPress={handleAddImage}
+            style={tw`w-[52px] h-[46px] justify-center items-center border border-light-gray-2 rounded-[5px]`}
+          >
             <CameraIcon />
-          </AddImageButton>
+          </TouchableOpacity>
         )}
         {images.map((uri, index) => (
-          <ImageBox key={index}>
-            <PreviewImage source={{ uri }} />
-            <RemoveButton onPress={() => handleRemoveImage(index)}>
-              <Txt variant="bodyTextBold" color="white">
-                ×
-              </Txt>
-            </RemoveButton>
-          </ImageBox>
+          <View key={index} style={tw`relative w-[52px] h-[46px] border border-light-gray-2 rounded-[5px] bg-white`}>
+            <Image 
+              source={{ uri }} 
+              style={tw`w-full h-full`}
+            />
+            <TouchableOpacity 
+              onPress={() => handleRemoveImage(index)}
+              style={tw`absolute top-[-8px] right-[-6px] w-[18px] h-[18px] rounded-[100px] bg-light-gray-2 justify-center items-center z-10`}
+            >
+              <CloseIcon />
+            </TouchableOpacity>
+          </View>
         ))}
-      </ImageContainer>
+      </View>
     </>
   );
 }
-
-const ImageContainer = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
-
-const ImageBox = styled.View`
-  position: relative;
-  width: 60px;
-  height: 60px;
-`;
-
-const PreviewImage = styled(Image)`
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-`;
-
-const RemoveButton = styled.TouchableOpacity`
-  position: absolute;
-  top: -8px;
-  right: -6px;
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
-  background-color: ${Colors.colors.light_gray2};
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-`;
-
-const AddImageButton = styled.TouchableOpacity`
-  width: 60px;
-  height: 60px;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid ${Colors.colors.light_gray2};
-  border-radius: 5px;
-`;
-
-export default ImageUploader;

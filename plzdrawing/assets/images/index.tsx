@@ -41,6 +41,7 @@ import GreeNormal from "@/assets/images/logo-gree-normal.svg";
 import GreeSuccess from "@/assets/images/logo-gree-success.svg";
 import GreeSad from "@/assets/images/logo-gree-sad.svg";
 import GreeSadGray from "@/assets/images/logo-gree-sad-gray.svg";
+import GreeProfile from "@/assets/images/logo-gree-profile.svg";
 
 export {
   EmptyCheck,
@@ -86,4 +87,5 @@ export {
   GreeSuccess,
   GreeSad,
   GreeSadGray,
+  GreeProfile,
 };

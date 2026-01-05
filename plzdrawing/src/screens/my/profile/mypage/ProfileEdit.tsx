@@ -1,39 +1,43 @@
-﻿import styled from "styled-components/native";
-import HomeDetailHeader from "@/src/screens/home/components/detail/HomeDetailHeader";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "@/src/types/navigation";
-import Colors from "@/src/constants/Colors";
-import Txt from "@/src/components/ui/Txt";
-import TextField from "@/src/components/ui/input/TextField";
-import { useState, useEffect } from "react";
-import { BaseProfile } from "@/src/types/profile";
-import ProfileImageUploader from "@/src/components/ui/input/ProfileImgUploader";
-import DefaultButton from "@/src/components/ui/button/DefaultButton";
+﻿import tw from '@/src/lib/tailwind';
+import { useState, useEffect } from 'react';
 
-import { memberController } from "@/src/apis/controller/member";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/src/types/navigation';
+
+import { View, ScrollView } from 'react-native';
+import Container from '@/src/components/layout/Container';
+import Header from '@/src/components/layout/header/Header';
+import Txt from '@/src/components/ui/Txt';
+import TextField from '@/src/components/ui/input/TextField';
+import BottomFixedArea from '@/src/components/layout/BottomFixedArea';
+import Button from '@/src/components/ui/button/Button';
+import ProfileImageUploader from '@/src/components/ui/input/ProfileImgUploader';
+
+import { BackArrowIcon } from '@/assets/images';
+
+import { memberController } from '@/src/apis/controller/member';
 
 type ProfileEditProps = NativeStackScreenProps<
-  RootStackParamList,
-  "ProfileEdit"
+  RootStackParamList, 'ProfileEdit'
 >;
 
 export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
-  const [nickname, setNickname] = useState("");
-  const [nicknameState, setNicknameState] = useState<"empty" | "filled" | "error" | 'failed'>("empty");
-  const [introduction, setIntroduction] = useState("");
-  const [introductionState, setIntroductionState] = useState<"empty" | "filled" | "error" | 'failed'>("empty");
-  const [hashtags, setHashtags] = useState("");
-  const [hashtagState, setHashtagState] = useState<"empty" | "filled" | "error" | 'failed'>("empty");
+  const [nickname, setNickname] = useState('');
+  const [nicknameState, setNicknameState] = useState<'empty' | 'filled' | 'error' | 'failed'>('empty');
+  const [introduction, setIntroduction] = useState('');
+  const [introductionState, setIntroductionState] = useState<'empty' | 'filled' | 'error' | 'failed'>('empty');
+  const [hashtags, setHashtags] = useState('');
+  const [hashtagState, setHashtagState] = useState<'empty' | 'filled' | 'error' | 'failed'>('empty');
   const [newImageUri, setNewImageUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   
   // 초기 데이터
   const [initialData, setInitialData] = useState({
-    nickname: "",
-    introduction: "",
-    hashtags: [] as string[],
-    imageUrl: "",
+    nickname: '',
+    introduction: '',
+    hashtags: '',
+    imageUrl: '',
   });
 
   // 사용자 데이터 불러오기
@@ -44,16 +48,16 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
         const data = response as any;
         
         if (data && data.nickname) {
-          const hashtagsStr = (data.hashtags || []).join(" ");
-          setNickname(data.nickname || "");
-          setIntroduction(data.introduction || "");
+          const hashtagsStr = (data.hashtags || []).join(' ');
+          setNickname(data.nickname || '');
+          setIntroduction(data.introduction || '');
           setHashtags(hashtagsStr);
           
           setInitialData({
-            nickname: data.nickname || "",
-            introduction: data.introduction || "",
+            nickname: data.nickname || '',
+            introduction: data.introduction || '',
             hashtags: hashtagsStr,
-            imageUrl: data.profileImageUrl || "",
+            imageUrl: data.profileImageUrl || '',
           });
         }
       } catch (error) {
@@ -71,7 +75,7 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
     return (
       nickname !== initialData.nickname ||
       introduction !== initialData.introduction ||
-      hashtags !== initialData.hashtags.join(" ") ||
+      hashtags !== initialData.hashtags ||
       newImageUri !== null
     );
   };
@@ -92,7 +96,7 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
           {
             nickname: nickname || initialData.nickname,
             introduce: introduction || initialData.introduction,
-            hashTag: hashtags.split(" ") || initialData.hashtags,
+            hashTag: hashtags.split(' ').filter(tag => tag.trim()) || initialData.hashtags.split(' ').filter(tag => tag.trim()),
           }
         );
       } else {
@@ -101,7 +105,7 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
           {
             nickname: nickname || initialData.nickname,
             introduce: introduction || initialData.introduction,
-            hashTag: hashtags.split(" ") || initialData.hashtags,
+            hashTag: hashtags.split(' ').filter(tag => tag.trim()) || initialData.hashtags.split(' ').filter(tag => tag.trim()),
           }
         );
       }
@@ -118,90 +122,79 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
 
   if (isLoading) {
     return (
-      <Container>
-        <HomeDetailHeader
-          title="프로필 수정"
-          onBackPress={() => navigation.goBack()}
+      <View style={tw`flex-1 bg-white`}>
+        <Header
+          title='프로필 수정'
+          leftIcon={<BackArrowIcon />}
+          className='pb-[12px]'
         />
-        <Txt variant="bodyText" style={{ textAlign: 'center', marginTop: 50 }}>
+        <Txt variant='bodyText' style={tw`text-center mt-[50px]`}>
           로딩 중...
         </Txt>
-      </Container>
+      </View>
     );
   }
 
   return (
-    <Container>
-      <HomeDetailHeader
-        title="프로필 수정"
-        onBackPress={() => navigation.goBack()}
+    <Container className='w-full'>
+      <Header
+        title='프로필 수정'
+        leftIcon={<BackArrowIcon />}
+        className='pb-[12px]'
       />
-      <ScrollContainer
+
+      <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{ padding: 32 }}
+        style={tw`p-[32px] w-full flex-1 bg-light-gray-1`}
       >
         <ProfileImageUploader
           initialImageUrl={initialData.imageUrl}
           onImageSelected={setNewImageUri}
         />
-        <Txt variant="bodySubText" style={{ marginBottom: 20, marginTop: 20 }}>
+
+        <Txt variant='subtitleBold' style={tw`mt-[22px] mb-[14px]`}>
           닉네임
         </Txt>
         <TextField
-          placeholder={initialData.nickname || "닉네임을 입력하세요"}
+          placeholder={initialData.nickname || '닉네임을 입력하세요'}
           state={nicknameState}
           setState={setNicknameState}
           value={nickname}
           onChangeText={setNickname}
         />
-        <Txt variant="bodySubText" style={{ marginBottom: 20, marginTop: 20 }}>
+
+        <Txt variant='subtitleBold' style={tw`mt-[27px] mb-[14px]`}>
           한 줄 소개
         </Txt>
         <TextField
-          placeholder={initialData.introduction || "자기소개를 입력하세요"}
+          placeholder={initialData.introduction || '자기소개를 입력하세요'}
           state={introductionState}
           setState={setIntroductionState}
           value={introduction}
           onChangeText={setIntroduction}
         />
-        <Txt variant="bodySubText" style={{ marginBottom: 20, marginTop: 20 }}>
+
+        <Txt variant='subtitleBold' style={tw`mt-[27px] mb-[14px]`}>
           해시태그
         </Txt>
         <TextField
-          placeholder={initialData.hashtags.join(" ") || "#태그를 입력하세요"}
+          placeholder={initialData.hashtags || '#태그를 입력하세요'}
           state={hashtagState}
           setState={setHashtagState}
           value={hashtags}
           onChangeText={setHashtags}
         />
-        
-        <ButtonContainer>
-          <DefaultButton
-            title={isSaving ? "저장 중..." : "확인"}
-            onPress={handleSave}
-            disabled={!hasChanges() || isSaving}
-            isLoading={isSaving}
+      </ScrollView>
+
+      <BottomFixedArea>
+        <View style={tw`w-full px-[57px] py-[10px] pb-[20px]`}>
+          <Button
             isValid={hasChanges()}
-            variant="primary"
+            title='확인'
+            onClick={handleSave}
           />
-        </ButtonContainer>
-      </ScrollContainer>
+        </View>
+      </BottomFixedArea>
     </Container>
   );
 }
-
-const Container = styled.View`
-  flex: 1;
-  background-color: ${Colors.colors.white};
-`;
-
-const ScrollContainer = styled.ScrollView`
-  width: 100%;
-  flex: 1;
-`;
-
-const ButtonContainer = styled.View`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  width: 100%;
-`;

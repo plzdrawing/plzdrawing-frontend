@@ -1,127 +1,144 @@
-﻿import React, { useState } from "react";
-import Colors from "@/src/constants/Colors";
-import styled from "styled-components/native";
-import HomeDetailHeader from "@/src/screens/home/components/detail/HomeDetailHeader";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "@/src/types/navigation";
-import DefaultButton from "@/src/components/ui/button/DefaultButton";
-import Txt from "@/src/components/ui/Txt";
-import ImageUploader from "@/src/components/ui/input/ImgUploader";
-import TextField from "@/src/components/ui/input/TextField";
-import AlertModal from "@/src/components/ui/modal/AlertModal";
+﻿import tw from '@/src/lib/tailwind';
+import { useState } from 'react';
+
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/src/types/navigation';
+
+import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import Container from '@/src/components/layout/Container';
+import Header from '@/src/components/layout/header/Header';
+import ImageUploader from '@/src/components/ui/input/ImgUploader';
+import Txt from '@/src/components/ui/Txt';
+import TextField from '@/src/components/ui/input/TextField';
+import Button from '@/src/components/ui/button/Button';
+
+import { BackArrowIcon } from '@/assets/images';
+
+import { memberController } from '@/src/apis/controller/member';
 
 type ProfileUploadScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  "ProfileUpload"
+  RootStackParamList, 'ProfileUpload'
 >;
 
-function ProfileUpload({ route, navigation }: ProfileUploadScreenProps) {
+export default function ProfileUpload({ route, navigation }: ProfileUploadScreenProps) {
   const [introduceText, setIntroduceText] = useState("");
   const [introduceState, setIntroduceState] = useState("");
   const [keywordText, setKeywordText] = useState("");
   const [keywordState, setKeywordState] = useState("");
-  const [referenceImages, setReferenceImages] = useState<string[]>([]);
   const [profileImages, setProfileImages] = useState<string[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleConfirm = () => {
-    // [todo] : dummy 네비게이션 수정해야 함
     setModalVisible(false);
     navigation.navigate("DrawingCardUpload");
   };
 
-  const handleButtonPress = () => {
-    setModalVisible(true);
+  const handleButtonPress = async () => {
+    if (isUploading) return;
+    
+    // 해시태그 처리 (쉼표 또는 공백으로 구분)
+    const hashtags = keywordText
+      .split(/[,\s]+/)
+      .filter(tag => tag.trim() !== '')
+      .map(tag => tag.trim());
+
+    try {
+      setIsUploading(true);
+      
+      // URI를 File 객체로 변환
+      const imageUri = profileImages[0];
+      const filename = imageUri.split('/').pop() || 'profile.jpg';
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : 'image/jpeg';
+      
+      const imageFile = {
+        uri: imageUri,
+        name: filename,
+        type: type,
+      } as any;
+      
+      await memberController.uploadProfile(
+        imageFile,
+        {
+          introduce: introduceText,
+          hashTag: hashtags,
+        }
+      );
+      
+      console.log('프로필 업로드 성공');
+      setModalVisible(true);
+    } catch (error) {
+      console.error('프로필 업로드 실패:', error, introduceText, hashtags, profileImages);
+      // TODO: 에러 모달 표시
+    }
   };
 
   return (
-    <Container style={{ paddingBottom: 10 }}>
-      <HomeDetailHeader
-        type="profileUpload"
-        onBackPress={() => navigation.goBack()}
+    <Container className='w-full'>
+      <Header 
+        title='프로필 올리기'
+        leftIcon={<BackArrowIcon />}
+        className='pb-[12px]'
       />
-      <StyledScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-        <ContentContainer>
-          <ImageUploader
-            title="프로필 그림을 올려볼까요?"
-            onImagesChange={setProfileImages}
-            maxImages={1}
-          />
-          <Txt
-            variant="mainTitleBold"
-            style={{ marginTop: 20, marginBottom: 20 }}
-          >
-            간단한 소개를 해볼까요?
-          </Txt>
-          <TextField
-            placeholder="한줄로 나를 어필해볼까요?"
-            setState={setIntroduceState}
-            value={introduceText}
-            onChangeText={setIntroduceText}
-          />
-          <Txt
-            variant="mainTitleBold"
-            style={{ marginBottom: 20, marginTop: 20 }}
-          >
-            해시태그로 자신을 표현해주세요
-          </Txt>
-          <TextField
-            placeholder="키워드로 나를 어필해볼까요?"
-            setState={setKeywordState}
-            value={keywordText}
-            onChangeText={setKeywordText}
-          />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={tw`flex-1`}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      >
+        <ScrollView 
+          style={tw`flex-1 bg-light-gray-1`}
+          contentContainerStyle={tw`pb-[120px]`}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={tw`px-[30px] pt-[17px]`}>
+            <ImageUploader
+              title='프로필 그림을 올려볼까요?'
+              onImagesChange={setProfileImages}
+              maxImages={1}
+            />
 
-          <ImageUploader
-            title="그림을 올려볼까요?"
-            onImagesChange={setReferenceImages}
-            maxImages={5}
-          />
-        </ContentContainer>
-      </StyledScrollView>
+            <Txt variant='subtitleBold' style={tw`mt-[27px] mb-[17px]`}>
+              간단한 소개를 해볼까요?
+            </Txt>
+            <TextField
+              placeholder='한줄로 나를 어필해볼까요?'
+              setState={setIntroduceState}
+              value={introduceText}
+              onChangeText={setIntroduceText}
+              className='bg-light-gray-1'
+            />
 
-      <FooterContainer>
-        <DefaultButton
-          title="보내기"
-          onPress={handleButtonPress}
-          variant="primary"
-        />
-      </FooterContainer>
-      {modalVisible && (
-        <AlertModal
-          title={"프로필 업로드가 완료되었어요!\n그림카드를 업로드해볼까요?"}
-          buttonTitle="확인"
-          onClick={handleConfirm}
-          textVariant="thirdText"
-        />
-      )}
+            <Txt variant='subtitleBold' style={tw`mt-[27px] mb-[17px]`}>
+              해시태그로 자신을 표현해주세요
+            </Txt>
+            <TextField
+              placeholder='키워드로 나를 어필해볼까요?'
+              setState={setKeywordState}
+              value={keywordText}
+              onChangeText={setKeywordText}
+              className='bg-light-gray-1'
+            />
+          </View>
+        </ScrollView>
+
+        <View style={tw`fixed bottom-0 left-0 right-0 w-full items-center py-[17px] bg-light-gray-1`}>
+          <Button
+            title='저장하기'
+            variant='default'
+            onClick={handleButtonPress}
+            className='w-[335px]'
+            isValid={
+              introduceText.trim() !== '' && 
+              keywordText.trim() !== '' &&
+              profileImages.length > 0
+            }
+            disabled={isUploading}
+          />
+        </View>
+      </KeyboardAvoidingView>
     </Container>
   );
 }
-
-const Container = styled.View`
-  flex: 1;
-  background-color: ${Colors.colors.white};
-`;
-
-const StyledScrollView = styled.ScrollView`
-  flex: 1;
-`;
-
-const ContentContainer = styled.View`
-  padding: 30px;
-`;
-
-const FooterContainer = styled.View`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 92px;
-  padding: 9px 57px;
-  padding-bottom: 20px;
-  background-color: ${Colors.colors.white};
-  border-top-width: 1px;
-  border-top-color: #f9f9f9;
-`;
-
-export default ProfileUpload;
+  

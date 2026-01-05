@@ -23,6 +23,7 @@ interface TextFieldProps extends TextInputProps {
   setState: (state: 'empty' | 'filled' | 'error' | 'failed') => void;
   validation?: (text: string) => void;
   errorMessage?: string;
+  className?: string;
 }
 
 export default function TextField(props: TextFieldProps) {
@@ -34,6 +35,7 @@ export default function TextField(props: TextFieldProps) {
     setState,
     errorMessage,
     validation,
+    className = '',
     ...rest
   } = props;
 
@@ -67,11 +69,20 @@ export default function TextField(props: TextFieldProps) {
     }
   };
 
+  const getBackgroundColor = () => {
+    if (isFocused || value) {
+      return tw`bg-white`;
+    } else {
+      return tw`bg-light-gray-1`;
+    }
+  };
+
   return (
     <View style={tw`gap-[9px]`}>
       <View style={[
-        tw`flex-row items-center relative w-full rounded-[12px] border bg-white`,
-        getBorderColor()
+        tw`flex-row items-center relative w-full rounded-[12px] border ${className}`,
+        getBorderColor(),
+        getBackgroundColor()
       ]}>
         <TextInput
           style={[

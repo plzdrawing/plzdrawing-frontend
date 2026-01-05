@@ -10,24 +10,30 @@ import {
 import Txt from '@/src/components/ui/Txt';
 import Button from '@/src/components/ui/button/Button';
 
+import { GreeProfile } from '@/assets/images';
+
 type FilterType = '그림' | '후기';
 
 interface UserDetailProps {
+  userProfileImage?: string;
   userName: string;
   userIntroduction: string;
   userTags: string[];
   selectedFilter: FilterType;
   onFilterChange: (filter: FilterType) => void;
   isNoProfile?: boolean;
+  onUploadProfile?: () => void;
 }
 
 export default function UserDetail({ 
+  userProfileImage,
   userName, 
   userIntroduction, 
   userTags, 
   selectedFilter, 
   onFilterChange,
   isNoProfile = false,
+  onUploadProfile,
 }: UserDetailProps) {
   const handleFilterPress = (filter: FilterType) => {
     onFilterChange(filter);
@@ -36,14 +42,24 @@ export default function UserDetail({
   return (
     <View style={tw`flex-col items-center pt-[24px] bg-light-gray-1`}>
       <View style={tw`flex-col items-center w-full`}>
-        <View style={tw`w-[120px] h-[120px] mt-[17px] mb-2.5 border border-dark-gray-1 rounded-[5px] bg-light-gray-3`} />
+        {userProfileImage ? (
+          <Image
+            source={{ uri: userProfileImage }}
+            style={tw`w-[120px] h-[120px] mt-[17px] mb-2.5 rounded-[5px]`}
+          />
+        ) : (
+          <View style={tw`w-[120px] h-[120px] mt-[17px] mb-2.5 border-[2px] border-light-gray-2 rounded-[5px] justify-center items-center bg-white`}>
+            <GreeProfile width={115} height={115} />
+          </View>
+        )}
+
         <Txt variant='mainTitleBold'>{userName} 님</Txt>
 
         {isNoProfile && (
           <Button
             title='프로필 올리기'
             variant='default'
-            onClick={() => {}}
+            onClick={onUploadProfile}
             className='w-[224px] mt-[12px] mb-[16px]'
           />
         ) || (
