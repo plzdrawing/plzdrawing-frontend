@@ -1,6 +1,6 @@
 import tw from '@/src/lib/tailwind';
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
   Image,
@@ -35,6 +35,21 @@ export default function UserDetail({
   isNoProfile = false,
   onUploadProfile,
 }: UserDetailProps) {
+  console.log('🖼️ UserDetail rendering with image:', userProfileImage);
+  const [imageHeaders, setImageHeaders] = useState<{[key: string]: string}>({});
+
+  useEffect(() => {
+    const getHeaders = async () => {
+      const token = await AsyncStorage.getItem('accessToken');
+      if (token) {
+        setImageHeaders({
+          'Authorization': `Bearer ${token}`,
+        });
+      }
+    };
+    getHeaders();
+  }, []);
+  
   const handleFilterPress = (filter: FilterType) => {
     onFilterChange(filter);
   };
@@ -44,8 +59,13 @@ export default function UserDetail({
       <View style={tw`flex-col items-center w-full`}>
         {userProfileImage ? (
           <Image
-            source={{ uri: userProfileImage }}
+            source={{ 
+              uri: userProfileImage,
+              headers: imageHeaders,
+            }}
             style={tw`w-[120px] h-[120px] mt-[17px] mb-2.5 rounded-[5px]`}
+            onError={(error) => console.error('❌ UserDetail image load error:', error.nativeEvent.error)}
+            onLoad={() => console.log('✅ UserDetail image loaded successfully')}
           />
         ) : (
           <View style={tw`w-[120px] h-[120px] mt-[17px] mb-2.5 border-[2px] border-light-gray-2 rounded-[5px] justify-center items-center bg-white`}>

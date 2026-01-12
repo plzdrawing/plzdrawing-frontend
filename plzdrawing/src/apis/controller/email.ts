@@ -44,7 +44,7 @@ export const emailController = {
   // 비밀번호 변경: PATCH
   changePassword: async (currentPassword: string, newPassword: string) => {
     const response = await apiClient.patch('/api/auth/email/v1/password/update', {
-      currentPassword,
+      nowPassword: currentPassword,
       newPassword,
     });
     return response.data;

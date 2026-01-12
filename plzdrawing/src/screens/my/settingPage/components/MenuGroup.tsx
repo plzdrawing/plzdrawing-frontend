@@ -2,9 +2,9 @@
 
 import { View } from 'react-native';
 import Txt from '@/src/components/ui/Txt';
-import MenuRow from "@/src/screens/my/pages/settingPage/components/MenuRow";
-import colors from "@/src/constants/Colors";
-import { ProfileMenuItem } from "@/src/types/profile";
+import MenuRow from '@/src/screens/my/settingPage/components/MenuRow';
+
+import { ProfileMenuItem } from '@/src/types/profile';
 
 interface MenuGroupProps {
   title: string;

@@ -5,6 +5,8 @@ import { RootStackParamList } from '@/src/types/navigation';
 import { View, TouchableOpacity } from 'react-native';
 import Txt from '@/src/components/ui/Txt';
 
+import { BackArrowIcon } from '@/assets/images';
+
 interface HeaderProps {
   title?: string;
   leftIcon?: React.ReactNode;
@@ -16,7 +18,7 @@ interface HeaderProps {
 
 export default function Header({
   title,
-  leftIcon,
+  leftIcon = <BackArrowIcon />,
   onLeftClick,
   rightIcon,
   onRightClick,

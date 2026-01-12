@@ -5,13 +5,13 @@ import { useNavigation, useIsFocused, useFocusEffect, CommonActions } from '@rea
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import UserProfile from "@/src/screens/my/pages/profilePage/Profile";
+import UserProfile from "@/src/screens/my/profilePage/Profile";
 import { BaseProfile, ProfileMenuItem } from "@/src/types/profile";
 import { RootStackParamList } from "@/src/types/navigation";
 
 import Container from "@/src/components/layout/Container";
 import TabHeader from '@/src/components/layout/header/TabHeader';
-import Setting from '@/src/screens/my/pages/settingPage/Setting';
+import Setting from '@/src/screens/my/settingPage/Setting';
 
 import { memberController } from '@/src/apis/controller/member';
 import { authController } from '@/src/apis/controller/auth';
@@ -34,59 +34,51 @@ export default function My() {
       const fetchUserData = async () => {
         try {
           const response = await memberController.checkMyProfile();
-          console.log('User data response:', response);
+          console.log('✅ User data response:', response);
         
-        // any로 캐스팅하여 실제 API 응답 구조 처리
-        const data = response as any;
+          // any로 캐스팅하여 실제 API 응답 구조 처리
+          const data = response as any;
         
-        // 실제 응답 구조: { nickname, hashtags, introduction, profileImageUrl }
-        if (data && (data.nickname || data.hashtags)) {
-          console.log('Mapping profile data:', {
-            nickname: data.nickname,
-            profileImageUrl: data.profileImageUrl,
-            hashtags: data.hashtags
-          });
+          // 실제 응답 구조: { nickname, hashtags/hashTags, introduction, profileImageUrl }
+          if (data) {
+            console.log('📋 Mapping profile data:', {
+              nickname: data.nickname,
+              profileImageUrl: data.profileImageUrl,
+              hashTags: data.hashTags || data.hashtags
+            });
           
-          setUserProfile({
-            name: data.nickname || "사용자",
-            imageUrl: data.profileImageUrl || "",
-            hashtag: data.hashtags || [],
-          });
+            setUserProfile({
+              name: data.nickname || "사용자",
+              imageUrl: data.profileImageUrl || "",
+              hashtag: data.hashTags || data.hashtags || [],
+            });
           
-          console.log('UserProfile set to:', {
-            name: data.nickname,
-            imageUrl: data.profileImageUrl,
-            hashtag: data.hashtags
-          });
-        } 
-        // ApiResponse 구조인 경우: { success, data }
-        else if (data?.success && data?.data) {
-          setUserProfile({
-            name: data.data.nickname || data.data.name || "사용자",
-            imageUrl: data.data.profileImageUrl || data.data.profileImage || "",
-            hashtag: data.data.hashtags || data.data.tags || [],
-          });
-        } else {
-          // 데이터가 없을 때 기본값 설정
-          console.log('No user data, using default values');
+            console.log('✓ UserProfile set to:', {
+              name: data.nickname,
+              imageUrl: data.profileImageUrl,
+              hashtag: data.hashTags || data.hashtags
+            });
+          } else {
+            // 데이터가 없을 때 기본값 설정
+            console.log('⚠️ No user data, using default values');
+            setUserProfile({
+              name: "사용자",
+              imageUrl: "",
+              hashtag: ["#프로필", "#미작성"],
+            });
+          }
+        } catch (error) {
+          console.error('❌ Failed to fetch user data:', error);
+          // 에러 발생 시에도 기본값 설정
           setUserProfile({
             name: "사용자",
             imageUrl: "",
             hashtag: ["#프로필", "#미작성"],
           });
         }
-      } catch (error) {
-        console.error('Failed to fetch user data:', error);
-        // 에러 발생 시에도 기본값 설정
-        setUserProfile({
-          name: "사용자",
-          imageUrl: "",
-          hashtag: ["#프로필", "#미작성"],
-        });
-      }
-    };
+      };
 
-    fetchUserData();
+      fetchUserData();
     }, [])
   );
 

@@ -36,19 +36,21 @@ import PasswordChange from "@/src/screens/my/myPage/PasswordChange";
 
 import PainterProfile from "@/src/screens/my/PainterProfile";
 
-import ProfileUpload from "@/src/screens/my/profile/ProfileUpload";
-import DrawingCardUpload from "@/src/screens/my/profile/DrawingCardUpload";
+import AppManagement from "@/src/screens/my/settingPage/pages/AppManagement";
+
+import ProfileUpload from "@/src/screens/my/profilePage/ProfileUpload";
+import DrawingCardUpload from "@/src/screens/my/profilePage/DrawingCardUpload";
 import Alarm from "@/src/screens/alarm/Alarm";
-import AlarmSetting from "@/src/screens/my/profile/mypage/AlarmSetting";
-import CustomerService from "@/src/screens/my/profile/mypage/CustomerService";
-import Notice from "@/src/screens/my/profile/mypage/Notice";
-import ProfileEdit from "@/src/screens/my/profile/mypage/ProfileEdit";
-import Tos from "@/src/screens/my/profile/mypage/Tos";
+import AlarmSetting from "@/src/screens/my/settingPage/pages/AlarmSetting";
+import CustomerService from "@/src/screens/my/settingPage/pages/CustomerService";
+import Notice from "@/src/screens/my/settingPage/pages/Notice";
+import ProfileEdit from "@/src/screens/my/settingPage/pages/ProfileEdit";
+import Tos from "@/src/screens/my/settingPage/pages/Tos";
 import EditAccount from "@/src/screens/my/myPage/edit/EditAccount";
-import EditPassword from "@/src/screens/my/myPage/edit/EditPassword";
+import EditPassword from "@/src/screens/my/settingPage/pages/EditPassword";
 import EditSuccess from "@/src/screens/my/myPage/edit/components/EditSuccess";
-import Payments from "@/src/screens/my/myPage/payments/Payments";
-import UserProfile from "@/src/screens/my/pages/profilePage/Profile";
+import Payments from "@/src/screens/my/settingPage/pages/payments/Payments";
+import UserProfile from "@/src/screens/my/profilePage/Profile";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -87,6 +89,7 @@ function AppNavigator({ isLoggedIn }: { isLoggedIn: boolean }) {
         
         <Stack.Screen name='PainterProfile' component={PainterProfile} />
         
+        <Stack.Screen name='AppManagement' component={AppManagement} />
         <Stack.Screen name='ProfileUpload' component={ProfileUpload} />
         <Stack.Screen name='DrawingCardUpload' component={DrawingCardUpload} />
         <Stack.Screen name='Alarm' component={Alarm} />

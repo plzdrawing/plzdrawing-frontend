@@ -60,13 +60,26 @@ export default function EmailLogin() {
         password: password,
       });
 
-      console.log('login success:', response);
+      console.log('✅ Login success:', response);
 
       if (response) {
         // Access Token 저장
-        const accessToken = response.access_token || response.access_token;
+        const accessToken = response.access_token || response.accessToken;
         if (accessToken) {
+          console.log('💾 Saving access token to AsyncStorage:', accessToken.substring(0, 20) + '...');
           await AsyncStorage.setItem('accessToken', accessToken);
+          
+          // 저장 확인
+          const savedToken = await AsyncStorage.getItem('accessToken');
+          console.log('✓ Token saved successfully:', savedToken ? 'YES' : 'NO');
+        } else {
+          console.log('⚠️ No access token in response. Checking if saved by interceptor...');
+          const savedToken = await AsyncStorage.getItem('accessToken');
+          if (savedToken) {
+            console.log('✓ Token was saved by interceptor');
+          } else {
+            console.log('❌ No token saved at all!');
+          }
         }
       }
 

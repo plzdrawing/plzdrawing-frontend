@@ -32,6 +32,8 @@ export type RootStackParamList = {
 
   PasswordChange: { email: string };
   PainterProfile: undefined;
+
+  AppManagement: undefined;
   
   ProfileUpload: undefined;
   DrawingCardUpload: undefined;

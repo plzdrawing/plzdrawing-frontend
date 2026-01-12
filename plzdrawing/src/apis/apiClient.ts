@@ -23,13 +23,16 @@ apiClient.interceptors.request.use(
         ...config.headers,
         Authorization: `Bearer ${token}`,
       };
+      console.log('🔑 Token found and added to headers:', token.substring(0, 20) + '...');
+    } else {
+      console.log('⚠️ No access token found in AsyncStorage');
     }
     
-    console.log('API Request:', config.method?.toUpperCase(), config.url);
+    console.log('📤 API Request:', config.method?.toUpperCase(), config.url);
     return config;
   },
   (error) => {
-    console.error('Request Error:', error);
+    console.error('❌ Request Error:', error);
     return Promise.reject(error);
   }
 );

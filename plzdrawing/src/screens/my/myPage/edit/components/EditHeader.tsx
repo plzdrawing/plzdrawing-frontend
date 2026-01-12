@@ -39,8 +39,8 @@ const Container = styled.View`
   padding: 30px 30px 23px 30px;
   margin: 4px 0;
   background-color: #fff;
-  border-bottom-width: 1px;
-  border-bottom-color: ${Colors.colors.seperator};
+  // border-bottom-width: 1px;
+  // border-bottom-color: ${Colors.colors.seperator};
   /* box shadow for iOS */
   shadow-color: #000;
   shadow-offset: 0px 2px;

@@ -6,8 +6,8 @@ import { RootStackParamList } from '@/src/types/navigation';
 import { BaseProfile } from '@/src/types/profile';
 
 import { View, ScrollView } from 'react-native';
-import MyInfoSection from '@/src/screens/my/pages/settingPage/components/MyInfoSection';
-import MenuGroup from '@/src/screens/my/pages/settingPage/components/MenuGroup';
+import MyInfoSection from '@/src/screens/my/settingPage/components/MyInfoSection';
+import MenuGroup from '@/src/screens/my/settingPage/components/MenuGroup';
 
 import {
   AlarmIcon,
@@ -50,8 +50,9 @@ export default function Setting({ userProfile, onLogout }: SettingProps) {
         items={[
           { text: '공지 사항', icon: <MegaphoneIcon />, onPress: () => {navigation.navigate('Notice')} },
           { text: '고객 센터', icon: <QuestionIcon />, onPress: () => {navigation.navigate('CustomerService')} },
+          // TODO: 1:1 문의 페이지 추가
           { text: '1:1 문의', icon: <QuestionIcon />, onPress: () => {} },
-          { text: '앱 관리', icon: <MultipleFileIcon />, onPress: () => {navigation.navigate('Tos')} },
+          { text: '앱 관리', icon: <MultipleFileIcon />, onPress: () => {navigation.navigate('AppManagement')} },
           { text: '결제 내역', icon: <MenuCircleIcon />, onPress: () => {navigation.navigate('Payments')} },
         ]}
       />

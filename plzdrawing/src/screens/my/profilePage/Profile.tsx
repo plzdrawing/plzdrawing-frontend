@@ -8,7 +8,7 @@ import { RootStackParamList } from '@/src/types/navigation';
 import { ScrollView } from 'react-native';
 import Header from '@/src/components/layout/header/Header';
 
-import UserDetail from '@/src/screens/my/pages/profilePage/components/UserDetail';
+import UserDetail from '@/src/screens/my/profilePage/components/UserDetail';
 import UserDrawings from '@/src/screens/my/userProfile/UserDrawings';
 import UserReviews from '@/src/screens/my/userProfile/UserReviews';
 
@@ -67,6 +67,7 @@ export default function Profile({
       if (isFromMyPage) {
         try {
           const profileData = await memberController.checkMyProfile();
+          console.log('📋 Profile data from API:', profileData);
           
           const hasNoProfile = 
             !!profileData.nickname && 
@@ -77,6 +78,7 @@ export default function Profile({
           setIsNoProfile(hasNoProfile);
           
           if (!hasNoProfile) {
+            console.log('✓ Setting user profile with image:', profileData.profileImageUrl);
             setUser(prev => ({
               ...prev,
               imageUrl: profileData.profileImageUrl || '',
@@ -91,7 +93,7 @@ export default function Profile({
             }));
           }
         } catch (error) {
-          console.error('Failed to check profile:', error);
+          console.error('❌ Failed to check profile:', error);
         }
       }
     };
