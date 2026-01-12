@@ -1,23 +1,20 @@
 import apiClient from '../apiClient';
 import {
-  CodeGenerateRequest,
-  CodeGenerateForPasswordRequest,
-  PasswordResetRequest,
-  UpdatePasswordRequest,
+  
 } from '../api';
 
 export const emailController = {
-  // 이메일 인증: GET
-  verifyEmailCode: async (data: { email: string; code: string }) => {
-    const response = await apiClient.get('/api/auth/email/v1/email-verification', {
-      params: data,
-    });
+  // 이메일 인증 코드 발송: POST
+  sendEmailVerificationCode: async (email: string) => {
+    const response = await apiClient.post('/api/auth/email/v1/email-verification', { email });
     return response.data;
   },
 
-  // 이메일 코드 보내기: POST
-  sendEmailCode: async (data: CodeGenerateRequest) => {
-    const response = await apiClient.post('/api/auth/email/v1/email-verification', data);
+  // 이메일 인증 코드 검증: GET
+  verifyEmailCode: async (email: string, code: string) => {
+    const response = await apiClient.get('/api/auth/email/v1/email-verification', {
+      params: { email, code },
+    });
     return response.data;
   },
 
@@ -29,21 +26,27 @@ export const emailController = {
     return response.data;
   },
 
-  // 비밀번호 재발급 인증번호 전송: POST
-  sendNewPasswordCode: async (data: CodeGenerateForPasswordRequest) => {
-    const response = await apiClient.post('/api/auth/email/v1/password/reissue', data);
+  // 비밀전호 재설정 인증 코드 발송: POST
+  sendPasswordResetCode: async (email: string) => {
+    const response = await apiClient.post('/api/auth/email/v1/password/reissue', { email });
     return response.data;
   },
 
-  // 비밀번호 재발급: PATCH
-  verifyNewPasswordCode: async (data: PasswordResetRequest) => {
-    const response = await apiClient.patch('/api/auth/email/v1/password/reissue', data);
+  // 비밀번호 재설정: PATCH
+  verifyPasswordResetCode: async (email: string, code: string) => {
+    const response = await apiClient.patch('/api/auth/email/v1/password/reissue', {
+      email,
+      code,
+    });
     return response.data;
   },
 
-  // 비민번호 변경 (로그인 사용자 기준): PATCH
-  updatePassword: async (data: UpdatePasswordRequest) => {
-    const response = await apiClient.patch('/api/auth/email/v1/password/update', data);
+  // 비밀번호 변경: PATCH
+  changePassword: async (currentPassword: string, newPassword: string) => {
+    const response = await apiClient.patch('/api/auth/email/v1/password/update', {
+      currentPassword,
+      newPassword,
+    });
     return response.data;
-  },
+  }
 };

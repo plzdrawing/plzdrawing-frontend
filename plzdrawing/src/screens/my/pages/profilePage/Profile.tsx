@@ -32,10 +32,12 @@ export default function Profile({
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('그림');
   const [isNoProfile, setIsNoProfile] = useState(false);
+  
   const [user, setUser] = useState({
-    id: "",
-    name: userProfile?.name || "",
-    intro: "",
+    id: '',
+    imageUrl: userProfile?.imageUrl || '',
+    name: userProfile?.name || '',
+    intro: '',
     tags: userProfile?.hashtag || [] as string[],
     drawings: [],
     reviews: {
@@ -48,40 +50,39 @@ export default function Profile({
     },
   });
 
-  // userProfile이 변경되면 user 상태 업데이트
   useEffect(() => {
     if (userProfile) {
       setUser(prev => ({
         ...prev,
+        imageUrl: userProfile.imageUrl,
         name: userProfile.name,
         tags: userProfile.hashtag,
       }));
     }
   }, [userProfile]);
 
-  // 마이페이지일 때 프로필 정보 확인
+  // 마이페이지일 때 서버에서 프로필 정보 다시 확인
   useEffect(() => {
     const checkProfile = async () => {
       if (isFromMyPage) {
         try {
-          const profileData = await memberController.checkMyPage();
+          const profileData = await memberController.checkMyProfile();
           
-          // nickname만 있고 introduction, profileImageUrl이 null이고 hashtags 배열이 비어있는 경우
           const hasNoProfile = 
             !!profileData.nickname && 
-            !profileData.introduction && 
+            !profileData.introduce && 
             !profileData.profileImageUrl && 
-            (!profileData.hashtags || profileData.hashtags.length === 0);
+            (!profileData.hashTags || profileData.hashTags.length === 0);
           
           setIsNoProfile(hasNoProfile);
           
-          // 프로필 데이터가 있으면 user 상태 업데이트
           if (!hasNoProfile) {
             setUser(prev => ({
               ...prev,
+              imageUrl: profileData.profileImageUrl || '',
               name: profileData.nickname || '',
-              intro: profileData.introduction || '',
-              tags: profileData.hashtags || [],
+              intro: profileData.introduce || '',
+              tags: profileData.hashTags || [],
             }));
           } else {
             setUser(prev => ({
@@ -110,7 +111,7 @@ export default function Profile({
         showsVerticalScrollIndicator={false}
       >
         <UserDetail
-          userProfileImage={userProfile?.imageUrl}
+          userProfileImage={user.imageUrl}
           userName={user.name}
           userIntroduction={user.intro}
           userTags={user.tags}

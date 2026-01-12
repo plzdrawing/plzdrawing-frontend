@@ -1,31 +1,41 @@
-import "react-native-gesture-handler"; // 반드시 첫 줄에 추가
-import React, { useState, useEffect } from "react";
-import { ActivityIndicator, View, StyleSheet } from "react-native";
-import * as Font from "expo-font";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import LoginSplash from "@/src/screens/auth/login/LoginSplash";
-import Login from "@/src/screens/auth/login/EmailLogin";
-import MainNavigation from "@/src/navigation/MainNavigation";
-import { RootStackParamList } from "@/src/types/navigation";
+import 'react-native-gesture-handler'; // 반드시 첫 줄에 추가
+import { useState, useEffect } from 'react';
 
-import Signup from "@/src/screens/auth/login/Login";
-import EmailSignup from "@/src/screens/auth/signup/EmailSignup";
-import ProfileMakingSplash from "@/src/screens/auth/signup/profileMaking/ProfileMakingSplash";
-import ProfileMakingDone from "@/src/screens/auth/signup/profileMaking/ProfileMakingDone";
-import ProfileMakingNickname from "@/src/screens/auth/signup/profileMaking/ProfileMakingNickname";
-import PasswordFind from "@/src/screens/auth/password/PasswordFind";
-import EmailVerification from "@/src/screens/auth/signup/EmailVerification";
-import VerificationComplete from "@/src/screens/auth/signup/EmailVerificationComplete";
-import PwdSetting from "@/src/screens/auth/signup/PasswordSetting";
-import PasswordChange from "@/src/screens/my/myPage/PasswordChange";
-import Chatting from "@/src/screens/talk/chatting/Chatting";
-import PasswordFindVerification from "@/src/screens/auth/password/PasswordFindVerification";
-import PainterProfile from "@/src/screens/my/PainterProfile";
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { RootStackParamList } from '@/src/types/navigation';
+import MainNavigation from '@/src/navigation/MainNavigation';
+
+import * as Font from 'expo-font';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { 
+  ActivityIndicator, 
+  View, 
+  StyleSheet,
+} from 'react-native';
+
+import LoginSplash from '@/src/screens/auth/login/LoginSplash';
+import Login from '@/src/screens/auth/login/Login';
+import EmailLogin from '@/src/screens/auth/login/EmailLogin';
+import EmailSignup from '@/src/screens/auth/signup/EmailSignup';
+import EmailVerification from '@/src/screens/auth/signup/EmailVerification';
+import EmailVerificationComplete from '@/src/screens/auth/signup/EmailVerificationComplete';
+import PasswordSetting from '@/src/screens/auth/signup/PasswordSetting';
+import NicknameSettingSplash from '@/src/screens/auth/signup/NicknameSettingSplash';
+import NicknameSetting from '@/src/screens/auth/signup/NicknameSetting';
+import NicknameSettingComplete from '@/src/screens/auth/signup/NicknameSettingComplete';
+import PasswordFind from '@/src/screens/auth/password/PasswordFind';
+import PasswordFindVerification from '@/src/screens/auth/password/PasswordFindVerification';
+import Chatting from '@/src/screens/talk/chatting/Chatting';
 import HomePostDetail from "@/src/screens/home/post/HomePostDetail";
 import HomeDrawingCardDetail from "@/src/screens/home/post/HomeDrawingCardDetail";
 import HomeRequest from "@/src/screens/home/post/HomeRequest";
+
+import PasswordChange from "@/src/screens/my/myPage/PasswordChange";
+
+import PainterProfile from "@/src/screens/my/PainterProfile";
+
 import ProfileUpload from "@/src/screens/my/profile/ProfileUpload";
 import DrawingCardUpload from "@/src/screens/my/profile/DrawingCardUpload";
 import Alarm from "@/src/screens/alarm/Alarm";
@@ -47,56 +57,49 @@ function AppNavigator({ isLoggedIn }: { isLoggedIn: boolean }) {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName={isLoggedIn ? "Main" : "LoginSplash"}
-        // initialRouteName="EmailVerification"
+        initialRouteName={isLoggedIn ? 'Main' : 'LoginSplash'}
       >
-        <Stack.Screen name="Main" component={MainNavigation} />
-        <Stack.Screen name="LoginSplash" component={LoginSplash} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen name="EmailSignup" component={EmailSignup} />
-        <Stack.Screen
-          name="ProfileMakingSplash"
-          component={ProfileMakingSplash}
-        />
-        <Stack.Screen
-          name="ProfileMakingNickname"
-          component={ProfileMakingNickname}
-        />
-        <Stack.Screen name="ProfileMakingDone" component={ProfileMakingDone} />
-        <Stack.Screen name="PasswordFind" component={PasswordFind} />
-        <Stack.Screen name="PasswordChange" component={PasswordChange} />
-        <Stack.Screen
-          name="PasswordFindVerification"
-          component={PasswordFindVerification}
-        />
-        <Stack.Screen name="EmailVerification" component={EmailVerification} />
-        <Stack.Screen
-          name="VerificationComplete"
-          component={VerificationComplete}
-        />
-        <Stack.Screen name="PwdSetting" component={PwdSetting} />
-        <Stack.Screen name="Chatting" component={Chatting} />
-        <Stack.Screen name="PainterProfile" component={PainterProfile} />
-        <Stack.Screen name="HomePostDetail" component={HomePostDetail} />
-        <Stack.Screen
-          name="HomeDrawingCardDetail"
-          component={HomeDrawingCardDetail}
-        />
-        <Stack.Screen name="HomeRequest" component={HomeRequest} />
-        <Stack.Screen name="ProfileUpload" component={ProfileUpload} />
-        <Stack.Screen name="DrawingCardUpload" component={DrawingCardUpload} />
-        <Stack.Screen name="Alarm" component={Alarm} />
-        <Stack.Screen name="AlarmSetting" component={AlarmSetting} />
-        <Stack.Screen name="CustomerService" component={CustomerService} />
-        <Stack.Screen name="Notice" component={Notice} />
-        <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
-        <Stack.Screen name="Tos" component={Tos} />
-        <Stack.Screen name="EditAccount" component={EditAccount} />
-        <Stack.Screen name="EditPassword" component={EditPassword} />
-        <Stack.Screen name="EditSuccess" component={EditSuccess} />
-        <Stack.Screen name="Payments" component={Payments} />
-        <Stack.Screen name="UserProfile" component={UserProfile} />
+        <Stack.Screen name='Main' component={MainNavigation} />
+        
+        <Stack.Screen name='LoginSplash' component={LoginSplash} />
+        <Stack.Screen name='Login' component={Login} />
+
+        <Stack.Screen name='EmailLogin' component={EmailLogin} />
+        
+        <Stack.Screen name='EmailSignup' component={EmailSignup} />
+        <Stack.Screen name='EmailVerification' component={EmailVerification} />
+        <Stack.Screen name='EmailVerificationComplete' component={EmailVerificationComplete} />
+        <Stack.Screen name='PasswordSetting' component={PasswordSetting} />
+        <Stack.Screen name='NicknameSettingSplash' component={NicknameSettingSplash} />
+        <Stack.Screen name='NicknameSetting' component={NicknameSetting} />
+        <Stack.Screen name='NicknameSettingComplete' component={NicknameSettingComplete} />
+
+        <Stack.Screen name='PasswordFind' component={PasswordFind} />
+        <Stack.Screen name='PasswordFindVerification' component={PasswordFindVerification} />
+        
+        <Stack.Screen name='Chatting' component={Chatting} />
+
+        <Stack.Screen name='HomePostDetail' component={HomePostDetail} />
+        <Stack.Screen name='HomeDrawingCardDetail' component={HomeDrawingCardDetail} />
+        <Stack.Screen name='HomeRequest' component={HomeRequest} />
+
+        <Stack.Screen name='PasswordChange' component={PasswordChange} />
+        
+        <Stack.Screen name='PainterProfile' component={PainterProfile} />
+        
+        <Stack.Screen name='ProfileUpload' component={ProfileUpload} />
+        <Stack.Screen name='DrawingCardUpload' component={DrawingCardUpload} />
+        <Stack.Screen name='Alarm' component={Alarm} />
+        <Stack.Screen name='AlarmSetting' component={AlarmSetting} />
+        <Stack.Screen name='CustomerService' component={CustomerService} />
+        <Stack.Screen name='Notice' component={Notice} />
+        <Stack.Screen name='ProfileEdit' component={ProfileEdit} />
+        <Stack.Screen name='Tos' component={Tos} />
+        <Stack.Screen name='EditAccount' component={EditAccount} />
+        <Stack.Screen name='EditPassword' component={EditPassword} />
+        <Stack.Screen name='EditSuccess' component={EditSuccess} />
+        <Stack.Screen name='Payments' component={Payments} />
+        <Stack.Screen name='UserProfile' component={UserProfile} />
       </Stack.Navigator>
     </NavigationContainer>
   );

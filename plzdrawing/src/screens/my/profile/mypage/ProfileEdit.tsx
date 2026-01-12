@@ -44,7 +44,7 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await memberController.checkMyPage();
+        const response = await memberController.checkMyProfile();
         const data = response as any;
         
         if (data && data.nickname) {
@@ -93,20 +93,16 @@ export default function ProfileEdit({ route, navigation }: ProfileEditProps) {
       if (imageFile) {
         await memberController.editProfile(
           imageFile,
-          {
-            nickname: nickname || initialData.nickname,
-            introduce: introduction || initialData.introduction,
-            hashTag: hashtags.split(' ').filter(tag => tag.trim()) || initialData.hashtags.split(' ').filter(tag => tag.trim()),
-          }
+          nickname || initialData.nickname,
+          introduction || initialData.introduction,
+          hashtags.split(' ').filter(tag => tag.trim()) || initialData.hashtags.split(' ').filter(tag => tag.trim()),
         );
       } else {
         await memberController.editProfile(
           {} as File,
-          {
-            nickname: nickname || initialData.nickname,
-            introduce: introduction || initialData.introduction,
-            hashTag: hashtags.split(' ').filter(tag => tag.trim()) || initialData.hashtags.split(' ').filter(tag => tag.trim()),
-          }
+          nickname || initialData.nickname,
+          introduction || initialData.introduction,
+          hashtags.split(' ').filter(tag => tag.trim()) || initialData.hashtags.split(' ').filter(tag => tag.trim()),
         );
       }
       

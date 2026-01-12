@@ -63,7 +63,7 @@ export default function EmailVerification() {
       // 기존 인증 취소
       await emailController.cancelEmailVerification(email);
       // 새 인증번호 전송
-      await emailController.sendEmailCode({ email });
+      await emailController.sendEmailVerificationCode(email);
       // 상태 초기화
       setTimeLeft(300);
       setVerificationCode(["", "", "", "", "", ""]);
@@ -82,7 +82,7 @@ export default function EmailVerification() {
     setIsLoading(true); // 로딩 시작
 
     try {
-      await emailController.verifyEmailCode({ email, code });
+      await emailController.verifyEmailCode(email, code);
 
       // 성공 시
       setCodeState('default');
@@ -142,7 +142,7 @@ export default function EmailVerification() {
           buttonTitle="확인"
           onClickButton={() => {
             setModalVisible(false);
-            navigation.navigate("VerificationComplete", { email: email });
+            navigation.navigate('EmailVerificationComplete', { email: email });
           }}
         />
       )}

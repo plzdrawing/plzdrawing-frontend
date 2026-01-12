@@ -33,7 +33,7 @@ export default function My() {
     useCallback(() => {
       const fetchUserData = async () => {
         try {
-          const response = await memberController.checkMyPage();
+          const response = await memberController.checkMyProfile();
           console.log('User data response:', response);
         
         // any로 캐스팅하여 실제 API 응답 구조 처리
@@ -106,7 +106,7 @@ export default function My() {
   // 로그아웃 처리
   const handleLogout = async () => {
     try {
-      await authController.logout();
+      // await authController.logout();
       
       await AsyncStorage.removeItem('accessToken');
       await AsyncStorage.removeItem('refreshToken');

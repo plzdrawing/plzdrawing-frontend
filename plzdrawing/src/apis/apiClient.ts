@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_BASE_URL = 'http://13.124.246.36:8080';
+// const API_BASE_URL = 'http://13.124.246.36:8080';
+const API_BASE_URL = 'https://plzdrawing.o-r.kr';
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,

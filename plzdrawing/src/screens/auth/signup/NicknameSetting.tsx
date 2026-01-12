@@ -13,10 +13,10 @@ import { NavigationProp, useNavigation, useRoute, RouteProp } from "@react-navig
 import { RootStackParamList } from "@/src/types/navigation";
 import { authController } from "@/src/apis/controller/auth";
 
-type ProfileMakingNicknameRouteProp = RouteProp<RootStackParamList, 'ProfileMakingNickname'>;
+type NicknameSettingRouteProp = RouteProp<RootStackParamList, 'NicknameSetting'>;
 
-export default function ProfileMakingNickname() {
-  const route = useRoute<ProfileMakingNicknameRouteProp>();
+export default function NicknameSetting() {
+  const route = useRoute<NicknameSettingRouteProp>();
   const { email, password, agreements } = route.params;
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -38,14 +38,14 @@ export default function ProfileMakingNickname() {
       await authController.signup({
         email: email,
         password: password,
-        nickName: nickName,
-        personalInfoConsent: agreements.privacy,
-        acceptTermsOfUse: agreements.terms,
-        marketingConsent: agreements.marketing,
+        nickname: nickName,
+        // personalInfoConsent: agreements.privacy,
+        // acceptTermsOfUse: agreements.terms,
+        // marketingConsent: agreements.marketing,
       });
 
       // 회원가입 성공
-      navigation.navigate("ProfileMakingDone");
+      navigation.navigate('NicknameSettingComplete');
 
     } catch (error: any) {
       // 회원가입 실패

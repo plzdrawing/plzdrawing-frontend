@@ -86,7 +86,7 @@ export default function TextField(props: TextFieldProps) {
       ]}>
         <TextInput
           style={[
-            tw`flex-1 text-[14px] px-[20px] py-[17.5px] color-black`,
+            tw`flex-1 px-[20px] py-[17.5px] text-[14px] text-black`,
             FontStyles.bodySubText,
           ]}
           multiline={false}

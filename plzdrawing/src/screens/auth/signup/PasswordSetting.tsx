@@ -14,10 +14,10 @@ import TextField from "@/src/components/ui/input/TextField";
 import AlertModal from "@/src/components/ui/modal/AlertModal";
 import { EmptyCheck, FilledCheck } from "@/assets/images";
 
-type PwdSettingRouteProp = RouteProp<RootStackParamList, 'PwdSetting'>;
+type PasswordSettingRouteProp = RouteProp<RootStackParamList, 'PasswordSetting'>;
 
-export default function PwdSetting() {
-  const route = useRoute<PwdSettingRouteProp>();
+export default function PasswordSetting() {
+  const route = useRoute<PasswordSettingRouteProp>();
   const { email, agreements } = route.params;
 
   const [password, setPassword] = useState("");
@@ -161,13 +161,13 @@ export default function PwdSetting() {
 
             {showPasswordChecks && (
               <View style={tw`gap-[7px] p-[0_0_0_20px]`}>
-                <View style={tw`gap-[17px]`}>
+                <View style={tw`flex-row gap-[17px]`}>
                   {lengthCheck ? <FilledCheck /> : <EmptyCheck />}
                   <Txt variant="bodySubText" color="icon_default">
                     최소 8자 이상
                   </Txt>
                 </View>
-                <View style={tw`gap-[17px]`}>
+                <View style={tw`flex-row gap-[17px]`}>
                   {combinationCheck ? <FilledCheck /> : <EmptyCheck />}
                   <Txt variant="bodySubText" color="icon_default">
                     영문, 숫자, 특수문자 3가지 조합
@@ -209,7 +209,7 @@ export default function PwdSetting() {
           buttonTitle="확인"
           onClickButton={() => {
             setModalVisible(false);
-            navigation.navigate("ProfileMakingSplash", {
+            navigation.navigate('NicknameSettingSplash', {
               email,
               password,
               agreements

@@ -10,392 +10,272 @@
  * ---------------------------------------------------------------
  */
 
-export interface ErrorResponse {
-  code?: string;
-  message?: string;
-  errors?: ValidationError[];
-}
-
-export interface ValidationError {
-  field?: string;
-  message?: string;
-}
-
-export interface UpsertProfileRequest {
-  /**
-   * 한 줄 소개
-   * @minLength 0
-   * @maxLength 30
-   * @example "안녕하십니까?"
-   */
-  introduce?: string;
-  /**
-   * 해시태그
-   * @example "[해시태그1, 해시태그2]"
-   */
-  hashTag?: string[];
-}
-
-export interface UploadContentRequest {
-  /**
-   * 제목
-   * @minLength 0
-   * @maxLength 20
-   * @example "그림 제목"
-   */
-  title?: string;
-  /**
-   * 설명
-   * @minLength 0
-   * @maxLength 30
-   * @example "게시글 설명"
-   */
-  explain?: string;
-  /**
-   * 해시태그
-   * @example "[해시태그1, 해시태그2]"
-   */
-  hashTag?: string[];
-  /**
-   * 예상금액
-   * @format int64
-   * @example 2000
-   */
-  price?: number;
-  /**
-   * 예상 소요 시간
-   * @example "TEN / HALF_HOUR / MORE_THAN_AN_HOUR / DAY"
-   */
-  timeTaken?: "TEN" | "HALF_HOUR" | "MORE_THAN_AN_HOUR" | "DAY";
-}
-
-export interface UploadContentResponse {
-  /**
-   * contentId
-   * @format int64
-   * @example 1
-   */
-  contentId?: number;
-}
-
-export interface SignUpRequest {
-  /**
-   * 이메일
-   * @example "abc@def.com"
-   */
-  email?: string;
-  /**
-   * 비밀번호
-   * @example "1234"
-   */
-  password?: string;
-  /**
-   * 닉네임
-   * @example "abc"
-   */
-  nickName?: string;
-  /**
-   * 약관동의(개인정보 수집 및 이용)
-   * @example true
-   */
-  personalInfoConsent?: boolean;
-  /**
-   * 이용정책 동의
-   * @example true
-   */
-  acceptTermsOfUse?: boolean;
-  /**
-   * 할인, 이벤트 소식 받기 동의
-   * @example false
-   */
-  marketingConsent?: boolean;
-}
-
-export interface SignUpResponse {
-  /**
-   * 멤버 식별자
-   * @format int64
-   * @example 1
-   */
-  memberId?: number;
-}
-
-export interface LoginRequest {
-  /**
-   * 제공자
-   * @example "EMAIL / KAKAO / NAVER"
-   */
-  provider?: "EMAIL" | "KAKAO" | "NAVER" | "GOOGLE" | "APPLE";
-  /**
-   * 이메일
-   * @example "abc@def.com"
-   */
-  email?: string;
-  /**
-   * 비밀번호
-   * @example "1234"
-   */
-  password?: string;
-}
-
-export interface CodeGenerateForPasswordRequest {
-  /**
-   * 이메일
-   * @example "abc@def.com"
-   */
-  email?: string;
-}
-
-export interface CodeGenerateRequest {
-  /**
-   * 이메일
-   * @example "abc@def.com"
-   */
-  email?: string;
-}
-
-export interface UpdateProfileRequest {
-  /**
-   * 닉네임
-   * @example "홍길동"
-   */
-  nickname?: string;
-  /**
-   * 한 줄 소개
-   * @minLength 0
-   * @maxLength 30
-   * @example "그림 그리는 걸 좋아합니다."
-   */
-  introduce?: string;
-  /**
-   * 해시태그
-   * @example "[해시태그1, 해시태그2]"
-   */
-  hashTag?: string[];
-}
-
-export interface ProfileResponse {
-  /**
-   * 닉네임
-   * @example "홍길동"
-   */
-  nickname?: string;
-  /**
-   * 한 줄 소개
-   * @example "그림 그리는 걸 좋아합니다."
-   */
-  introduce?: string;
-  /**
-   * 해시태그
-   * @example "#귀여운 #낙서 #동물그림"
-   */
-  hashtag?: string[];
-  /**
-   * 프로필 이미지 URL
-   * @example "https://bucket.s3.ap-northeast-2.amazonaws.com/profile123.png"
-   */
-  profileImageUrl?: string;
-}
-
-export interface UpdateContentRequest {
-  /**
-   * 수정할 게시글 Id
-   * @format int64
-   * @example 1
-   */
-  contentId?: number;
-  /**
-   * 수정할 게시글 제목
-   * @minLength 0
-   * @maxLength 20
-   * @example "그림 제목"
-   */
-  title?: string;
-  /**
-   * 설명
-   * @minLength 0
-   * @maxLength 30
-   * @example "게시글 설명"
-   */
-  explain?: string;
-  /**
-   * 해시태그
-   * @example "[해시태그1, 해시태그2]"
-   */
-  hashTag?: string[];
-  /**
-   * 예상금액
-   * @format int64
-   * @example 2000
-   */
-  price?: number;
-  /**
-   * 예상 소요 시간
-   * @example "TEN / HALF_HOUR / MORE_THAN_AN_HOUR / DAY"
-   */
-  timeTaken?: "TEN" | "HALF_HOUR" | "MORE_THAN_AN_HOUR" | "DAY";
-}
-
-export interface UpdatePasswordRequest {
-  /**
-   * 현재 비밀번호
-   * @example "Test1234!"
-   */
-  nowPassword?: string;
-  /**
-   * 새 비밀번호
-   * @example "Test1234!"
-   */
-  newPassword?: string;
-}
-
-export interface PasswordResetRequest {
-  /**
-   * 이메일
-   * @example "abc@def.com"
-   */
-  email?: string;
-  /**
-   * 인증코드
-   * @example "000042"
-   */
-  authCode?: string;
-}
-
-/** 마이페이지 사용자 정보 응답 */
 export interface ProfileInfoResponse {
   /**
    * 닉네임
-   * @example "똥강아지"
+   * @example "홍길동"
    */
-  nickname?: string;
+  nickname: string;
   /**
-   * 한 줄 소개
-   * @example "그림 그리는 걸 좋아합니다."
+   * 이메일
+   * @example "user@example.com"
    */
-  introduction?: string;
-  /**
-   * 해시태그 목록
-   * @example ["귀여운","낙서","동물그림"]
-   */
-  hashtags?: string[];
+  email: string;
   /**
    * 프로필 이미지 URL
-   * @example "https://plzdrawing.s3.amazonaws.com/profile/abcd1234.png"
+   * @example "https://example.com/image.jpg"
    */
-  profileImageUrl?: string;
+  profileImageUrl: string;
+  /**
+   * 자기소개
+   * @example "안녕하세요."
+   */
+  introduce: string;
+  /**
+   * 관심 태그 목록
+   * @example ["그림","일러스트"]
+   */
+  hashTags: string[];
 }
 
-/** 콘텐츠 정보 */
-export interface ContentsDto {
+export interface CreateMemberDto {
   /**
-   * 콘텐츠 id
-   * @format int64
+   * 이메일
+   * @example "user@example.com"
+   */
+  email: string;
+  /**
+   * 비밀번호
+   * @example "password123"
+   */
+  password: string;
+  /**
+   * 닉네임
+   * @example "홍길동"
+   */
+  nickname: string;
+}
+
+export interface MemberResponseDto {
+  /**
+   * 회원 ID
    * @example 1
    */
-  contentId?: number;
+  id: number;
   /**
-   * 콘텐츠 생성일자
-   * @format date
-   * @example "2025-12-22"
+   * 이메일
+   * @example "user@example.com"
    */
-  createAt?: string;
+  email: string;
   /**
-   * 콘텐츠 url
-   * @example "[https://s3~, https://s3~]"
+   * 닉네임
+   * @example "홍길동"
    */
-  contentUrl?: string[];
+  nickname: string;
   /**
-   * 콘텐츠 해시태그
-   * @example "[사과, 바나나]"
+   * 역할
+   * @example "ROLE_MEMBER"
    */
-  hashTag?: string[];
+  role: "ROLE_TEMP" | "ROLE_MEMBER" | "ROLE_ADMIN";
   /**
-   * 콘텐츠 설명
-   * @example "기린 그림입니다."
+   * 가입 경로
+   * @example "EMAIL"
    */
-  explanation?: string;
+  provider: "EMAIL" | "KAKAO" | "NAVER" | "GOOGLE" | "APPLE";
   /**
-   * 소요 시간
-   * @example "TEN,HALF_HOUR,MORE_THAN_AN_HOUR,DAY"
+   * 생성일
+   * @format date-time
+   * @example "2023-01-01T00:00:00.000Z"
    */
-  timeTaken?: "TEN" | "HALF_HOUR" | "MORE_THAN_AN_HOUR" | "DAY";
+  createdAt: string;
   /**
-   * 가격
-   * @format int64
-   * @example 1000
+   * 수정일
+   * @format date-time
+   * @example "2023-01-01T00:00:00.000Z"
    */
-  price?: number;
-  /**
-   * 좋아요 수
-   * @format int64
-   * @example 1
-   */
-  like?: number;
+  updatedAt: string;
 }
 
-/** 페이지 응답 */
-export interface LatestContentsResponse {
-  /** 업로더 정보 */
-  uploaderDto?: UploaderDto;
-  /** 콘텐츠 정보 */
-  contentsDto?: ContentsDto;
-}
-
-export interface PageResponseLatestContentsResponse {
-  /** 페이지 응답 */
-  data?: LatestContentsResponse[];
+export interface AuthCredentialsDto {
   /**
-   * 전체 페이지 수
-   * @format int32
+   * 이메일
+   * @example "user@example.com"
    */
-  totalPages?: number;
-  /** 마지막 페이지 여부 */
-  isLastPage?: boolean;
+  email: string;
+  /**
+   * 비밀번호
+   * @example "password123"
+   */
+  password: string;
 }
 
-/** 업로더 정보 */
+export interface LoginResponseDto {
+  /**
+   * JWT 액세스 토큰
+   * @example "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+   */
+  access_token: string;
+}
+
 export interface UploaderDto {
   /**
    * 닉네임
    * @example "홍길동"
    */
-  nickname?: string;
+  nickname: string;
   /**
-   * 프로필 이미지
-   * @example "https://s3~"
+   * 프로필 이미지 URL
+   * @example "https://example.com/image.jpg"
    */
-  profileImageUrl?: string;
+  profileImageUrl: string;
   /**
-   * 그림 횟수
-   * @format int64
-   * @example 1
+   * 그림 개수
+   * @example 10
    */
-  drawingCount?: number;
+  drawingCount: number;
   /**
-   * 후기 개수
-   * @format int64
-   * @example 1
+   * 리뷰 개수
+   * @example 5
    */
-  reviewCount?: number;
+  reviewCount: number;
   /**
    * 별점
-   * @format float
-   * @example 3.5
+   * @example 4.5
    */
-  star?: number;
+  star: number;
 }
 
-export interface PageResponseContentsDto {
-  /** 페이지 응답 */
-  data?: ContentsDto[];
+export interface ContentsDto {
   /**
-   * 전체 페이지 수
-   * @format int32
+   * 게시글 ID
+   * @example 1
    */
-  totalPages?: number;
-  /** 마지막 페이지 여부 */
-  isLastPage?: boolean;
+  contentId: number;
+  /**
+   * 생성일
+   * @format date-time
+   * @example "2023-01-01T00:00:00.000Z"
+   */
+  createdAt: string;
+  /**
+   * 이미지 URL 목록
+   * @example ["https://example.com/image1.jpg"]
+   */
+  imageUrls: string[];
+  /**
+   * 태그 목록
+   * @example ["그림","일러스트"]
+   */
+  tags: string[];
+  /**
+   * 설명
+   * @example "멋진 그림입니다."
+   */
+  explanation: string;
+  /**
+   * 소요 시간
+   * @example "1시간"
+   */
+  timeTaken: string;
+  /**
+   * 가격
+   * @example 10000
+   */
+  price: number;
+  /**
+   * 좋아요 수
+   * @example 10
+   */
+  likeCount: number;
+}
+
+export interface LatestContentsResponse {
+  /** 업로더 정보 */
+  uploader: UploaderDto;
+  /** 게시글 정보 */
+  contents: ContentsDto;
+}
+
+export interface LatestContentsPageResponseDto {
+  /** 데이터 목록 */
+  data: LatestContentsResponse[];
+  /**
+   * 총 데이터 수
+   * @example 100
+   */
+  total: number;
+  /**
+   * 현재 페이지
+   * @example 1
+   */
+  page: number;
+  /**
+   * 페이지 당 항목 수
+   * @example 10
+   */
+  limit: number;
+}
+
+export interface ContentsPageResponseDto {
+  /** 데이터 목록 */
+  data: ContentsDto[];
+  /**
+   * 총 데이터 수
+   * @example 100
+   */
+  total: number;
+  /**
+   * 현재 페이지
+   * @example 1
+   */
+  page: number;
+  /**
+   * 페이지 당 항목 수
+   * @example 10
+   */
+  limit: number;
+}
+
+export interface SendVerificationCodeDto {
+  /**
+   * 이메일
+   * @example "user@example.com"
+   */
+  email: string;
+}
+
+export interface CodeGenerateForPasswordRequest {
+  /**
+   * 이메일
+   * @example "user@example.com"
+   */
+  email: string;
+}
+
+export interface PasswordResetRequest {
+  /**
+   * 이메일
+   * @example "user@example.com"
+   */
+  email: string;
+  /**
+   * 인증 코드
+   * @example "123456"
+   */
+  authCode: string;
+}
+
+export interface UpdatePasswordRequest {
+  /**
+   * 현재 비밀번호
+   * @example "password123"
+   */
+  nowPassword: string;
+  /**
+   * 새 비밀번호
+   * @example "newpassword123"
+   */
+  newPassword: string;
 }
 
 import type {
@@ -462,7 +342,7 @@ export class HttpClient<SecurityDataType = unknown> {
   }: ApiConfig<SecurityDataType> = {}) {
     this.instance = axios.create({
       ...axiosConfig,
-      baseURL: axiosConfig.baseURL || "http://localhost:8080",
+      baseURL: axiosConfig.baseURL || "",
     });
     this.secure = secure;
     this.format = format;
@@ -574,33 +454,49 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title Plzdrawing API Docs
- * @baseUrl http://localhost:8080
+ * @title PlzDrawing API
+ * @version 1.0
+ * @contact
  *
- * 플리즈드로잉 관련 spring 서버 Api Document 입니다.
+ * PlzDrawing API 문서
  */
 export class Api<
   SecurityDataType extends unknown,
 > extends HttpClient<SecurityDataType> {
   api = {
     /**
-     * @description 프로필 업로드
+     * No description
      *
-     * @tags 멤버 관련 컨트롤러
-     * @name UploadFile
+     * @tags App
+     * @name AppControllerGetHello
+     * @request GET:/api
+     */
+    appControllerGetHello: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Member
+     * @name MemberControllerUploadProfile
      * @summary 프로필 업로드
      * @request POST:/api/member/profile
      * @secure
      */
-    uploadFile: (
+    memberControllerUploadProfile: (
       data: {
         /** @format binary */
-        multipartFile: File;
-        profile: UpsertProfileRequest;
+        file?: File;
+        introduce?: string;
+        hashTag?: string[];
       },
       params: RequestParams = {},
     ) =>
-      this.request<boolean, ErrorResponse>({
+      this.request<boolean, void>({
         path: `/api/member/profile`,
         method: "POST",
         body: data,
@@ -611,290 +507,25 @@ export class Api<
       }),
 
     /**
-     * @description fcm
+     * No description
      *
-     * @tags fcm 관련 테스트 컨트롤러
-     * @name FcmTest
-     * @summary fcm 테스트
-     * @request POST:/api/fcm/v1/test
-     * @secure
-     */
-    fcmTest: (params: RequestParams = {}) =>
-      this.request<boolean, ErrorResponse>({
-        path: `/api/fcm/v1/test`,
-        method: "POST",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description 최신순으로 콘텐츠를 조회한다.
-     *
-     * @tags 컨텐츠 관련 컨트롤러
-     * @name GetLatestContents
-     * @summary 최신순 콘텐츠 조회
-     * @request GET:/api/content
-     * @secure
-     */
-    getLatestContents: (
-      query?: {
-        /**
-         * @format int32
-         * @default 1
-         */
-        page?: number;
-        /**
-         * @format int32
-         * @default 10
-         */
-        size?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<PageResponseLatestContentsResponse, ErrorResponse>({
-        path: `/api/content`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description uploadContents
-     *
-     * @tags 컨텐츠 관련 컨트롤러
-     * @name UploadContents
-     * @summary 게시글 업로드
-     * @request POST:/api/content
-     * @secure
-     */
-    uploadContents: (
-      data: {
-        multipartFile: File[];
-        content: UploadContentRequest;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<UploadContentResponse, ErrorResponse>({
-        path: `/api/content`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.FormData,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description updateContents
-     *
-     * @tags 컨텐츠 관련 컨트롤러
-     * @name UpdateContents
-     * @summary 게시글 수정
-     * @request PATCH:/api/content
-     * @secure
-     */
-    updateContents: (
-      data: {
-        multipartFile: File[];
-        content: UpdateContentRequest;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<boolean, ErrorResponse>({
-        path: `/api/content`,
-        method: "PATCH",
-        body: data,
-        secure: true,
-        type: ContentType.FormData,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description reissue
-     *
-     * @tags 인증 관련 컨트롤러
-     * @name Reissue
-     * @summary 토큰 재발급
-     * @request POST:/api/auth/v1/token/refresh
-     * @secure
-     */
-    reissue: (params: RequestParams = {}) =>
-      this.request<boolean, ErrorResponse>({
-        path: `/api/auth/v1/token/refresh`,
-        method: "POST",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description signUp
-     *
-     * @tags 인증 관련 컨트롤러
-     * @name SignUp
-     * @summary 회원가입
-     * @request POST:/api/auth/v1/signup
-     * @secure
-     */
-    signUp: (data: SignUpRequest, params: RequestParams = {}) =>
-      this.request<SignUpResponse, ErrorResponse>({
-        path: `/api/auth/v1/signup`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description JWT 토큰을 무효화하고 세션을 종료합니다.
-     *
-     * @tags 인증 관련 컨트롤러
-     * @name Logout
-     * @summary 로그아웃
-     * @request POST:/api/auth/v1/logout
-     * @secure
-     */
-    logout: (params: RequestParams = {}) =>
-      this.request<void, ErrorResponse>({
-        path: `/api/auth/v1/logout`,
-        method: "POST",
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * @description login
-     *
-     * @tags 인증 관련 컨트롤러
-     * @name Login
-     * @summary 로그인
-     * @request POST:/api/auth/v1/login
-     * @secure
-     */
-    login: (data: LoginRequest, params: RequestParams = {}) =>
-      this.request<boolean, ErrorResponse>({
-        path: `/api/auth/v1/login`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description verifyEmail
-     *
-     * @tags 이메일 관련 컨트롤러
-     * @name SendEmailForReissuePassword
-     * @summary 비밀번호 재발급 인증번호 전송
-     * @request POST:/api/auth/email/v1/password/reissue
-     * @secure
-     */
-    sendEmailForReissuePassword: (
-      data: CodeGenerateForPasswordRequest,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, ErrorResponse>({
-        path: `/api/auth/email/v1/password/reissue`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * @description reissuePassword
-     *
-     * @tags 이메일 관련 컨트롤러
-     * @name ReissuePassword
-     * @summary 비밀번호 재발급
-     * @request PATCH:/api/auth/email/v1/password/reissue
-     * @secure
-     */
-    reissuePassword: (data: PasswordResetRequest, params: RequestParams = {}) =>
-      this.request<boolean, ErrorResponse>({
-        path: `/api/auth/email/v1/password/reissue`,
-        method: "PATCH",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description verifyEmail
-     *
-     * @tags 이메일 관련 컨트롤러
-     * @name VerifyEmail
-     * @summary 이메일 인증
-     * @request GET:/api/auth/email/v1/email-verification
-     * @secure
-     */
-    verifyEmail: (
-      query: {
-        email: string;
-        code: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<boolean, ErrorResponse>({
-        path: `/api/auth/email/v1/email-verification`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description sendEmailForVerification
-     *
-     * @tags 이메일 관련 컨트롤러
-     * @name SendEmailForVerification
-     * @summary 이메일 코드 보내기
-     * @request POST:/api/auth/email/v1/email-verification
-     * @secure
-     */
-    sendEmailForVerification: (
-      data: CodeGenerateRequest,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, ErrorResponse>({
-        path: `/api/auth/email/v1/email-verification`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * @description 닉네임, 한 줄 소개, 해시태그, 프로필 이미지 수정
-     *
-     * @tags 멤버 관련 컨트롤러
-     * @name UpdateProfile
+     * @tags Member
+     * @name MemberControllerUpdateProfile
      * @summary 프로필 수정
      * @request PATCH:/api/member/v1/profile
      * @secure
      */
-    updateProfile: (
+    memberControllerUpdateProfile: (
       data: {
         /** @format binary */
-        multipartFile: File;
-        profile: UpdateProfileRequest;
+        file?: File;
+        nickname?: string;
+        introduce?: string;
+        hashTag?: string[];
       },
       params: RequestParams = {},
     ) =>
-      this.request<ProfileResponse, ErrorResponse>({
+      this.request<boolean, void>({
         path: `/api/member/v1/profile`,
         method: "PATCH",
         body: data,
@@ -905,16 +536,439 @@ export class Api<
       }),
 
     /**
-     * @description 현재 로그인된 사용자의 비밀번호를 변경합니다.
+     * No description
      *
-     * @tags 이메일 관련 컨트롤러
-     * @name UpdatePassword
-     * @summary 비밀번호 변경 (로그인 사용자 기준)
+     * @tags Member
+     * @name MemberControllerGetMyProfile
+     * @summary 내 프로필 조회
+     * @request GET:/api/member/v1/me
+     * @secure
+     */
+    memberControllerGetMyProfile: (params: RequestParams = {}) =>
+      this.request<ProfileInfoResponse, any>({
+        path: `/api/member/v1/me`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Member
+     * @name MemberControllerCheckNickname
+     * @summary 닉네임 중복 확인
+     * @request GET:/api/member/check-nickname
+     */
+    memberControllerCheckNickname: (
+      query: {
+        nickname: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<boolean, void>({
+        path: `/api/member/check-nickname`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Member
+     * @name MemberControllerWithdraw
+     * @summary 회원 탈퇴
+     * @request DELETE:/api/member/v1/withdraw
+     * @secure
+     */
+    memberControllerWithdraw: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/member/v1/withdraw`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerRegister
+     * @summary 회원가입
+     * @request POST:/api/auth/register
+     */
+    authControllerRegister: (
+      data: CreateMemberDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<MemberResponseDto, void>({
+        path: `/api/auth/register`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerLogin
+     * @summary 로그인
+     * @request POST:/api/auth/login
+     */
+    authControllerLogin: (
+      data: AuthCredentialsDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<LoginResponseDto, void>({
+        path: `/api/auth/login`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerGetProfile
+     * @summary 프로필 조회
+     * @request GET:/api/auth/profile
+     * @secure
+     */
+    authControllerGetProfile: (params: RequestParams = {}) =>
+      this.request<MemberResponseDto, any>({
+        path: `/api/auth/profile`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerGoogleAuth
+     * @summary 구글 로그인
+     * @request GET:/api/auth/google
+     */
+    authControllerGoogleAuth: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/google`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerGoogleAuthRedirect
+     * @summary 구글 로그인 콜백
+     * @request GET:/api/auth/google/callback
+     */
+    authControllerGoogleAuthRedirect: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/google/callback`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerKakaoAuth
+     * @summary 카카오 로그인
+     * @request GET:/api/auth/kakao
+     */
+    authControllerKakaoAuth: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/kakao`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerKakaoAuthRedirect
+     * @summary 카카오 로그인 콜백
+     * @request GET:/api/auth/kakao/callback
+     */
+    authControllerKakaoAuthRedirect: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/kakao/callback`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Post
+     * @name PostControllerCreate
+     * @summary 게시글 작성
+     * @request POST:/api/posts
+     * @secure
+     */
+    postControllerCreate: (
+      data: {
+        images?: File[];
+        title?: string;
+        content?: string;
+        hashTag?: string[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
+        path: `/api/posts`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.FormData,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Post
+     * @name PostControllerGetLatestContents
+     * @summary 최신 게시글 조회
+     * @request GET:/api/posts
+     */
+    postControllerGetLatestContents: (
+      query?: {
+        /**
+         * 페이지 번호
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 페이지 당 항목 수
+         * @default 10
+         */
+        limit?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<LatestContentsPageResponseDto, any>({
+        path: `/api/posts`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Post
+     * @name PostControllerGetMemberContents
+     * @summary 멤버별 게시글 조회
+     * @request GET:/api/posts/member/{memberId}
+     */
+    postControllerGetMemberContents: (
+      memberId: string,
+      query?: {
+        /**
+         * 페이지 번호
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 페이지 당 항목 수
+         * @default 10
+         */
+        limit?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ContentsPageResponseDto, any>({
+        path: `/api/posts/member/${memberId}`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Post
+     * @name PostControllerFindOne
+     * @summary 게시글 상세 조회
+     * @request GET:/api/posts/{id}
+     */
+    postControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/api/posts/${id}`,
+        method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Post
+     * @name PostControllerUpdate
+     * @summary 게시글 수정
+     * @request PATCH:/api/posts/{id}
+     * @secure
+     */
+    postControllerUpdate: (id: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/api/posts/${id}`,
+        method: "PATCH",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Post
+     * @name PostControllerRemove
+     * @summary 게시글 삭제
+     * @request DELETE:/api/posts/{id}
+     * @secure
+     */
+    postControllerRemove: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/posts/${id}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Email
+     * @name EmailControllerSendEmailForVerification
+     * @summary 이메일 인증 코드 발송
+     * @request POST:/api/auth/email/v1/email-verification
+     */
+    emailControllerSendEmailForVerification: (
+      data: SendVerificationCodeDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
+        path: `/api/auth/email/v1/email-verification`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Email
+     * @name EmailControllerVerifyEmail
+     * @summary 이메일 인증 코드 검증
+     * @request GET:/api/auth/email/v1/email-verification
+     */
+    emailControllerVerifyEmail: (
+      query: {
+        email: string;
+        code: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<boolean, void>({
+        path: `/api/auth/email/v1/email-verification`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Email
+     * @name EmailControllerCancelEmailVerification
+     * @summary 이메일 인증 취소
+     * @request DELETE:/api/auth/email/v1/email-verification/cancel
+     */
+    emailControllerCancelEmailVerification: (
+      query: {
+        email: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
+        path: `/api/auth/email/v1/email-verification/cancel`,
+        method: "DELETE",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Email
+     * @name EmailControllerSendEmailForReissuePassword
+     * @summary 비밀번호 재설정 인증 코드 발송
+     * @request POST:/api/auth/email/v1/password/reissue
+     */
+    emailControllerSendEmailForReissuePassword: (
+      data: CodeGenerateForPasswordRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
+        path: `/api/auth/email/v1/password/reissue`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Email
+     * @name EmailControllerReissuePassword
+     * @summary 비밀번호 재설정
+     * @request PATCH:/api/auth/email/v1/password/reissue
+     */
+    emailControllerReissuePassword: (
+      data: PasswordResetRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
+        path: `/api/auth/email/v1/password/reissue`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Email
+     * @name EmailControllerUpdatePassword
+     * @summary 비밀번호 변경
      * @request PATCH:/api/auth/email/v1/password/update
      * @secure
      */
-    updatePassword: (data: UpdatePasswordRequest, params: RequestParams = {}) =>
-      this.request<void, ErrorResponse>({
+    emailControllerUpdatePassword: (
+      data: UpdatePasswordRequest,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
         path: `/api/auth/email/v1/password/update`,
         method: "PATCH",
         body: data,
@@ -924,94 +978,18 @@ export class Api<
       }),
 
     /**
-     * @description JWT 토큰 기반으로 현재 로그인된 사용자의 정보를 조회합니다.
+     * No description
      *
-     * @tags 멤버 관련 컨트롤러
-     * @name GetMyProfile
-     * @summary 마이페이지 사용자 정보 조회
-     * @request GET:/api/member/v1/me
-     * @secure
+     * @tags Alarm
+     * @name AlarmControllerFcmTest
+     * @summary FCM 알림 전송 테스트
+     * @request POST:/api/fcm/v1/test
      */
-    getMyProfile: (params: RequestParams = {}) =>
-      this.request<ProfileInfoResponse, ErrorResponse>({
-        path: `/api/member/v1/me`,
-        method: "GET",
-        secure: true,
+    alarmControllerFcmTest: (params: RequestParams = {}) =>
+      this.request<boolean, void>({
+        path: `/api/fcm/v1/test`,
+        method: "POST",
         format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description 멤버별 콘텐츠를 페이징으로 조회합니다.
-     *
-     * @tags 컨텐츠 관련 컨트롤러
-     * @name GetContentsThumbnail
-     * @summary 멤버별 콘텐츠 조회
-     * @request GET:/api/content/{memberId}
-     * @secure
-     */
-    getContentsThumbnail: (
-      memberId: number,
-      query?: {
-        /**
-         * @format int32
-         * @default 1
-         */
-        page?: number;
-        /**
-         * @format int32
-         * @default 10
-         */
-        size?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<PageResponseContentsDto, ErrorResponse>({
-        path: `/api/content/${memberId}`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description 현재 로그인된 회원을 탈퇴시킵니다.
-     *
-     * @tags 멤버 관련 컨트롤러
-     * @name Withdraw
-     * @summary 회원 탈퇴
-     * @request DELETE:/api/member/v1/withdraw
-     * @secure
-     */
-    withdraw: (params: RequestParams = {}) =>
-      this.request<void, ErrorResponse>({
-        path: `/api/member/v1/withdraw`,
-        method: "DELETE",
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * @description 회원가입 도중 취소 시 임시 이메일 계정을 DB에서 제거합니다.
-     *
-     * @tags 이메일 관련 컨트롤러
-     * @name CancelEmailVerification
-     * @summary 이메일 인증 취소
-     * @request DELETE:/api/auth/email/v1/email-verification/cancel
-     * @secure
-     */
-    cancelEmailVerification: (
-      query: {
-        email: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<void, ErrorResponse>({
-        path: `/api/auth/email/v1/email-verification/cancel`,
-        method: "DELETE",
-        query: query,
-        secure: true,
         ...params,
       }),
   };

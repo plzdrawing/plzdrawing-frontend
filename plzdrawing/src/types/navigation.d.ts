@@ -10,24 +10,29 @@ type Agreements = {
 
 export type RootStackParamList = {
   Main: undefined;
+
   LoginSplash: undefined;
-  Login: { userId: string } | undefined;
-  Signup: undefined;
+  Login: undefined;
+  EmailLogin: undefined;
   EmailSignup: undefined;
-  ProfileMakingSplash: { email: string; password: string; agreements: Agreements };
-  ProfileMakingNickname: { email: string; password: string; agreements: Agreements };
-  ProfileMakingDone: undefined;
-  PasswordFind: undefined;
-  PasswordChange: { email: string };
   EmailVerification: { email: string };
-  VerificationComplete: { email: string };
-  PwdSetting: { email: string; agreements: Agreements };
-  Chatting: undefined;
+  EmailVerificationComplete: { email: string };
+  PasswordSetting: { email: string; agreements: Agreements };
+  NicknameSettingSplash: { email: string; password: string; agreements: Agreements };
+  NicknameSetting: { email: string; password: string; agreements: Agreements };
+  NicknameSettingComplete: undefined;
+  PasswordFind: undefined;
   PasswordFindVerification: { email: string };
-  PainterProfile: undefined;
+  
+  Chatting: undefined;
+  
   HomePostDetail: { postId: string };
   HomeDrawingCardDetail: { cardId: string, postId: string };
   HomeRequest: { postId: string };
+
+  PasswordChange: { email: string };
+  PainterProfile: undefined;
+  
   ProfileUpload: undefined;
   DrawingCardUpload: undefined;
   Alarm: undefined;

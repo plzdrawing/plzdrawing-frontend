@@ -1,5 +1,6 @@
 import tw from '@/src/lib/tailwind';
 import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { NavigationProp, useNavigation, CommonActions } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/types/navigation';
@@ -55,13 +56,20 @@ export default function EmailLogin() {
 
     try {
       const response = await authController.login({
-        provider: 'EMAIL',
         email: email,
         password: password,
       });
 
-      // 로그인 성공 - 토큰은 interceptor에서 자동 저장됨
       console.log('login success:', response);
+
+      if (response) {
+        // Access Token 저장
+        const accessToken = response.access_token || response.access_token;
+        if (accessToken) {
+          await AsyncStorage.setItem('accessToken', accessToken);
+        }
+      }
+
       navigation.dispatch(
         CommonActions.reset({
           index: 0,

@@ -26,13 +26,8 @@ export default function ProfileUpload({ route, navigation }: ProfileUploadScreen
   const [keywordText, setKeywordText] = useState("");
   const [keywordState, setKeywordState] = useState("");
   const [profileImages, setProfileImages] = useState<string[]>([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
 
-  const handleConfirm = () => {
-    setModalVisible(false);
-    navigation.navigate("DrawingCardUpload");
-  };
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleButtonPress = async () => {
     if (isUploading) return;
@@ -46,28 +41,30 @@ export default function ProfileUpload({ route, navigation }: ProfileUploadScreen
     try {
       setIsUploading(true);
       
-      // URI를 File 객체로 변환
       const imageUri = profileImages[0];
+      // [수정] 파일명 뒤에 확장자가 없거나 webp일 경우를 대비해 처리
       const filename = imageUri.split('/').pop() || 'profile.jpg';
-      const match = /\.(\w+)$/.exec(filename);
-      const type = match ? `image/${match[1]}` : 'image/jpeg';
       
+      // [!code ++] 확장자와 상관없이 서버 호환성을 위해 jpg/jpeg로 설정
+      // (서버가 확장자로 검사하는 경우 통과하기 위함)
+      const newName = filename.toLowerCase().endsWith('.webp') 
+        ? filename.replace(/\.webp$/, '.jpg') 
+        : filename;
+
       const imageFile = {
         uri: imageUri,
-        name: filename,
-        type: type,
+        name: newName,      // 이름을 .jpg로 변경
+        type: 'image/jpeg', // MIME type을 jpeg로 강제
       } as any;
       
       await memberController.uploadProfile(
         imageFile,
-        {
-          introduce: introduceText,
-          hashTag: hashtags,
-        }
+        introduceText,
+        hashtags,
       );
       
       console.log('프로필 업로드 성공');
-      setModalVisible(true);
+      navigation.navigate("DrawingCardUpload");
     } catch (error) {
       console.error('프로필 업로드 실패:', error, introduceText, hashtags, profileImages);
       // TODO: 에러 모달 표시

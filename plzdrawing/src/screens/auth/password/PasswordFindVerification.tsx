@@ -80,7 +80,7 @@ export default function PasswordFindVerification() {
     setVerificationCode(["", "", "", "", "", ""]);
     // [추가] 인증번호 재전송 API 호출
     try {
-      await emailController.sendNewPasswordCode({ email });
+      await emailController.sendPasswordResetCode(email);
     } catch (error) {
       console.error("Resend code failed:", error);
     }
@@ -93,10 +93,7 @@ export default function PasswordFindVerification() {
     }
 
     try {
-      await emailController.verifyNewPasswordCode({
-        email: email,
-        authCode: code,
-      });
+      await emailController.verifyPasswordResetCode(email, code);
 
       // API 성공
       setModalVisible(true);

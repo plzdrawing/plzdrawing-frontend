@@ -8,10 +8,10 @@ import Container from "@/src/components/layout/Container";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
 import styled from "styled-components/native";
 
-export default function ProfileMakingDone() {
+export default function NicknameSettingComplete() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const handleStartButtonOnClick = () => {
-    navigation.navigate("Main");
+    navigation.navigate('Main');
   };
 
   return (

@@ -14,7 +14,7 @@ export default function Login() {
   const handleLoginGoogle = () => {};
   const handleLoginApple = () => {};
   const handleLoginEmail = () => {
-    navigation.navigate('Login');
+    navigation.navigate('EmailLogin');
   };
 
   const handleSignupEmail = () => {

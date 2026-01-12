@@ -71,7 +71,7 @@ export default function EmailSignup() {
       setIsLoading(true); // 로딩 시작
       try {
         // API 호출
-        await emailController.sendEmailCode({ email });
+        await emailController.sendEmailVerificationCode(email);
 
         // API 호출 성공 시
         console.log('인증번호 전송');

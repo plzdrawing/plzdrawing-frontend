@@ -14,7 +14,7 @@ export default function LoginSplash() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleStartButtonOnClick = () => {
-    navigation.navigate("Signup");
+    navigation.navigate('Login');
   };
 
   return (

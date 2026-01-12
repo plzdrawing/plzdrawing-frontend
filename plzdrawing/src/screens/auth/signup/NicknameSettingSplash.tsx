@@ -8,16 +8,16 @@ import Container from "@/src/components/layout/Container";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
 import styled from "styled-components/native";
 
-type ProfileMakingSplashRouteProp = RouteProp<RootStackParamList, 'ProfileMakingSplash'>;
+type NicknameSettingSplashRouteProp = RouteProp<RootStackParamList, 'NicknameSettingSplash'>;
 
-export default function ProfileMakingSplash() {
-  const route = useRoute<ProfileMakingSplashRouteProp>();
+export default function NicknameSettingSplash() {
+  const route = useRoute<NicknameSettingSplashRouteProp>();
   const { email, password, agreements } = route.params;
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleProfileMakingButtonOnClick = () => {
-    navigation.navigate("ProfileMakingNickname", {
+    navigation.navigate("NicknameSetting", {
       email,
       password,
       agreements,

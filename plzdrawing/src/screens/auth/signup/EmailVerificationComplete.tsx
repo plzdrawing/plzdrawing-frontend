@@ -12,7 +12,7 @@ import styled from "styled-components/native";
 import { NavigationProp, useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 
-type VerificationCompleteRouteProp = RouteProp<RootStackParamList, 'VerificationComplete'>;
+type VerificationCompleteRouteProp = RouteProp<RootStackParamList, 'EmailVerificationComplete'>;
 
 export default function VerificationComplete() {
   const route = useRoute<VerificationCompleteRouteProp>();
@@ -52,7 +52,7 @@ export default function VerificationComplete() {
   };
 
   const handleNextButton = () => {  
-    navigation.navigate("PwdSetting", { 
+    navigation.navigate('PasswordSetting', { 
       email: email,
       agreements: {
         terms: agreements.terms,

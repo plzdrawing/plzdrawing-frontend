@@ -55,7 +55,7 @@ export default function PasswordFind() {
     if (!isButtonEnabled) return;
 
     try {
-      await emailController.sendNewPasswordCode({ email });
+      await emailController.sendPasswordResetCode(email);
       // API 호출 성공
       console.log('new password code sent');
       setSuccessModalVisible(true);
