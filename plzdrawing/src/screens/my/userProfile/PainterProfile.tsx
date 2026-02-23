@@ -10,11 +10,11 @@ import {
 } from "react-native";
 import colors from "@/src/constants/Colors";
 import React from "react";
-import Txt from "../../components/ui/Txt";
+import Txt from "@/src/components/ui/Txt";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../../types/navigation";
-import Container from "../../components/layout/Container";
-import Header from "../../components/layout/header/Header";
+import { RootStackParamList } from "@/src/types/navigation";
+import Container from "@/src/components/layout/Container";
+import Header from "@/src/components/layout/header/Header";
 
 interface PainterProfileProps {
   profile: string;

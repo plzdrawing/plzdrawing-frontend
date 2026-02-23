@@ -1,8 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/src/stores/authStore';
 
-// const API_BASE_URL = 'http://13.124.246.36:8080';
-const API_BASE_URL = 'https://plzdrawing.o-r.kr';
+const API_BASE_URL = 'http://10.0.2.2:8080'; // 에뮬레이터 → Mac 로컬 SSL 프록시
+// const API_BASE_URL = 'http://13.124.246.36:8080'; // 서버 8080 포트 닫혀있음
+// const API_BASE_URL = 'https://plzdrawing.o-r.kr'; // SSL 만료
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,

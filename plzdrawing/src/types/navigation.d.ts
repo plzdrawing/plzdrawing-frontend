@@ -24,7 +24,7 @@ export type RootStackParamList = {
   PasswordFind: undefined;
   PasswordFindVerification: { email: string };
   
-  Chatting: undefined;
+  Chatting: { chatRoomId: number };
   
   HomePostDetail: { postId: string };
   HomeDrawingCardDetail: { cardId: string, postId: string };

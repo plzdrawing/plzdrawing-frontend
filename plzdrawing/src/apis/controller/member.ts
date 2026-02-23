@@ -1,16 +1,16 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiClient from '../apiClient';
 import {
   ProfileInfoResponse,
 } from '../api';
+import { useAuthStore } from '@/src/stores/authStore';
 
-const BASE_URL = 'http://13.124.246.36:8080';
+const BASE_URL = 'http://10.0.2.2:8080'; // 에뮬레이터 → Mac 로컬 SSL 프록시
 
 export const memberController = {
   // 프로필 업로드: POST
   uploadProfile: async (file: any, introduce: string, hashTag: string[]) => {
-    const token = await AsyncStorage.getItem('accessToken');
-    const UPLOAD_URL = 'https://plzdrawing.o-r.kr/api/member/profile'; 
+    const token = useAuthStore.getState().accessToken;
+    const UPLOAD_URL = `${BASE_URL}/api/member/profile`;
 
     const formData = new FormData();
 
@@ -51,8 +51,8 @@ export const memberController = {
 
   // 프로필 수정: PATCH
   editProfile: async (file: any, nickname: string, introduce: string, hashTag: string[]) => {
-    const token = await AsyncStorage.getItem('accessToken');
-    const UPDATE_URL = 'https://plzdrawing.o-r.kr/api/member/v1/profile';
+    const token = useAuthStore.getState().accessToken;
+    const UPDATE_URL = `${BASE_URL}/api/member/v1/profile`;
 
     const formData = new FormData();
 

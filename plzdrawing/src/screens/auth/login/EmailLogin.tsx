@@ -1,6 +1,6 @@
 import tw from '@/src/lib/tailwind';
 import { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuthStore } from '@/src/stores/authStore';
 
 import { NavigationProp, useNavigation, CommonActions } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/types/navigation';
@@ -47,9 +47,11 @@ export default function EmailLogin() {
     }
   }, [email]);
 
+  const { setAuth } = useAuthStore();
+
   const handleLoginClick = async () => {
     Keyboard.dismiss();
-    
+
     if (emailState === 'error') {
       return;
     }
@@ -60,28 +62,12 @@ export default function EmailLogin() {
         password: password,
       });
 
-      console.log('✅ Login success:', response);
+      const accessToken = response.access_token;
+      if (!accessToken) throw new Error('No access token in response');
 
-      if (response) {
-        // Access Token 저장
-        const accessToken = response.access_token || response.accessToken;
-        if (accessToken) {
-          console.log('💾 Saving access token to AsyncStorage:', accessToken.substring(0, 20) + '...');
-          await AsyncStorage.setItem('accessToken', accessToken);
-          
-          // 저장 확인
-          const savedToken = await AsyncStorage.getItem('accessToken');
-          console.log('✓ Token saved successfully:', savedToken ? 'YES' : 'NO');
-        } else {
-          console.log('⚠️ No access token in response. Checking if saved by interceptor...');
-          const savedToken = await AsyncStorage.getItem('accessToken');
-          if (savedToken) {
-            console.log('✓ Token was saved by interceptor');
-          } else {
-            console.log('❌ No token saved at all!');
-          }
-        }
-      }
+      // Zustand store에 저장 (AsyncStorage도 내부에서 자동 처리)
+      await setAuth(accessToken);
+      console.log('✅ Login success, token saved to store');
 
       navigation.dispatch(
         CommonActions.reset({

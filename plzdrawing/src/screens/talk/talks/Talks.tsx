@@ -1,5 +1,6 @@
 import tw from '@/src/lib/tailwind';
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import { 
   NavigationProp, 
@@ -9,7 +10,8 @@ import {
 import { RootStackParamList } from '@/src/types/navigation';
 
 import { 
-  ScrollView,
+  ActivityIndicator,
+  View,
   BackHandler,
 } from 'react-native';
 import Container from '@/src/components/layout/Container';
@@ -20,6 +22,9 @@ import {
   TalkData,
 } from '@/src/screens/talk/talks/components/TalkList';
 import { NoTalk } from '@/src/screens/talk/talks/components/NoTalk';
+
+import { chatController } from '@/src/apis/controller/chat';
+import { formatRelativeTime } from '@/src/utils/formatTime';
 
 export default function Talks() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -37,55 +42,54 @@ export default function Talks() {
 
     return () => backHandler.remove();
   }, [isFocused, navigation]);
-  
-  const [talks, setTalks] = useState<TalkData[]>([
-    {
-      id: '1',
-      unreadCount: 2,
-      userName: '홍길동',
-      lastMessageTime: '지금',
-      lastMessage: '안녕하세요 :)  요청하신 반려동물 낙서 그림 작업완료했습니다 ! 확인 부탁드려요 !!!!!!!! asdf',
-    },
-    {
-      id: '2',
-      unreadCount: 1,
-      userName: '가나다라',
-      lastMessageTime: '5분 전',
-      lastMessage: '요청 감사드립니다 !',
-    },
-    {
-      id: '3',
-      unreadCount: 1,
-      userName: '그림쟁이',
-      lastMessageTime: '15분 전',
-      lastMessage: '안녕하세요 :)  요청하신 반려동물 낙서 그림 작업완료했습니다 ! 확인 부탁드려요',
-    },
-    {
-      id: '4',
-      unreadCount: 0,
-      userName: '낙서쟁이',
-      lastMessageTime: '1시간 전',
-      lastMessage: '안녕하세요 :)',
-    },
-  ]);
 
-  // const handleTalkPress = (talkId: string) => {
-  const handleTalkPress = () => {
-    navigation.navigate('Chatting');
+  const { data: roomList, isLoading, refetch } = useQuery({
+    queryKey: ['chatRooms'],
+    queryFn: () => chatController.getChatRooms({ page: 1, limit: 50 }),
+    refetchInterval: 10_000,
+    enabled: isFocused,
+  });
+
+  // 포커스 복귀 시 목록 갱신
+  useEffect(() => {
+    if (isFocused) refetch();
+  }, [isFocused, refetch]);
+
+  const talks: TalkData[] = useMemo(() => {
+    if (!roomList?.data) return [];
+    return roomList.data.map((room) => ({
+      id: String(room.chatRoomId),
+      userProfileImage: room.counterpart.profileImageUrl,
+      userName: room.counterpart.nickname,
+      unreadCount: room.unreadCount,
+      lastMessage:
+        room.lastMessage?.type === 'IMAGE'
+          ? '📷 이미지'
+          : room.lastMessage?.type === 'SYSTEM'
+          ? '📋 시스템 메시지'
+          : room.lastMessage?.content ?? '',
+      lastMessageTime: room.lastMessage?.sentAt
+        ? formatRelativeTime(room.lastMessage.sentAt)
+        : formatRelativeTime(room.updatedAt),
+    }));
+  }, [roomList]);
+
+  const handleTalkPress = (talkId: string) => {
+    navigation.navigate('Chatting', { chatRoomId: Number(talkId) });
   };
 
   return (
     <Container>
       <TabHeader title1='그림톡' />
-      <ScrollView
-        style={tw`w-full h-full bg-light-gray-1`}
-        showsVerticalScrollIndicator={false}
-      >
-        {talks.length > 0
-          ? <TalkList talks={talks} onClickTalk={handleTalkPress} />
-          : <NoTalk />
-        }
-      </ScrollView>
+      {isLoading ? (
+        <View style={tw`flex-1 justify-center items-center`}>
+          <ActivityIndicator />
+        </View>
+      ) : talks.length > 0 ? (
+        <TalkList talks={talks} onClickTalk={handleTalkPress} />
+      ) : (
+        <NoTalk />
+      )}
     </Container>
   );
 }

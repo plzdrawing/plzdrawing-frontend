@@ -1,115 +1,189 @@
 import tw from '@/src/lib/tailwind';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '@/src/types/navigation';
+import { useUserStore } from '@/src/stores/userStore';
+import { chatController } from '@/src/apis/controller/chat';
+import { mapStatusToProcess } from '@/src/utils/formatTime';
+import * as FileSystem from 'expo-file-system';
 
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   ScrollView,
   TouchableWithoutFeedback,
   View,
   SafeAreaView,
+  Text,
 } from 'react-native';
 
 import Container from '@/src/components/layout/Container';
 import ChatInput from '@/src/screens/talk/chatting/chat/ChatInput';
-
-import SenderBox from "@/src/screens/talk/chatting/chat/SenderBox";
-import ReceiverBox from "@/src/screens/talk/chatting/chat/ReceiverBox";
-import AlertModal from "@/src/components/ui/modal/AlertModal";
-import TalkProcess from "@/src/screens/talk/chatting/chat/TalkProcess";
-import RequestBox from "@/src/screens/talk/chatting/chat/RequestBox";
-import * as ScreenCapture from "expo-screen-capture";
-
-interface Message {
-  isSender: boolean;
-  message: string;
-  imageUri?: string;
-  type?: "request" | "accept" | "reject" | "completePayment" | "check" | "feedback";
-}
+import SenderBox from '@/src/screens/talk/chatting/chat/SenderBox';
+import ReceiverBox from '@/src/screens/talk/chatting/chat/ReceiverBox';
+import TalkProcess from '@/src/screens/talk/chatting/chat/TalkProcess';
+import * as ScreenCapture from 'expo-screen-capture';
+import Colors from '@/src/constants/Colors';
 
 export default function Chatting() {
-  const [modalVisible, setModalVisible] = useState(false);
-  const handleClickModalButton = () => {
-    setModalVisible(true);
-  };
-  const [sendMessage, setSendMessage] = useState("");
+  const route = useRoute<RouteProp<RootStackParamList, 'Chatting'>>();
+  const { chatRoomId } = route.params;
+
+  const navigation = useNavigation();
+  const { user } = useUserStore();
+
+  const [sendMessage, setSendMessage] = useState('');
   const [isOpenedMenu, setIsOpenedMenu] = useState(false);
-  const [messageList, setMessageList] = useState<Message[]>([
-    // { isSender: false, message: "안녕하세요" },
-    // { isSender: false, message: "안녕하세요" },
-    // { isSender: true, message: "안녕하세요" },
-    // { isSender: true, message: "안녕하세요", type: "request" },
-    // { isSender: false, message: "안녕하세요", type: "accept" },
-    // { isSender: false, message: "안녕하세요", type: "reject" },
-    // { isSender: true, message: "안녕하세요", type: "completePayment"},
-    // { isSender: false, message: "안녕하세요", type: "check" },
-    // { isSender: true, message: "안녕하세요", type: "feedback" },
-  ]);
   const scrollViewRef = useRef<ScrollView>(null);
 
+  // ────────────────────────────────────────────────────────────
+  // 채팅방 상세 조회
+  // ────────────────────────────────────────────────────────────
+  const { data: roomDetail } = useQuery({
+    queryKey: ['chatRoom', chatRoomId],
+    queryFn: () => chatController.getChatRoomDetail(chatRoomId),
+    enabled: !!chatRoomId,
+  });
+
+  // 내 ID 판별: userStore nickname과 requester/artist nickname 비교
+  const myId = useMemo(() => {
+    if (!roomDetail || !user) return null;
+    return roomDetail.requester.nickname === user.nickname
+      ? roomDetail.requester.id
+      : roomDetail.artist.id;
+  }, [roomDetail, user]);
+
+  // 상대방 정보
+  const counterpart = useMemo(() => {
+    if (!roomDetail || myId === null) return null;
+    return roomDetail.requester.id === myId
+      ? roomDetail.artist
+      : roomDetail.requester;
+  }, [roomDetail, myId]);
+
+  // 헤더 타이틀 설정
+  useEffect(() => {
+    if (counterpart) {
+      navigation.setOptions({ title: `${counterpart.nickname} 님` });
+    }
+  }, [counterpart, navigation]);
+
+  // ────────────────────────────────────────────────────────────
+  // 메시지 목록 조회 (3초 폴링)
+  // ────────────────────────────────────────────────────────────
+  const { data: messagesData, refetch: refetchMessages } = useQuery({
+    queryKey: ['messages', chatRoomId],
+    queryFn: () => chatController.getMessages(chatRoomId, { limit: 50 }),
+    enabled: !!chatRoomId,
+    refetchInterval: 3_000,
+  });
+
+  const messages = messagesData?.data ?? [];
+
+  // 새 메시지 도착 시 읽음 처리
+  useEffect(() => {
+    if (!messages.length) return;
+    const lastMsg = messages[messages.length - 1];
+    if (!lastMsg.isRead && lastMsg.senderId !== myId) {
+      chatController.markAsRead(chatRoomId, { lastReadMessageId: lastMsg.id }).catch(() => {});
+    }
+  }, [messages, myId, chatRoomId]);
+
+  // ────────────────────────────────────────────────────────────
+  // 텍스트 메시지 전송
+  // ────────────────────────────────────────────────────────────
+  const sendTextMutation = useMutation({
+    mutationFn: (content: string) => chatController.sendTextMessage(chatRoomId, content),
+    onSuccess: () => refetchMessages(),
+    onError: () => Alert.alert('전송 실패', '메시지 전송에 실패했습니다.'),
+  });
+
   const handleSendMessage = () => {
-    if (sendMessage && sendMessage !== "")
-      setMessageList([
-        ...messageList,
-        { message: sendMessage, isSender: true },
-      ]);
-    setSendMessage("");
+    const trimmed = sendMessage.trim();
+    if (!trimmed) return;
+    setSendMessage('');
+    sendTextMutation.mutate(trimmed);
   };
 
-  const handleSendImage = (imageUri: string) => {
-    setMessageList([
-      ...messageList,
-      { message: "", isSender: true, imageUri },
-    ]);
+  // ────────────────────────────────────────────────────────────
+  // 이미지 메시지 전송 (presigned URL → S3 PUT → objectKey 전달)
+  // ────────────────────────────────────────────────────────────
+  const handleSendImage = async (imageUri: string) => {
     setIsOpenedMenu(false);
+    try {
+      // 1. Presigned URL 발급
+      const { uploadUrl, objectKey } = await chatController.getImageUploadUrl(chatRoomId);
+
+      // 2. 파일 크기 조회
+      const fileInfo = await FileSystem.getInfoAsync(imageUri);
+      const size =
+        fileInfo.exists && 'size' in fileInfo ? (fileInfo.size ?? 0) : 0;
+
+      // 3. S3 업로드
+      const blob = await fetch(imageUri).then((r) => r.blob());
+      const uploadRes = await fetch(uploadUrl, {
+        method: 'PUT',
+        body: blob,
+        headers: { 'Content-Type': 'image/png' },
+      });
+      if (!uploadRes.ok) throw new Error('S3 upload failed');
+
+      // 4. 메시지 서버 전송 (width/height는 리사이즈 기준 1200px)
+      await chatController.sendImageMessage(chatRoomId, {
+        objectKey,
+        size,
+        mimeType: 'image/png',
+        width: 1200,
+        height: 1200,
+      });
+      refetchMessages();
+    } catch {
+      Alert.alert('전송 실패', '이미지 전송에 실패했습니다.');
+    }
   };
 
+  // ────────────────────────────────────────────────────────────
+  // 스크롤 / 키보드 / 스크린샷 방지
+  // ────────────────────────────────────────────────────────────
   useEffect(() => {
     const timeout = setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
-    }, 100); // 100ms 지연
-
+    }, 100);
     return () => clearTimeout(timeout);
-  }, [messageList]);
+  }, [messages]);
 
   useEffect(() => {
-    // 스크린샷 방지 활성화
     const preventScreenCapture = async () => {
-      const hasPermissions = await ScreenCapture.preventScreenCaptureAsync();
+      await ScreenCapture.preventScreenCaptureAsync();
     };
-    
     preventScreenCapture();
-
-    // 컴포넌트 언마운트 시 스크린샷 방지 해제
     return () => {
       ScreenCapture.allowScreenCaptureAsync();
     };
   }, []);
 
   useEffect(() => {
-    // 📌 키보드가 올라올 때 → 즉시 스크롤을 아래로 이동
-    const keyboardShowListener = Keyboard.addListener(
-      "keyboardWillShow",
-      () => {
-        requestAnimationFrame(() => {
-          scrollViewRef.current?.scrollToEnd({ animated: true });
-        });
-      }
-    );
-
-    // 📌 키보드가 사라질 때 → 플랫폼에 따라 다르게 처리
-    const keyboardHideListener = Keyboard.addListener("keyboardDidHide", () => {
+    const keyboardShowListener = Keyboard.addListener('keyboardWillShow', () => {
       requestAnimationFrame(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       });
     });
-
+    const keyboardHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      requestAnimationFrame(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      });
+    });
     return () => {
       keyboardShowListener.remove();
       keyboardHideListener.remove();
     };
   }, [scrollViewRef]);
 
+  // ────────────────────────────────────────────────────────────
+  // 렌더링
+  // ────────────────────────────────────────────────────────────
   return (
     <Container>
       <KeyboardAvoidingView
@@ -117,12 +191,15 @@ export default function Chatting() {
         style={tw`flex-1 w-full flex flex-col`}
       >
         <SafeAreaView style={tw`flex flex-col justify-between flex-1`}>
-          <TalkProcess 
-            imageUrl=""
-            title="귀여운 그림"
-            price={500}
-            process="inProgress"
+          {/* 진행 상태 헤더 */}
+          <TalkProcess
+            imageUrl={roomDetail?.post.thumbnailUrl ?? ''}
+            title={roomDetail?.post.title ?? ''}
+            price={roomDetail?.paidAmount ?? roomDetail?.price ?? 0}
+            process={roomDetail ? mapStatusToProcess(roomDetail.status) : 'request'}
           />
+
+          {/* 메시지 목록 */}
           <ScrollView
             ref={scrollViewRef}
             contentContainerStyle={{ flexGrow: 1 }}
@@ -135,28 +212,52 @@ export default function Chatting() {
               }}
             >
               <View style={tw`flex items-end p-[17px_32px] gap-[17px] w-full bg-light_gray1`}>
-                {messageList.map((message, index) => {
-                  if (message.type) {
+                {messages.map((msg) => {
+                  const isSender = msg.senderId === myId;
+
+                  // 시스템 메시지
+                  if (msg.type === 'SYSTEM') {
                     return (
-                      <RequestBox
-                        key={index}
-                        type={message.type}
-                        imageUrl=""
-                        title="귀여운 그림"
-                        price={1000}
-                        description="30분 예상 / 수정..."
+                      <View key={msg.id} style={tw`w-full items-center py-[4px]`}>
+                        <Text
+                          style={[
+                            tw`text-center px-[12px] py-[4px] rounded-[10px]`,
+                            {
+                              color: Colors.colors.dark_gray1,
+                              fontSize: 12,
+                              backgroundColor: Colors.colors.light_gray2,
+                            },
+                          ]}
+                        >
+                          {msg.content}
+                        </Text>
+                      </View>
+                    );
+                  }
+
+                  if (isSender) {
+                    return (
+                      <SenderBox
+                        key={msg.id}
+                        message={msg.content ?? ''}
+                        imageUri={msg.imageUrl}
                       />
                     );
                   }
-                  return message.isSender ? (
-                    <SenderBox key={index} message={message.message} imageUri={message.imageUri} />
-                  ) : (
-                    <ReceiverBox key={index} message={message.message} />
+                  return (
+                    <ReceiverBox
+                      key={msg.id}
+                      message={msg.content ?? ''}
+                      imageUri={msg.imageUrl}
+                      profileImageUrl={counterpart?.profileImageUrl}
+                    />
                   );
                 })}
               </View>
             </TouchableWithoutFeedback>
           </ScrollView>
+
+          {/* 입력창 */}
           <ChatInput
             message={sendMessage}
             setMessage={setSendMessage}
@@ -167,13 +268,6 @@ export default function Chatting() {
           />
         </SafeAreaView>
       </KeyboardAvoidingView>
-      {modalVisible && (
-        <AlertModal
-          modalTitle="모달"
-          buttonTitle="확인"
-          onClickButton={() => setModalVisible(false)}
-        />
-      )}
     </Container>
   );
 }
