@@ -1,6 +1,8 @@
 import apiClient from '../apiClient';
 import {
-  
+  Post,
+  LatestContentsPageResponseDto,
+  ContentsPageResponseDto,
 } from '../api';
 
 export const postController = {
@@ -40,7 +42,7 @@ export const postController = {
 
   // 최신 게시글 조회: GET
   getLatestPosts: async (page: number = 1, limit: number = 10) => {
-    const response = await apiClient.get(`/api/posts`, {
+    const response = await apiClient.get<LatestContentsPageResponseDto>(`/api/posts`, {
       params: { page, limit },
     });
     return response.data;
@@ -48,7 +50,7 @@ export const postController = {
 
   // 멤버별 게시글 조회: GET
   getMemberPosts: async (memberId: string, page: number = 1, limit: number = 10) => {
-    const response = await apiClient.get(`/api/posts/member/${memberId}`, {
+    const response = await apiClient.get<ContentsPageResponseDto>(`/api/posts/member/${memberId}`, {
       params: { page, limit },
     });
     return response.data;

@@ -9,7 +9,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "gen:api": "swagger-typescript-api generate -p https://plzdrawing.o-r.kr/api-docs-json -o ./src/apis -n api.ts --axios"
+    "gen:api": "curl -sk https://plzdrawing.o-r.kr/api-docs-json -o /tmp/swagger.json && swagger-typescript-api generate -p /tmp/swagger.json -o ./src/apis -n api.ts --axios"
   },
   "jest": {
     "preset": "jest-expo"

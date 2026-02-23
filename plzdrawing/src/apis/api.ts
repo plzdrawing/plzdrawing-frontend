@@ -597,6 +597,345 @@ export interface UpdatePasswordRequest {
   newPassword: string;
 }
 
+export interface CreateChatRoomDto {
+  /**
+   * 게시글 ID
+   * @min 1
+   * @example 1
+   */
+  postId: number;
+  /**
+   * 요청 설명
+   * @maxLength 1000
+   * @example "강아지 그림을 부탁드려요."
+   */
+  description?: string;
+  /**
+   * 요청 금액
+   * @min 0
+   * @example 5000
+   */
+  price?: number;
+}
+
+export interface ChatRoomPostDto {
+  /**
+   * 게시글 ID
+   * @example 10
+   */
+  id: number;
+  /**
+   * 게시글 제목
+   * @example "귀여운 그림"
+   */
+  title: string;
+  /**
+   * 게시글 썸네일 URL
+   * @example "https://example.com/thumb.png"
+   */
+  thumbnailUrl?: string;
+}
+
+export interface ChatUserDto {
+  /**
+   * 회원 ID
+   * @example 1
+   */
+  id: number;
+  /**
+   * 닉네임
+   * @example "홍길동"
+   */
+  nickname: string;
+  /**
+   * 프로필 이미지 URL
+   * @example "https://example.com/profile.png"
+   */
+  profileImageUrl?: string;
+}
+
+export interface ChatRoomDetailResponseDto {
+  /**
+   * 채팅방 ID
+   * @example 1
+   */
+  chatRoomId: number;
+  /** @example "REQUESTED" */
+  status:
+    | "REQUESTED"
+    | "PAID"
+    | "IN_PROGRESS"
+    | "COMPLETED"
+    | "REVIEWED"
+    | "CANCELLED";
+  post: ChatRoomPostDto;
+  requester: ChatUserDto;
+  artist: ChatUserDto;
+  /**
+   * 요청 설명
+   * @example "강아지 그림 요청"
+   */
+  description?: string;
+  /**
+   * 요청 금액
+   * @example 5000
+   */
+  price?: number;
+  /**
+   * 결제 금액
+   * @example 5000
+   */
+  paidAmount?: number;
+  /**
+   * 생성 시간
+   * @format date-time
+   * @example "2025-01-01 12:00:00"
+   */
+  createdAt: string;
+  /**
+   * 업데이트 시간
+   * @format date-time
+   * @example "2025-01-01 12:00:00"
+   */
+  updatedAt: string;
+}
+
+export interface ChatRoomCreateResponseDto {
+  /**
+   * 기존 채팅방 여부
+   * @example false
+   */
+  isExisting: boolean;
+  chatRoom: ChatRoomDetailResponseDto;
+}
+
+export interface LastMessageDto {
+  /**
+   * 메시지 ID
+   * @example 100
+   */
+  id: number;
+  /** @example "TEXT" */
+  type: "TEXT" | "IMAGE" | "SYSTEM";
+  /**
+   * 메시지 내용
+   * @example "안녕하세요"
+   */
+  content?: string;
+  /**
+   * 이미지 URL
+   * @example "https://example.com/image.png"
+   */
+  imageUrl?: string;
+  /**
+   * 전송 시간
+   * @format date-time
+   * @example "2025-01-01T00:00:00.000Z"
+   */
+  sentAt: string;
+}
+
+export interface ChatRoomListItemDto {
+  /**
+   * 채팅방 ID
+   * @example 1
+   */
+  chatRoomId: number;
+  /**
+   * 게시글 ID
+   * @example 10
+   */
+  postId: number;
+  /**
+   * 게시글 제목
+   * @example "귀여운 그림"
+   */
+  title: string;
+  /**
+   * 게시글 썸네일 URL
+   * @example "https://example.com/thumb.png"
+   */
+  thumbnailUrl?: string;
+  /** @example "REQUESTED" */
+  status:
+    | "REQUESTED"
+    | "PAID"
+    | "IN_PROGRESS"
+    | "COMPLETED"
+    | "REVIEWED"
+    | "CANCELLED";
+  counterpart: ChatUserDto;
+  lastMessage?: LastMessageDto;
+  /**
+   * 미읽음 메시지 수
+   * @example 2
+   */
+  unreadCount: number;
+  /**
+   * 요청 금액
+   * @example 5000
+   */
+  price?: number;
+  /**
+   * 결제 금액
+   * @example 5000
+   */
+  paidAmount?: number;
+  /**
+   * 최근 업데이트 시간
+   * @format date-time
+   * @example "2025-01-01 12:00:00"
+   */
+  updatedAt: string;
+}
+
+export interface ChatRoomListResponseDto {
+  /** 채팅방 목록 */
+  data: ChatRoomListItemDto[];
+  /**
+   * 총 데이터 수
+   * @example 100
+   */
+  total: number;
+  /**
+   * 현재 페이지
+   * @example 1
+   */
+  page: number;
+  /**
+   * 페이지 당 항목 수
+   * @example 10
+   */
+  limit: number;
+}
+
+export interface UpdateChatRoomStatusDto {
+  /** @example "IN_PROGRESS" */
+  status:
+    | "REQUESTED"
+    | "PAID"
+    | "IN_PROGRESS"
+    | "COMPLETED"
+    | "REVIEWED"
+    | "CANCELLED";
+}
+
+export interface MessageResponseDto {
+  /**
+   * 메시지 ID
+   * @example 100
+   */
+  id: number;
+  /**
+   * 채팅방 ID
+   * @example 1
+   */
+  chatRoomId: number;
+  /**
+   * 발신자 ID
+   * @example 5
+   */
+  senderId: number;
+  /** @example "TEXT" */
+  type: "TEXT" | "IMAGE" | "SYSTEM";
+  /**
+   * 메시지 내용
+   * @example "안녕하세요"
+   */
+  content?: string;
+  /**
+   * 이미지 URL
+   * @example "https://example.com/image.png"
+   */
+  imageUrl?: string;
+  /**
+   * 읽음 여부
+   * @example false
+   */
+  isRead: boolean;
+  /**
+   * 전송 시간
+   * @format date-time
+   * @example "2025-01-01T00:00:00.000Z"
+   */
+  sentAt: string;
+}
+
+export interface MessageListResponseDto {
+  /** 메시지 목록 */
+  data: MessageResponseDto[];
+}
+
+export interface SendMessageDto {
+  /**
+   * 메시지 타입 (기본값 TEXT)
+   * @example "TEXT"
+   */
+  type?: "TEXT" | "IMAGE" | "SYSTEM";
+  /**
+   * 텍스트 메시지 내용
+   * @maxLength 2000
+   * @example "안녕하세요 :)"
+   */
+  content?: string;
+  /**
+   * 이미지 object key
+   * @example "chat/12/2026/02/uuid.png"
+   */
+  objectKey?: string;
+  /**
+   * 파일 크기 (bytes)
+   * @min 1
+   * @max 10485760
+   * @example 5242880
+   */
+  size?: number;
+  /**
+   * MIME 타입
+   * @example "image/png"
+   */
+  mimeType?: string;
+  /**
+   * 이미지 너비 (px)
+   * @min 1
+   * @example 1200
+   */
+  width?: number;
+  /**
+   * 이미지 높이 (px)
+   * @min 1
+   * @example 900
+   */
+  height?: number;
+}
+
+export interface ChatImageUploadResponseDto {
+  /**
+   * S3 업로드 presigned URL
+   * @example "https://s3-presigned-put-url"
+   */
+  uploadUrl: string;
+  /**
+   * S3 object key
+   * @example "chat/12/2026/02/uuid.png"
+   */
+  objectKey: string;
+  /**
+   * URL 만료 시각(ISO)
+   * @example "2026-02-01T12:00:00Z"
+   */
+  expiresAt: string;
+}
+
+export interface ReadChatDto {
+  /**
+   * 마지막으로 읽은 메시지 ID
+   * @min 1
+   * @example 150
+   */
+  lastReadMessageId?: number;
+}
+
 import type {
   AxiosInstance,
   AxiosRequestConfig,
@@ -799,7 +1138,7 @@ export class Api<
       }),
 
     /**
-     * No description
+     * @description 프로필 정보를 업로드합니다. file은 선택이며 업로드 시 파일 최대 크기는 5MB입니다.
      *
      * @tags Member
      * @name MemberControllerUploadProfile
@@ -809,7 +1148,10 @@ export class Api<
      */
     memberControllerUploadProfile: (
       data: {
-        /** @format binary */
+        /**
+         * 프로필 이미지 파일(선택), 최대 5MB
+         * @format binary
+         */
         file?: File;
         introduce?: string;
         hashTag?: string[];
@@ -827,7 +1169,7 @@ export class Api<
       }),
 
     /**
-     * No description
+     * @description 프로필 정보를 수정합니다. file은 선택이며 업로드 시 파일 최대 크기는 5MB입니다.
      *
      * @tags Member
      * @name MemberControllerUpdateProfile
@@ -837,7 +1179,10 @@ export class Api<
      */
     memberControllerUpdateProfile: (
       data: {
-        /** @format binary */
+        /**
+         * 프로필 이미지 파일(선택), 최대 5MB
+         * @format binary
+         */
         file?: File;
         nickname?: string;
         introduce?: string;
@@ -1033,7 +1378,7 @@ export class Api<
       }),
 
     /**
-     * No description
+     * @description 게시글과 이미지를 함께 업로드합니다. images는 선택이며 최대 5개, 파일당 최대 10MB입니다.
      *
      * @tags Post
      * @name PostControllerCreate
@@ -1043,6 +1388,7 @@ export class Api<
      */
     postControllerCreate: (
       data: {
+        /** 업로드 이미지 목록(선택), 최대 5개, 파일당 최대 10MB */
         images?: File[];
         title?: string;
         content?: string;
@@ -1315,6 +1661,258 @@ export class Api<
         path: `/api/fcm/v1/test`,
         method: "POST",
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description 게시글 기반으로 채팅방을 생성합니다. 동일한 조합(게시글/요청자/작가)이 이미 존재하면 기존 채팅방을 반환합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerCreateChatRoom
+     * @summary 채팅방 생성
+     * @request POST:/api/chats
+     * @secure
+     */
+    chatControllerCreateChatRoom: (
+      data: CreateChatRoomDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ChatRoomCreateResponseDto, void>({
+        path: `/api/chats`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description 참여 중인 채팅방 목록을 최신 업데이트 순으로 조회합니다. status/unreadOnly/page/limit 파라미터를 지원합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerGetChatRooms
+     * @summary 내 채팅방 목록
+     * @request GET:/api/chats
+     * @secure
+     */
+    chatControllerGetChatRooms: (
+      query?: {
+        /**
+         * 페이지 번호
+         * @min 1
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 페이지 당 항목 수
+         * @min 1
+         * @default 10
+         */
+        limit?: number;
+        /**
+         * 채팅방 상태 필터
+         * @example "REQUESTED"
+         */
+        status?:
+          | "REQUESTED"
+          | "PAID"
+          | "IN_PROGRESS"
+          | "COMPLETED"
+          | "REVIEWED"
+          | "CANCELLED";
+        /**
+         * 미읽음 채팅방만 조회
+         * @example true
+         */
+        unreadOnly?: boolean;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ChatRoomListResponseDto, void>({
+        path: `/api/chats`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description 채팅방 상세 정보(게시글/참여자/금액/상태)를 조회합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerGetChatRoomDetail
+     * @summary 채팅방 상세 조회
+     * @request GET:/api/chats/{id}
+     * @secure
+     */
+    chatControllerGetChatRoomDetail: (id: string, params: RequestParams = {}) =>
+      this.request<ChatRoomDetailResponseDto, void>({
+        path: `/api/chats/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description 채팅방 상태를 변경하고 시스템 메시지(STATUS_CHANGED)를 생성합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerUpdateChatRoomStatus
+     * @summary 채팅방 상태 변경
+     * @request PATCH:/api/chats/{id}/status
+     * @secure
+     */
+    chatControllerUpdateChatRoomStatus: (
+      id: string,
+      data: UpdateChatRoomStatusDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ChatRoomDetailResponseDto, void>({
+        path: `/api/chats/${id}/status`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description 채팅 메시지를 조회합니다. beforeId/afterId는 동시에 사용할 수 없습니다.
+     *
+     * @tags Chat
+     * @name ChatControllerGetMessages
+     * @summary 채팅 메시지 목록 조회
+     * @request GET:/api/chats/{id}/messages
+     * @secure
+     */
+    chatControllerGetMessages: (
+      id: string,
+      query?: {
+        /**
+         * 이전 메시지 기준 ID (afterId와 동시 사용 불가)
+         * @min 1
+         * @example 120
+         */
+        beforeId?: number;
+        /**
+         * 이후 메시지 기준 ID (beforeId와 동시 사용 불가)
+         * @min 1
+         * @example 150
+         */
+        afterId?: number;
+        /**
+         * 조회 개수
+         * @min 1
+         * @default 30
+         * @example 30
+         */
+        limit?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<MessageListResponseDto, void>({
+        path: `/api/chats/${id}/messages`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description 텍스트 또는 이미지 메시지를 전송하고 채팅방 updatedAt을 갱신합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerSendMessage
+     * @summary 메시지 전송
+     * @request POST:/api/chats/{id}/messages
+     * @secure
+     */
+    chatControllerSendMessage: (
+      id: string,
+      data: SendMessageDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<MessageResponseDto, void>({
+        path: `/api/chats/${id}/messages`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description 이미지 파일(필수)을 업로드하여 IMAGE 타입 메시지를 전송합니다. 파일 최대 크기는 10MB입니다.
+     *
+     * @tags Chat
+     * @name ChatControllerSendImageMessage
+     * @summary 이미지 메시지 전송
+     * @request POST:/api/chats/{id}/messages/image-upload
+     * @secure
+     */
+    chatControllerSendImageMessage: (
+      id: string,
+      data: {
+        /**
+         * 전송할 이미지 파일(필수), 최대 10MB
+         * @format binary
+         */
+        image: File;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ChatImageUploadResponseDto, void>({
+        path: `/api/chats/${id}/messages/image-upload`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.FormData,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description 상대방이 보낸 미읽음 메시지를 읽음 처리합니다. lastReadMessageId를 지정하면 해당 ID 이하만 처리합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerMarkAsRead
+     * @summary 메시지 읽음 처리
+     * @request PATCH:/api/chats/{id}/read
+     * @secure
+     */
+    chatControllerMarkAsRead: (
+      id: string,
+      data: ReadChatDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<any, void>({
+        path: `/api/chats/${id}/read`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+  };
+  chatTest = {
+    /**
+     * No description
+     *
+     * @tags App
+     * @name AppControllerGetChatTest
+     * @request GET:/chat-test
+     */
+    appControllerGetChatTest: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/chat-test`,
+        method: "GET",
         ...params,
       }),
   };
