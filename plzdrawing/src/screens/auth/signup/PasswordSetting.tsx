@@ -2,7 +2,6 @@ import tw from '@/src/lib/tailwind';
 
 import React, { useState, useEffect } from "react";
 import { Keyboard, View } from "react-native";
-import styled from "styled-components/native";
 import BottomFixedArea from "@/src/components/layout/BottomFixedArea";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
 import Container from "@/src/components/layout/Container";
@@ -193,7 +192,7 @@ export default function PasswordSetting() {
         </View>
       </View>
       <BottomFixedArea>
-        <ButtonContainer>
+        <View style={tw`w-full py-[10px] px-[57px]`}>
           <PrimaryButton
             isValid={isValid}
             title="다음"
@@ -201,7 +200,7 @@ export default function PasswordSetting() {
             disabled={!isValid}
             onClick={handleConfirmButton}
           />
-        </ButtonContainer>
+        </View>
       </BottomFixedArea>
       {modalVisible && (
         <AlertModal
@@ -220,8 +219,3 @@ export default function PasswordSetting() {
     </Container>
   );
 }
-
-const ButtonContainer = styled.View`
-  width: 100%;
-  padding: 10px 57px;
-`;

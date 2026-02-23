@@ -1,8 +1,6 @@
 ﻿import tw from '@/src/lib/tailwind';
-
-import styled from "styled-components/native";
-
-import { View } from "react-native";
+import React from "react";
+import { View, Image } from "react-native";
 import Colors from "@/src/constants/Colors";
 import Txt from "@/src/components/ui/Txt";
 
@@ -18,8 +16,16 @@ interface DrawingInfoCardProps {
 
 const DrawingInfoCard: React.FC<DrawingInfoCardProps> = ({ info }) => {
   return (
-    <CardContainer>
-      <InfoImage source={{ uri: info.image }} />
+    <View
+      style={[
+        tw`rounded-[5px] p-[7px] flex-row items-center gap-[12px] mb-[16px]`,
+        { backgroundColor: Colors.colors.white, borderWidth: 0.5, borderColor: '#d9d9d9' },
+      ]}
+    >
+      <Image
+        source={{ uri: info.image }}
+        style={tw`w-[60px] h-[60px] rounded-[5px]`}
+      />
       <View style={{ flex: 1 }}>
         <Txt variant="subtitleBold" style={{ marginBottom: 7 }}>
           {info.title}
@@ -30,25 +36,8 @@ const DrawingInfoCard: React.FC<DrawingInfoCardProps> = ({ info }) => {
           {info.description}
         </Txt>
       </View>
-    </CardContainer>
+    </View>
   );
 };
-
-const CardContainer = styled.View`
-  background-color: ${Colors.colors.white};
-  border-radius: 5px;
-  border: 0.5px solid #d9d9d9;
-  padding: 7px;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-`;
-
-const InfoImage = styled.Image`
-  width: 60px;
-  height: 60px;
-  border-radius: 5px;
-`;
 
 export default DrawingInfoCard;

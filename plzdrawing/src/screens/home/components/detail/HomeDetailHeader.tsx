@@ -1,5 +1,6 @@
-﻿import React from "react";
-import styled from "styled-components/native";
+﻿import tw from '@/src/lib/tailwind';
+import React from "react";
+import { View, TouchableOpacity } from "react-native";
 import Colors from "@/src/constants/Colors";
 import { BackArrowIcon } from "@/assets/images";
 import Txt from "@/src/components/ui/Txt";
@@ -18,11 +19,27 @@ const HomeDetailHeader: React.FC<HomeDetailHeaderProps> = ({
   onBackPress,
 }) => {
   return (
-    <HeaderContainer>
-      <BackButton onPress={onBackPress}>
+    <View
+      style={[
+        tw`w-full flex-row items-center`,
+        {
+          paddingTop: 72,
+          paddingRight: 0,
+          paddingBottom: 12,
+          paddingLeft: 16,
+          backgroundColor: Colors.colors.white,
+          shadowColor: '#000000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.05,
+          shadowRadius: 8,
+          elevation: 4,
+        },
+      ]}
+    >
+      <TouchableOpacity onPress={onBackPress} style={tw`p-[8px]`}>
         <BackArrowIcon />
-      </BackButton>
-      <HeaderTitleContainer>
+      </TouchableOpacity>
+      <View style={tw`flex-row items-baseline ml-[10px]`}>
         {authorName && <Txt variant="mainTitleBold">{authorName} 님</Txt>}
         {(title && <Txt variant="mainTitleBold">{title}</Txt>) || (
           <Txt
@@ -46,28 +63,9 @@ const HomeDetailHeader: React.FC<HomeDetailHeaderProps> = ({
               : "프로필 업로드"}
           </Txt>
         )}
-      </HeaderTitleContainer>
-    </HeaderContainer>
+      </View>
+    </View>
   );
 };
-
-const HeaderContainer = styled.View`
-  width: 100%;
-  padding: 72px 0 12px 16px;
-  flex-direction: row;
-  align-items: center;
-  background-color: ${Colors.colors.white};
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
-`;
-
-const BackButton = styled.TouchableOpacity`
-  padding: 8px;
-`;
-
-const HeaderTitleContainer = styled.View`
-  flex-direction: row;
-  align-items: baseline;
-  margin-left: 10px;
-`;
 
 export default HomeDetailHeader;

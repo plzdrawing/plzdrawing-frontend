@@ -16,6 +16,9 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": { "serviceAccountKeyPath": "./google-service-account.json", "track": "production" },
+      "ios": { "appleId": "gree@apple.com", "ascAppId": "123456789" }
+    }
   }
 }

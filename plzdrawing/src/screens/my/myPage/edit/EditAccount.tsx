@@ -1,6 +1,6 @@
+import tw from '@/src/lib/tailwind';
 import React, { useState } from "react";
-import { Alert } from "react-native";
-import styled from "styled-components/native";
+import { Alert, View, ScrollView } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/src/types/navigation';
@@ -108,10 +108,10 @@ export default function EditAccount() {
   };
 
   return (
-    <Container>
+    <View style={[tw`flex-1`, { backgroundColor: Colors.colors.white }]}>
       <ProfileEditHeader type="userProfile" onBack={() => {}} />
 
-      <ProfileInputWrapper>
+      <View style={tw`flex-col w-full px-[32px] pt-[20px] flex-1`}>
         <Txt variant="bodySubText" style={{ marginVertical: 17 }}>
           생년월일
         </Txt>
@@ -145,36 +145,17 @@ export default function EditAccount() {
           setState={(state) => {}}
           keyboardType="numeric"
         />
-      </ProfileInputWrapper>
+      </View>
 
-      <ButtonContainer>
+      <View style={tw`absolute bottom-0 left-0 right-0 mx-[40px] mb-[20px]`}>
         <DefaultButton 
           title="확인" 
           variant="primary"
           onPress={handleSubmit}
         />
-      </ButtonContainer>
-    </Container>
+      </View>
+    </View>
   );
 }
 
-const Container = styled.View`
-  flex: 1;
-  background-color: ${Colors.colors.white};
-`;
-
-const ProfileInputWrapper = styled.View`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 20px 32px 0 32px;
-  flex: 1;
-`;
-
-const ButtonContainer = styled.View`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 0 40px 20px 40px;
-`;
+export default EditAccount;

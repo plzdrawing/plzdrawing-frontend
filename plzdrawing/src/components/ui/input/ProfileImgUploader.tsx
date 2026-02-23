@@ -1,7 +1,7 @@
-﻿import React, { useState } from "react";
-import styled from "styled-components/native";
+﻿import tw from '@/src/lib/tailwind';
+import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import { Alert } from "react-native";
+import { Alert, View, Image, TouchableOpacity } from "react-native";
 import { CameraCircleIcon } from "@/assets/images/index";
 import Colors from "@/src/constants/Colors";
 
@@ -43,42 +43,23 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
   const imageSource = selectedImageUri || initialImageUrl;
 
   return (
-    <ImageContainer>
-      <ProfileImage
+    <View style={tw`w-[102px] h-[102px] self-center mb-[16px] relative`}>
+      <Image
         source={
           imageSource
             ? { uri: imageSource }
             : require("@/assets/images/sample.svg")
         }
+        style={[tw`w-full h-full rounded-[10px]`, { borderWidth: 1, borderColor: Colors.colors.light_gray2 }]}
       />
-      <UploadButton onPress={handlePickImage}>
+      <TouchableOpacity
+        onPress={handlePickImage}
+        style={tw`absolute right-[-10px] bottom-[-10px]`}
+      >
         <CameraCircleIcon />
-      </UploadButton>
-    </ImageContainer>
+      </TouchableOpacity>
+    </View>
   );
 };
-
-
-const ImageContainer = styled.View`
-  width: 102px;
-  height: 102px;
-  align-self: center;
-  margin-bottom: 16px;
-  position: relative;
-`;
-
-const ProfileImage = styled.Image`
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  border-color: ${Colors.colors.light_gray2};
-  border-width: 1px;
-`;
-
-const UploadButton = styled.TouchableOpacity`
-  position: absolute;
-  right: -10;
-  bottom: -10;
-`;
 
 export default ProfileImageUploader;

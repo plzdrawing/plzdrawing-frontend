@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { SectionList } from 'react-native';
-import styled from 'styled-components/native';
+import { SectionList, TouchableOpacity, View } from 'react-native';
+import tw from '@/src/lib/tailwind';
 import colors from '@/src/constants/Colors';
 import Txt from '@/src/components/ui/Txt';
 import PaymentsItem from './PaymentsItem';
@@ -120,7 +120,7 @@ export default function PaymentsList({ setSelectedPayment, selectedPayment }: Pa
     const painterPayments = paymentsData.filter(p => p.painterName === selectedPayment.painterName);
     
     return (
-      <ListWrapper>
+      <View style={tw`flex-1 w-full`}>
         <PaymentsDetail 
           amount={selectedPayment.amount}
           painterProfile={selectedPayment.painterProfile}
@@ -128,119 +128,73 @@ export default function PaymentsList({ setSelectedPayment, selectedPayment }: Pa
           date={selectedPayment.date}
           painterPayments={painterPayments}
         />
-      </ListWrapper>
+      </View>
     );
   }
 
   return (
-    <ListWrapper>
-      <FilterContainer>
-        <Filter>
-          <FilterButton
-            isSelected={selectedFilter === '보낸 내역'}
+    <View style={tw`flex-1 w-full`}>
+      <View style={[tw``, { borderBottomWidth: 1, borderBottomColor: colors.colors.seperator }]}>
+        <View style={tw`flex-row justify-between px-[79px]`}>
+          <TouchableOpacity
             onPress={() => setFilter('보낸 내역')}
+            style={[tw`py-[8px]`, { borderBottomWidth: 2, borderBottomColor: selectedFilter === '보낸 내역' ? colors.colors.black : 'transparent' }]}
           >
             <Txt variant={selectedFilter === '보낸 내역' ? 'subtitleBold' : 'bodyText'} align="center">보낸 내역</Txt>
-          </FilterButton>
-          <FilterButton
-            isSelected={selectedFilter === '받은 내역'}
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => setFilter('받은 내역')}
+            style={[tw`py-[8px]`, { borderBottomWidth: 2, borderBottomColor: selectedFilter === '받은 내역' ? colors.colors.black : 'transparent' }]}
           >
             <Txt variant={selectedFilter === '받은 내역' ? 'subtitleBold' : 'bodyText'} align="center">받은 내역</Txt>
-          </FilterButton>
-        </Filter>
-      </FilterContainer>
+          </TouchableOpacity>
+        </View>
+      </View>
 
-      <MonthContainer>
-        <MonthRow>
-          <MonthNavButton onPress={handlePrevMonth}>
+      <View style={tw`p-[37px_32px_20px_32px] gap-[17px]`}>
+        <View style={tw`flex-row items-center gap-[17px]`}>
+          <TouchableOpacity onPress={handlePrevMonth}>
             <Txt variant="bodyText">{'<'}</Txt>
-          </MonthNavButton>
+          </TouchableOpacity>
           <Txt variant="auxiliaryTextLight">
             {monthStr}
           </Txt>
-          <MonthNavButton onPress={handleNextMonth}>
+          <TouchableOpacity onPress={handleNextMonth}>
             <Txt variant="bodyText">{'>'}</Txt>
-          </MonthNavButton>
-        </MonthRow>
+          </TouchableOpacity>
+        </View>
         <Txt variant="bodyText">
           {selectedFilter === '보낸 내역'
             ? <Txt variant="mainTitleBold">- {totalAmount.toLocaleString()}원</Txt>
             : <Txt variant="mainTitleBold">+ {totalAmount.toLocaleString()}원</Txt>
           } 
         </Txt>
-      </MonthContainer>
+      </View>
 
       <SectionList
         sections={sections}
         keyExtractor={item => item.id}
         renderSectionHeader={({ section: { title } }) => (
-          <SectionHeader>
+          <View style={tw`py-[19px_0_9px_0]`}>
             <Txt variant="auxiliaryTextLight">{title}</Txt>
-          </SectionHeader>
+          </View>
         )}
         renderItem={({ item }) => (
           <PaymentsItem {...item} onPress={() => setSelectedPayment(item)} />
         )}
         ListEmptyComponent={
-          <NoPlayments>
+          <View style={tw`justify-center items-center mt-[145px]`}>
             <GreeSad width={120} height={120} />
             <Txt align="center" style={{ marginTop: 32 }}>
               {selectedFilter === '보낸 내역'
                 ? '아직 보낸 내역이 없어요'
                 : '아직 받은 내역이 없어요'}
             </Txt>
-          </NoPlayments>
+          </View>
         }
         style={{ flex: 1, paddingHorizontal: 32 }}
         contentContainerStyle={{ paddingBottom: 32 }}
       />
-    </ListWrapper>
+    </View>
   );
 }
-
-
-const ListWrapper = styled.View`
-  flex: 1;
-  width: 100%;
-`;
-
-const FilterContainer = styled.View`
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.colors.seperator};
-`;
-
-const Filter = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0 79px;
-`;
-
-const FilterButton = styled.TouchableOpacity<{ isSelected: boolean }>`
-  padding: 8px 0;
-  border-bottom-width: 2px;
-  border-bottom-color: ${({ isSelected }: { isSelected: boolean }) => (isSelected ? colors.colors.black : 'transparent')};
-`;
-
-const MonthContainer = styled.View`
-  padding: 37px 32px 20px 32px;
-  gap: 17px;
-`;
-
-const MonthRow = styled.View`
-  flex-direction: row;
-  align-items: center;
-  gap: 17px;
-`;
-
-const MonthNavButton = styled.TouchableOpacity``;
-
-const SectionHeader = styled.View`
-  padding: 19px 0 9px 0;
-`;
-
-const NoPlayments = styled.View`
-  justify-content: center;
-  align-items: center;
-  margin-top: 145px
-`;

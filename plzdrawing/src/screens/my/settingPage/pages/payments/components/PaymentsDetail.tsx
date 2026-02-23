@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { SectionList } from 'react-native';
-import styled from 'styled-components/native';
+import { SectionList, View } from 'react-native';
+import tw from '@/src/lib/tailwind';
 import colors from '@/src/constants/Colors';
 import Txt from '@/src/components/ui/Txt';
 import DefaultButton from '@/src/components/ui/button/DefaultButton';
@@ -49,59 +49,59 @@ export default function PaymentsDetail({
   }));
 
   return (
-    <DetailWrapper>
-      <Details>
-        <PaymentHistory>
-          <PainterProfile>
+    <View style={tw`flex-col w-full h-full`}>
+      <View style={[tw`flex-col items-center justify-between`, { borderBottomWidth: 1, borderBottomColor: colors.colors.seperator }]}>
+        <View style={tw`flex-row items-center w-full my-[12px] p-[30px_30px_0_30px]`}>
+          <View style={[tw`w-[52px] h-[52px] rounded-[5px] overflow-hidden mr-[17px]`, { backgroundColor: colors.colors.light_gray1, borderWidth: 1, borderColor: colors.colors.light_gray2 }]}>
             <img src={painterProfile} alt='' />
-          </PainterProfile>
-          <PaymentDetail>
+          </View>
+          <View style={tw`flex-1 justify-center gap-[7px]`}>
             <Txt variant='auxiliaryTextLight'>
               {painterName} 님
             </Txt>
             <Txt variant='mainTitleBold'>
               - {amount.toLocaleString()} 원
             </Txt>
-          </PaymentDetail>
-        </PaymentHistory>
+          </View>
+        </View>
 
-        <DetailContainer>
-          <Detail>
+        <View style={tw`flex-col gap-[22px] w-full my-[27px] p-[8px_30px]`}>
+          <View style={tw`flex-row justify-between`}>
             <Txt variant='auxiliaryTextLight'>결제방법/수단</Txt>
             <Txt variant='auxiliaryTextLight' onPress={() => {}}>네이버 페이 &gt;</Txt>
-          </Detail>
-          <Detail>
+          </View>
+          <View style={tw`flex-row justify-between`}>
             <Txt variant='auxiliaryTextLight'>결제일시</Txt>
             <Txt variant='auxiliaryTextLight' onPress={() => {}}>{formatDate(date)} &gt;</Txt>
-          </Detail>
-        </DetailContainer>
+          </View>
+        </View>
 
-        <ButtonContainer>
+        <View style={tw`flex-row justify-center gap-[7px] w-full mb-[22px]`}>
           <DefaultButton title='프로필 확인하기' onPress={() => {}} />
           <DefaultButton title='톡방 확인하기' onPress={() => {}} />
-        </ButtonContainer>
-      </Details>
+        </View>
+      </View>
       
-      <HistoryDetail>
+      <View style={tw`flex-1 flex-col justify-start p-[27px_30px_0_30px]`}>
         <Txt variant='auxiliaryTextLight'>{painterName} 님과의 거래 내역</Txt>
-        <Histories>
-          <History>
+        <View style={tw`flex-row justify-center gap-[107px] w-full my-[27px] mb-[8px]`}>
+          <View style={tw`flex-col items-center gap-[20px]`}>
             <Txt variant='auxiliaryTextLight'>거래 횟수</Txt>
             <Txt variant='auxiliaryTextBold'>{painterPayments.length} 회</Txt>
-          </History>
-          <History>
+          </View>
+          <View style={tw`flex-col items-center gap-[20px]`}>
             <Txt variant='auxiliaryTextLight'>총 금액</Txt>
             <Txt variant='auxiliaryTextBold'>{painterPayments.reduce((sum, p) => sum + p.amount, 0).toLocaleString()}원</Txt>
-          </History>
-        </Histories>
+          </View>
+        </View>
 
         <SectionList
           sections={sections}
           keyExtractor={(item) => item.id}
           renderSectionHeader={({ section: { title } }) => (
-            <SectionHeader>
+            <View style={tw`py-[19px_0_9px_0]`}>
               <Txt variant="auxiliaryTextLight">{title}</Txt>
-            </SectionHeader>
+            </View>
           )}
           renderItem={({ item }) => (
             <PaymentsItem {...item} />
@@ -109,106 +109,8 @@ export default function PaymentsDetail({
           style={{ flex: 1 }}
           contentContainerStyle={{ paddingBottom: 32 }}
         />
-      </HistoryDetail>
-    </DetailWrapper>
+      </View>
+    </View>
   )
 }
-
-const DetailWrapper = styled.View`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-`;
-
-const Details = styled.View`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.colors.seperator};
-`;
-
-const PaymentHistory = styled.View`
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  margin: 12px 0;
-  padding: 30px 30px 0 30px;
-`;
-
-const PainterProfile = styled.View`
-  width: 52px;
-  height: 52px;
-  background-color: ${colors.colors.light_gray1};
-  border-radius: 5px;
-  border: 1px solid ${colors.colors.light_gray2};
-  overflow: hidden;
-  margin-right: 17px;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`;
-
-const PaymentDetail = styled.View`
-  flex: 1;
-  justify-content: center;
-  gap: 7px;
-`;
-
-const DetailContainer = styled.View`
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-  width: 100%;
-  margin: 27px 0;
-  padding: 8px 30px;
-`;
-
-const Detail = styled.View`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const ButtonContainer = styled.View`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 7px;
-  width: 100%;
-  margin-bottom: 22px;
-`;
-
-const HistoryDetail = styled.View`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding: 27px 30px 0 30px;
-`;
-
-const Histories = styled.View`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 107px;
-  width: 100%;
-  margin: 27px 0 8px 0;
-`;
-
-const History = styled.View`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-`;
-
-const SectionHeader = styled.View`
-  padding: 19px 0 9px 0;
-`;
 

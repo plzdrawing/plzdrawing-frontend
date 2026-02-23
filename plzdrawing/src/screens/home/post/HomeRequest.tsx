@@ -1,6 +1,6 @@
-﻿import React from "react";
+﻿import tw from '@/src/lib/tailwind';
+import React from "react";
 import Colors from "@/src/constants/Colors";
-import styled from "styled-components/native";
 import HomeDetailHeader from "@/src/screens/home/components/detail/HomeDetailHeader";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
@@ -12,6 +12,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  View,
+  ScrollView,
 } from "react-native";
 import { DrawingInfo } from "@/src/types/post";
 import TextAreaField from "@/src/components/ui/input/TextAreaField";
@@ -55,13 +57,13 @@ function HomeRequest({ route, navigation }: HomeRequestScreenProps) {
   ];
 
   return (
-    <Container style={{ paddingBottom: 10 }}>
+    <View style={[tw`flex-1`, { paddingBottom: 10, backgroundColor: Colors.colors.white }]}>
       <HomeDetailHeader
         type="request"
         onBackPress={() => navigation.goBack()}
       />
-      <StyledScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-        <ContentContainer>
+      <ScrollView style={tw`flex-1`} contentContainerStyle={{ paddingBottom: 100 }}>
+        <View style={tw`p-[30px]`}>
           <Txt variant="mainTitleBold" style={{ marginBottom: 20 }}>
             그림 카드를 선택해주세요
           </Txt>
@@ -92,43 +94,28 @@ function HomeRequest({ route, navigation }: HomeRequestScreenProps) {
           </KeyboardAvoidingView>
 
           <ImageUploader onImagesChange={setReferenceImages} maxImages={5} />
-        </ContentContainer>
-      </StyledScrollView>
+        </View>
+      </ScrollView>
 
-      <FooterContainer>
+      <View
+        style={[tw`absolute bottom-0 w-full`, {
+          height: 92,
+          paddingTop: 9,
+          paddingHorizontal: 57,
+          paddingBottom: 20,
+          backgroundColor: Colors.colors.white,
+          borderTopWidth: 1,
+          borderTopColor: '#f9f9f9',
+        }]}
+      >
         <DefaultButton
           title="보내기"
           variant="primary"
           onPress={() => handleButtonPress()}
         />
-      </FooterContainer>
-    </Container>
+      </View>
+    </View>
   );
 }
-
-const Container = styled.View`
-  flex: 1;
-  background-color: ${Colors.colors.white};
-`;
-
-const StyledScrollView = styled.ScrollView`
-  flex: 1;
-`;
-
-const ContentContainer = styled.View`
-  padding: 30px;
-`;
-
-const FooterContainer = styled.View`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 92px;
-  padding: 9px 57px;
-  padding-bottom: 20px;
-  background-color: ${Colors.colors.white};
-  border-top-width: 1px;
-  border-top-color: #f9f9f9;
-`;
 
 export default HomeRequest;

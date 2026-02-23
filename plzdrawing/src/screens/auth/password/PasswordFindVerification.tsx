@@ -7,8 +7,7 @@ import Container from "@/src/components/layout/Container";
 import Header from "@/src/components/layout/header/Header";
 import Txt from "@/src/components/ui/Txt";
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, TextInput } from "react-native";
-import styled from "styled-components/native";
+import { View, TextInput } from "react-native";
 import { NavigationProp, useRoute, RouteProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import AlertModal from "@/src/components/ui/modal/AlertModal";
@@ -114,20 +113,28 @@ export default function PasswordFindVerification() {
           비밀번호 찾기
         </Txt>
         <View style={{ gap: 8 }}>
-          <VerificationInputContainer>
+        <View style={tw`w-full flex-row justify-between w-full`}>
             {verificationCode.map((code, index) => (
-              <Input
+              <TextInput
                 key={index}
                 ref={(el: any) => (inputRefs.current[index] = el)}
                 maxLength={1}
                 keyboardType="numeric"
                 value={code}
-                hasValue={code !== ""}
                 onChangeText={(text: string) => handleInputChange(text, index)}
                 onKeyPress={(e: any) => handleKeyPress(e, index)}
+                style={{
+                  width: 48,
+                  height: 52,
+                  borderWidth: 1,
+                  borderColor: code !== '' ? colors.colors.main_yellow : colors.colors.light_gray3,
+                  borderRadius: 12,
+                  textAlign: 'center',
+                  fontSize: 20,
+                }}
               />
             ))}
-          </VerificationInputContainer>
+        </View>
 
           <View style={{ justifyContent: "space-between", marginTop: 8 }}>
             <Txt variant="bodySubText" color="error_red">
@@ -145,7 +152,7 @@ export default function PasswordFindVerification() {
         </View>
       </View>
       <BottomFixedArea>
-        <ButtonContainer>
+        <View style={tw`w-full py-[10px] px-[57px]`}>
           <PrimaryButton
             title="확인"
             color="sub_yellow"
@@ -153,7 +160,7 @@ export default function PasswordFindVerification() {
             onClick={handleVerificationButtonClick}
             isValid={isVerificationComplete}
           />
-        </ButtonContainer>
+        </View>
       </BottomFixedArea>
       {errorModalVisible && (
         <AlertModal
@@ -178,24 +185,3 @@ export default function PasswordFindVerification() {
   );
 }
 
-const ButtonContainer = styled.View`
-  width: 100%;
-  padding: 10px 57px;
-`;
-
-const VerificationInputContainer = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-`;
-
-const Input = styled.TextInput<{ hasValue?: boolean }>`
-  width: 48px;
-  height: 52px;
-  border: 1px solid
-    ${(props: any) =>
-      props.hasValue ? colors.colors.main_yellow : colors.colors.light_gray3};
-  border-radius: 12px;
-  text-align: center;
-  font-size: 20px;
-`;

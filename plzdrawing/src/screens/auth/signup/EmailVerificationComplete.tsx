@@ -8,7 +8,6 @@ import Header from "@/src/components/layout/header/Header";
 import Txt from "@/src/components/ui/Txt";
 import React, { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
-import styled from "styled-components/native";
 import { NavigationProp, useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 
@@ -77,20 +76,20 @@ export default function VerificationComplete() {
           </Txt>
         </View>
 
-        <AgreementSection>
+        <View style={tw`mt-[250px] w-full`}>
           <TouchableOpacity onPress={handleAllAgreements}>
             <View style={tw`gap-[12px] flex-row`}>
-              <Checkbox checked={agreements.all}></Checkbox>
+              <View style={[tw`w-[19px] h-[19px] rounded-[5px] justify-center items-center`, { borderWidth: 1, borderColor: agreements.all ? colors.colors.main_yellow : colors.colors.light_gray3, backgroundColor: agreements.all ? colors.colors.sub_yellow : 'transparent' }]} />
               <Txt variant="bodySubText">약관 전체 동의</Txt>
             </View>
           </TouchableOpacity>
 
-          <Divider />
+          <View style={[tw`h-[1px] my-[16px]`, { backgroundColor: colors.colors.seperator }]} />
 
           <View style={tw`gap-[16px]`}>
             <TouchableOpacity onPress={() => handleSingleAgreement("terms")}>
               <View style={tw`gap-[12px] flex-row`}>
-                <Checkbox checked={agreements.terms}></Checkbox>
+                <View style={[tw`w-[19px] h-[19px] rounded-[5px] justify-center items-center`, { borderWidth: 1, borderColor: agreements.terms ? colors.colors.main_yellow : colors.colors.light_gray3, backgroundColor: agreements.terms ? colors.colors.sub_yellow : 'transparent' }]} />
                 <Txt variant="bodySubText">
                   [필수] 약관동의 (개인정보 수집 및 이용)
                 </Txt>
@@ -99,7 +98,7 @@ export default function VerificationComplete() {
 
             <TouchableOpacity onPress={() => handleSingleAgreement("privacy")}>
               <View style={tw`gap-[12px] flex-row`}>
-                <Checkbox checked={agreements.privacy}></Checkbox>
+                <View style={[tw`w-[19px] h-[19px] rounded-[5px] justify-center items-center`, { borderWidth: 1, borderColor: agreements.privacy ? colors.colors.main_yellow : colors.colors.light_gray3, backgroundColor: agreements.privacy ? colors.colors.sub_yellow : 'transparent' }]} />
                 <Txt variant="bodySubText">[필수] 이용정책 동의</Txt>
               </View>
             </TouchableOpacity>
@@ -108,16 +107,16 @@ export default function VerificationComplete() {
               onPress={() => handleSingleAgreement("marketing")}
             >
               <View style={tw`gap-[12px] flex-row`}>
-                <Checkbox checked={agreements.marketing}></Checkbox>
+                <View style={[tw`w-[19px] h-[19px] rounded-[5px] justify-center items-center`, { borderWidth: 1, borderColor: agreements.marketing ? colors.colors.main_yellow : colors.colors.light_gray3, backgroundColor: agreements.marketing ? colors.colors.sub_yellow : 'transparent' }]} />
                 <Txt variant="bodySubText">[선택] 할인, 이벤트 소식 받기</Txt>
               </View>
             </TouchableOpacity>
           </View>
-        </AgreementSection>
+        </View>
       </View>
 
       <BottomFixedArea>
-        <ButtonContainer>
+        <View style={tw`w-full py-[10px] px-[57px]`}>
           <PrimaryButton
             isValid={isNextEnabled}
             title="다음"
@@ -125,37 +124,10 @@ export default function VerificationComplete() {
             disabled={!isNextEnabled}
             onClick={handleNextButton}
           />
-        </ButtonContainer>
+        </View>
       </BottomFixedArea>
     </Container>
   );
 }
 
-const ButtonContainer = styled.View`
-  width: 100%;
-  padding: 10px 57px;
-`;
 
-const AgreementSection = styled.View`
-  margin-top: 250px;
-  width: 100%;
-`;
-
-const Checkbox = styled.View<{ checked: boolean }>`
-  width: 19px;
-  height: 19px;
-  border-radius: 5px;
-  border: 1px solid
-    ${(props: { checked: boolean }) =>
-      props.checked ? colors.colors.main_yellow : colors.colors.light_gray3};
-  background-color: ${(props: { checked: boolean }) =>
-    props.checked ? colors.colors.sub_yellow : "transparent"};
-  justify-content: center;
-  align-items: center;
-`;
-
-const Divider = styled.View`
-  height: 1px;
-  background-color: ${colors.colors.seperator};
-  margin: 16px 0;
-`;

@@ -5,3 +5,9 @@ declare module "*.svg" {
   const content: React.FC<SvgProps>;
   export default content;
 }
+
+declare module "@/src/lib/tailwind" {
+  import { TailwindFn } from "twrnc";
+  const tw: TailwindFn;
+  export default tw;
+}

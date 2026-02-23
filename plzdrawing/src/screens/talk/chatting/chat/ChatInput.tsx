@@ -13,7 +13,6 @@ import {
   PictureIcon,
   SendIcon,
 } from "@/assets/images";
-import styled from "styled-components/native";
 import Colors from "@/src/constants/Colors";
 import Txt from "@/src/components/ui/Txt";
 
@@ -100,59 +99,81 @@ const ChatInput = (props: ChatInputProps) => {
     }
   };
 
+  const iconStyle = (color: string, borderWidth: number = 0) => ({
+    width: 45,
+    height: 45,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    backgroundColor: color,
+    borderWidth,
+    borderColor: Colors.colors.light_gray2,
+    borderRadius: 12,
+  });
+
   return (
     <View>
       <View style={tw`p-[12px] px-[18px] items-center justify-between gap-[6px] bg-white`}>
         <TouchableOpacity onPress={handleOpenMenu}>
-          <IconContainer color={Colors.colors.main_yellow}>
+          <View style={iconStyle(Colors.colors.main_yellow)}>
             <CameraIcon />
-          </IconContainer>
+          </View>
         </TouchableOpacity>
-        <ChattingTextInput
+        <TextInput
           placeholder="메시지를 입력하세요"
           value={message}
           onChangeText={setMessage}
           multiline
           numberOfLines={4}
+          style={{
+            flex: 1,
+            color: Colors.colors.black,
+            backgroundColor: Colors.colors.sub_yellow,
+            fontFamily: 'SsurroundAir',
+            width: '100%',
+            height: 45,
+            borderRadius: 12,
+            paddingVertical: 13.5,
+            paddingHorizontal: 16,
+          }}
         />
         <TouchableOpacity onPress={handleSendMessage}>
-          <IconContainer color={Colors.colors.sub_yellow}>
+          <View style={iconStyle(Colors.colors.sub_yellow)}>
             <SendIcon />
-          </IconContainer>
+          </View>
         </TouchableOpacity>
       </View>
       {isOpenMenu && (
         <View style={tw`p-[15px] px-[32px] gap-[12px]`}>
           <View style={tw`flex-row gap-[14px] items-center`}>
-            <IconContainer color={Colors.colors.light_gray1} width={1}>
+            <View style={iconStyle(Colors.colors.light_gray1, 1)}>
               <FileIcon />
-            </IconContainer>
+            </View>
             <Txt variant="bodyText" color="black">
               파일 보내기
             </Txt>
           </View>
           <TouchableOpacity onPress={handlePickImage}>
             <View style={tw`flex-row gap-[14px] items-center`}>
-              <IconContainer color={Colors.colors.light_gray1} width={1}>
+              <View style={iconStyle(Colors.colors.light_gray1, 1)}>
                 <PictureIcon />
-              </IconContainer>
+              </View>
               <Txt variant="bodyText" color="black">
                 사진 보내기
               </Txt>
             </View>
           </TouchableOpacity>
           <View style={tw`flex-row gap-[14px] items-center`}>
-            <IconContainer color={Colors.colors.light_gray1} width={1}>
+            <View style={iconStyle(Colors.colors.light_gray1, 1)}>
               <CameraIcon />
-            </IconContainer>
+            </View>
             <Txt variant="bodyText" color="black">
               직접 촬영하기
             </Txt>
           </View>
           {/* <Row gap={14} alignItems="center">
-            <IconContainer color={Colors.colors.light_gray1} width={1}>
+            <View style={iconStyle(Colors.colors.light_gray1, 1)}>
               <DrawerIcon />
-            </IconContainer>
+            </View>
             <Txt variant="bodyText" color="black">
               서랍 열기
             </Txt>
@@ -162,36 +183,5 @@ const ChatInput = (props: ChatInputProps) => {
     </View>
   );
 };
-
-const ChattingTextInput = styled(TextInput)`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: left;
-  color: ${Colors.colors.black};
-  background-color: ${Colors.colors.sub_yellow};
-  font-family: "SsurroundAir";
-  width: 100%;
-  height: 45px;
-  border-radius: 12px;
-  padding: 13.5px 16px;
-`;
-
-interface IconContainerProps {
-  color: string;
-  width?: number;
-}
-
-const IconContainer = styled.View<IconContainerProps>`
-  width: 45px;
-  height: 45px;
-  justify-content: center;
-  align-items: center;
-  background-color: ${(props: IconContainerProps) => props.color};
-  border-width: ${(props: IconContainerProps) => props.width || 0};
-  border-color: ${Colors.colors.light_gray2};
-  border-radius: 12px;
-`;
 
 export default ChatInput;

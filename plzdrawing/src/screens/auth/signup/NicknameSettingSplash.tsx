@@ -1,12 +1,13 @@
+import tw from '@/src/lib/tailwind';
 import Header from "@/src/components/layout/header/Header";
 import React from "react";
 import Txt from "@/src/components/ui/Txt";
 import BottomFixedArea from "@/src/components/layout/BottomFixedArea";
+import { View } from "react-native";
 import { useNavigation, NavigationProp, useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import Container from "@/src/components/layout/Container";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
-import styled from "styled-components/native";
 
 type NicknameSettingSplashRouteProp = RouteProp<RootStackParamList, 'NicknameSettingSplash'>;
 
@@ -39,19 +40,14 @@ export default function NicknameSettingSplash() {
         이제 프로필을 만들어보아요:)
       </Txt>
       <BottomFixedArea>
-        <ButtonContainer>
+        <View style={tw`w-full py-[10px] px-[57px]`}>
           <PrimaryButton
             title="프로필 만들기"
             color="sub_yellow"
             onClick={handleProfileMakingButtonOnClick}
           />
-        </ButtonContainer>
+        </View>
       </BottomFixedArea>
     </Container>
   );
 }
-
-const ButtonContainer = styled.View`
-  width: 100%;
-  padding: 10px 57px;
-`;

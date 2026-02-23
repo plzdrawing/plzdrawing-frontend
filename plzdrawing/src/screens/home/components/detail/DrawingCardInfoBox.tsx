@@ -1,4 +1,5 @@
-﻿import styled from "styled-components/native";
+﻿import tw from '@/src/lib/tailwind';
+import { View } from "react-native";
 import Txt from "@/src/components/ui/Txt";
 
 type DrawingCardInfoBoxProps = {
@@ -7,19 +8,14 @@ type DrawingCardInfoBoxProps = {
 };
 
 const DrawingCardInfoBox = ({ label, value }:DrawingCardInfoBoxProps) => (
-  <InfoBoxContainer>
+  <View style={tw`flex-1 items-start`}>
     <Txt variant="bodyText">
       {label}
     </Txt>
     <Txt variant="bodyTextBold" style={{ marginTop: 4 }}>
       {value}
     </Txt>
-  </InfoBoxContainer>
+  </View>
 );
-
-const InfoBoxContainer = styled.View`
-  align-items: start;
-  flex: 1;
-`;
 
 export default DrawingCardInfoBox;

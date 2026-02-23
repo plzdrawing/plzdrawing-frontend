@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/types/navigation';
-import styled from 'styled-components/native';
+import tw from '@/src/lib/tailwind';
 import colors from '@/src/constants/Colors';
 import Txt from '@/src/components/ui/Txt';
 import { GreeSad } from '@/assets/images';
+import { View, TouchableOpacity } from 'react-native';
 
 interface UserDrawingsProps {
   userName: string;
@@ -23,58 +24,30 @@ export default function UserDrawings({ drawings }: UserDrawingsProps) {
 
   if (drawings.length === 0) {
     return (
-      <DrawingsWrapper>
-        <EmptyStateContainer>
+      <View style={[tw`w-full h-full`, { backgroundColor: colors.colors.light_gray1 }]}>
+        <View style={tw`items-center justify-center py-[60px] px-[20px]`}>
           <GreeSad width={120} height={120} />
           <Txt variant='bodyText' color='dark_gray2' style={{ marginTop: 9 }}>
             아직 게시글이 없어요!
           </Txt>
-        </EmptyStateContainer>
-      </DrawingsWrapper>
+        </View>
+      </View>
     );
   }
 
   return (
-    <DrawingsWrapper>
-      <GridContainer>
+    <View style={[tw`w-full h-full`, { backgroundColor: colors.colors.light_gray1 }]}>
+      <View style={tw`flex-row flex-wrap justify-start gap-[7px] py-[17px] px-[34px]`}>
         {drawings.map((item) => (
-          <DrawingSquare
+          <TouchableOpacity
             key={item.id}
             onPress={() => {
               // navigation.navigate('DrawingsList');
             }}
+            style={[tw`w-[103px] h-[103px] rounded-[8px]`, { backgroundColor: colors.colors.white, borderWidth: 1, borderColor: colors.colors.light_gray2 }]}
           />
         ))}
-      </GridContainer>
-    </DrawingsWrapper>
+      </View>
+    </View>
   )
 }
-
-const DrawingsWrapper = styled.View`
-  width: 100%;
-  height: 100%;
-  background-color: ${colors.colors.light_gray1};
-`;
-
-const GridContainer = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 7px;
-  padding-vertical: 17px;
-  padding-horizontal: 34px;
-`;
-
-const DrawingSquare = styled.View`
-  width: 103px;
-  height: 103px;
-  border-radius: 8px;
-  background-color: ${colors.colors.white};
-  border: 1px solid ${colors.colors.light_gray2};
-`;
-
-const EmptyStateContainer = styled.View`
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-`;

@@ -1,8 +1,8 @@
+import tw from '@/src/lib/tailwind';
 import React from "react";
-import styled from "styled-components/native";
 import Colors from "@/src/constants/Colors";
 import Txt from "@/src/components/ui/Txt";
-import { Image } from "react-native";
+import { View, Image, TouchableOpacity } from "react-native";
 
 interface RequestBoxProps {
   type: "request" | "accept" | "reject" | "completePayment" | "check" | "feedback";
@@ -80,52 +80,65 @@ export default function RequestBox({
   const hasProfileImage = type === "accept" || type === "reject" || type === "check";
 
   const boxContent = (
-    <RequestContainer backgroundColor={backgroundColor} borderColor={borderColor}>
+    <View
+      style={[
+        tw`max-w-[70%] p-[20px] rounded-[12px] gap-[12px]`,
+        { borderWidth: 2, borderColor, backgroundColor, flexShrink: 1 },
+      ]}
+    >
       <Txt variant="auxiliaryTextBold" color="black" style={{ marginBottom: 12 }}>
         {content.title}
       </Txt>
 
       {content.hasImage && message && (
         <>
-          <MessageImage source={{ uri: imageUrl }} />
-          <MessageText>
+          <Image
+            source={{ uri: imageUrl }}
+            style={[tw`w-full h-[200px] rounded-[8px]`, { backgroundColor: Colors.colors.light_gray2 }]}
+          />
+          <View style={tw`w-full`}>
             <Txt variant="auxiliaryTextLight" color="icon_default">
               {message}
             </Txt>
-          </MessageText>
+          </View>
         </>
       )}
 
       {content.message && !content.hasImage && (
-        <MessageText>
+        <View style={tw`w-full`}>
           <Txt variant="auxiliaryTextLight" color="icon_default">
             {content.message}
           </Txt>
-        </MessageText>
+        </View>
       )}
 
       {content.additionalInfo && (
-        <InfoText>
+        <View style={tw`gap-[4px]`}>
           <Txt variant="auxiliaryTextLight" color="icon_default">
             결제금액: {price}원
           </Txt>
           <Txt variant="auxiliaryTextLight" color="icon_default">
             예상완료일자: {date}
           </Txt>
-        </InfoText>
+        </View>
       )}
 
       {content.feedbackInfo && (
-        <FeedbackInfo>
+        <View style={tw`gap-[4px]`}>
           <Txt variant="auxiliaryTextLight" color="icon_default">
             남은 피드백 횟수: {feedbackCount}
           </Txt>
-        </FeedbackInfo>
+        </View>
       )}
 
-      <CardContainer>
-        <ProfileImage source={{ uri: imageUrl }} />
-        <CardContent>
+      <View
+        style={[tw`flex-row p-[16px] rounded-[8px] gap-[12px] items-center`, { backgroundColor: Colors.colors.white }]}
+      >
+        <Image
+          source={{ uri: imageUrl }}
+          style={[tw`w-[52px] h-[52px] rounded-[8px]`, { backgroundColor: Colors.colors.light_gray2 }]}
+        />
+        <View style={tw`flex-1 gap-[4px]`}>
           <Txt variant="auxiliaryTextBold" color="black">
             {title}
           </Txt>
@@ -135,124 +148,46 @@ export default function RequestBox({
           <Txt variant="auxiliaryTextLight" color="icon_default">
             {description}
           </Txt>
-        </CardContent>
-      </CardContainer>
+        </View>
+      </View>
 
-      <ButtonContainer>
+      <View style={tw`flex-row gap-[8px] mt-[8px]`}>
         {content.secondaryButtonText && (
-          <SecondaryButton>
+          <TouchableOpacity
+            style={[tw`flex-1 py-[12px] px-[24px] rounded-[8px] items-center`, { backgroundColor: Colors.colors.white }]}
+          >
             <Txt variant="auxiliaryTextLight" color="black">
               {content.secondaryButtonText}
             </Txt>
-          </SecondaryButton>
+          </TouchableOpacity>
         )}
-        <PrimaryButton hasTwoButtons={!!content.secondaryButtonText}>
+        <TouchableOpacity
+          style={[
+            tw`py-[12px] px-[24px] rounded-[8px] items-center`,
+            content.secondaryButtonText
+              ? { flex: 1, alignSelf: 'stretch', backgroundColor: Colors.colors.white }
+              : { alignSelf: 'flex-end', minWidth: 100, backgroundColor: Colors.colors.white },
+          ]}
+        >
           <Txt variant="auxiliaryTextLight" color="black">
             {content.buttonText}
           </Txt>
-        </PrimaryButton>
-      </ButtonContainer>
-    </RequestContainer>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 
   if (hasProfileImage) {
     return (
-      <WrapperWithProfile>
-        <SenderProfileImage source={{ uri: imageUrl }} />
+      <View style={tw`flex-row items-start gap-[17px] max-w-full self-start`}>
+        <Image
+          source={{ uri: imageUrl }}
+          style={[tw`w-[40px] h-[40px] rounded-[12px]`, { backgroundColor: Colors.colors.light_gray2 }]}
+        />
         {boxContent}
-      </WrapperWithProfile>
+      </View>
     );
   }
 
   return boxContent;
 }
-
-const WrapperWithProfile = styled.View`
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 17px;
-  max-width: 100%;
-  align-self: flex-start;
-`;
-
-const SenderProfileImage = styled.Image`
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background-color: ${Colors.colors.light_gray2};
-`;
-
-const RequestContainer = styled.View<{ backgroundColor: string; borderColor: string }>`
-  max-width: 70%;
-  padding: 20px;
-  border-radius: 12px;
-  border-width: 2;
-  border-color: ${(props: { borderColor: string }) => props.borderColor};
-  background-color: ${(props: { backgroundColor: string }) => props.backgroundColor};
-  gap: 12px;
-  flex-shrink: 1;
-`;
-
-const MessageImage = styled.Image`
-  width: 100%;
-  height: 200px;
-  border-radius: 8px;
-  background-color: ${Colors.colors.light_gray2};
-`;
-
-const MessageText = styled.View`
-  width: 100%;
-`;
-
-const InfoText = styled.View`
-  gap: 4px;
-`;
-
-const FeedbackInfo = styled.View`
-  gap: 4px;
-`;
-
-const CardContainer = styled.View`
-  flex-direction: row;
-  padding: 16px;
-  background-color: ${Colors.colors.white};
-  border-radius: 8px;
-  gap: 12px;
-  align-items: center;
-`;
-
-const ProfileImage = styled.Image`
-  width: 52px;
-  height: 52px;
-  border-radius: 8px;
-  background-color: ${Colors.colors.light_gray2};
-`;
-
-const CardContent = styled.View`
-  flex: 1;
-  gap: 4px;
-`;
-
-const ButtonContainer = styled.View`
-  flex-direction: row;
-  gap: 8px;
-  margin-top: 8px;
-`;
-
-const PrimaryButton = styled.TouchableOpacity<{ hasTwoButtons?: boolean }>`
-  flex: ${(props: { hasTwoButtons?: boolean }) => props.hasTwoButtons ? 1 : 0};
-  padding: 12px 24px;
-  background-color: ${Colors.colors.white};
-  border-radius: 8px;
-  align-items: center;
-  align-self: ${(props: { hasTwoButtons?: boolean }) => props.hasTwoButtons ? 'stretch' : 'flex-end'};
-  ${(props: { hasTwoButtons?: boolean }) => !props.hasTwoButtons && 'min-width: 100px;'}
-`;
-
-const SecondaryButton = styled.TouchableOpacity`
-  flex: 1;
-  padding: 12px 24px;
-  background-color: ${Colors.colors.white};
-  border-radius: 8px;
-  align-items: center;
-`;

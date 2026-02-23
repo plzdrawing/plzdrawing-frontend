@@ -1,6 +1,6 @@
-﻿import React from "react";
+﻿import tw from '@/src/lib/tailwind';
+import React from "react";
 import Colors from "@/src/constants/Colors";
-import styled from "styled-components/native";
 import HomeDetailHeader from "@/src/screens/home/components/detail/HomeDetailHeader";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
@@ -10,7 +10,7 @@ import PostContent from "@/src/screens/home/components/detail/PostContent";
 import DrawingCarousel from "@/src/screens/home/components/detail/DrawingCarousel";
 import DrawingInfoCard from "@/src/screens/home/components/detail/DrawingInfoCard";
 import DrawingCardInfoBox from "@/src/screens/home/components/detail/DrawingCardInfoBox";
-import { TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { DrawingCardData } from "@/src/types/post";
 
 type HomeDrawingCardDetailScreenProps = NativeStackScreenProps<
@@ -61,14 +61,14 @@ function HomeDrawingCardDetail ({
   };
 
   return (
-    <Container style={{ paddingBottom: 10 }}>
+    <View style={[tw`flex-1`, { paddingBottom: 10, backgroundColor: Colors.colors.white }]}>
       <HomeDetailHeader
         authorName={cardData.author}
         type="drawingCard"
         onBackPress={() => navigation.goBack()}
       />
-      <StyledScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-        <ContentContainer>
+      <ScrollView style={tw`flex-1`} contentContainerStyle={{ paddingBottom: 100 }}>
+        <View style={tw`p-[30px]`}>
           <Txt variant="mainTitleBold" style={{ marginBottom: 20 }}>
             {cardData.title}
           </Txt>
@@ -84,7 +84,7 @@ function HomeDrawingCardDetail ({
               cardData.mainImage,
             ]}
           />
-          <InfoGrid>
+          <View style={tw`w-full flex-col gap-[12px] mb-[37px]`}>
             <DrawingCardInfoBox
               label="예상금액"
               value={`${cardData.price}원`}
@@ -97,7 +97,7 @@ function HomeDrawingCardDetail ({
               label="그림 수정"
               value={cardData.revisions == false ? "불가능" : "가능"}
             />
-          </InfoGrid>
+          </View>
           <Txt
             variant="bodyText"
             color="dark_gray2"
@@ -114,10 +114,20 @@ function HomeDrawingCardDetail ({
               <DrawingInfoCard key={info.id} info={info} />
             </TouchableOpacity>
           ))}
-        </ContentContainer>
-      </StyledScrollView>
+        </View>
+      </ScrollView>
 
-      <FooterContainer>
+      <View
+        style={[tw`absolute bottom-0 w-full`, {
+          height: 92,
+          paddingTop: 9,
+          paddingHorizontal: 57,
+          paddingBottom: 20,
+          backgroundColor: Colors.colors.white,
+          borderTopWidth: 1,
+          borderTopColor: '#f9f9f9',
+        }]}
+      >
         <DefaultButton
           title="요청하기"
           onPress={() => {
@@ -126,43 +136,9 @@ function HomeDrawingCardDetail ({
           }}
           variant="primary"
         />
-      </FooterContainer>
-    </Container>
+      </View>
+    </View>
   );
 };
-
-const Container = styled.View`
-  flex: 1;
-  background-color: ${Colors.colors.white};
-`;
-
-const StyledScrollView = styled.ScrollView`
-  flex: 1;
-`;
-
-const ContentContainer = styled.View`
-  padding: 30px;
-`;
-
-const InfoGrid = styled.View`
-  width: 100%;
-  flex-direction: column;
-  justify-content: start;
-  align-items: start;
-  gap: 12px;
-  margin-bottom: 37px;
-`;
-
-const FooterContainer = styled.View`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 92px;
-  padding: 9px 57px;
-  padding-bottom: 20px;
-  background-color: ${Colors.colors.white};
-  border-top-width: 1px;
-  border-top-color: #f9f9f9;
-`;
 
 export default HomeDrawingCardDetail;

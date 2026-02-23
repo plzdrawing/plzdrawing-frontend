@@ -1,4 +1,5 @@
-import styled from 'styled-components/native';
+import tw from '@/src/lib/tailwind';
+import { View } from 'react-native';
 import colors from '@/src/constants/Colors';
 import Txt from '@/src/components/ui/Txt';
 
@@ -13,29 +14,26 @@ interface Drawing {
 
 export default function DrawingsList({ drawings }: { drawings: Drawing[] }) {
   return (
-    <ListWrapper>
+    <View style={tw`flex-col gap-[16px]`}>
       {drawings.map((drawing) => (
-        <DrawingContainer key={drawing.id}>
+        <View
+          key={drawing.id}
+          style={[
+            tw`rounded-[8px] p-[12px]`,
+            {
+              borderWidth: 1,
+              borderColor: colors.colors.dark_gray1,
+              backgroundColor: colors.colors.light_gray1,
+            },
+          ]}
+        >
           {/* <img src={drawing.imageUrl} alt={drawing.description} /> */}
           <Txt>{drawing.description}</Txt>
           <Txt>Likes: {drawing.likes}</Txt>
           <Txt>Comments: {drawing.comments}</Txt>
           <Txt>Date: {drawing.date}</Txt>
-        </DrawingContainer>
+        </View>
       ))}
-    </ListWrapper>
+    </View>
   )
 }
-
-const ListWrapper = styled.View`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const DrawingContainer = styled.View`
-  border: 1px solid ${colors.colors.dark_gray1};
-  border-radius: 8px;
-  padding: 12px;
-  background-color: ${colors.colors.light_gray1};
-`;

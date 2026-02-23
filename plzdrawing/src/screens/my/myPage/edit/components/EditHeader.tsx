@@ -1,9 +1,10 @@
-import styled from "styled-components/native";
+import tw from '@/src/lib/tailwind';
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
 import Colors from "@/src/constants/Colors";
 import Txt from "@/src/components/ui/Txt";
 import { BackArrowIcon } from "@/assets/images";
+import { View, TouchableOpacity } from "react-native";
 
 interface ProfileEditHeaderProps {
   type: "userProfile" | "password"
@@ -18,45 +19,28 @@ export default function EditHeader({ type, onBack }: ProfileEditHeaderProps) {
   };
 
   return (
-    <Container>
-      <BackButton onPress={handleBackPress}>
+    <View
+      style={[
+        tw`w-full flex-row items-center p-[30px_30px_23px_30px] my-[4px]`,
+        {
+          backgroundColor: '#fff',
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.08,
+          shadowRadius: 4,
+          elevation: 4,
+        },
+      ]}
+    >
+      <TouchableOpacity onPress={handleBackPress} style={tw`mr-[17px]`}>
         <BackArrowIcon />
-      </BackButton>
-      <HeaderTitle>
+      </TouchableOpacity>
+      <View style={tw`flex-row items-center gap-[4px]`}>
         {type === "userProfile" 
           ? <Txt variant="mainTitleBold">회원정보 수정</Txt>
           : <Txt variant="mainTitleBold">비밀번호 변경</Txt>
         }
-      </HeaderTitle>
-    </Container>
+      </View>
+    </View>
   );
 }
-
-const Container = styled.View`
-  width: 100%;
-  flex-direction: row;
-  align-items: center;
-  padding: 30px 30px 23px 30px;
-  margin: 4px 0;
-  background-color: #fff;
-  // border-bottom-width: 1px;
-  // border-bottom-color: ${Colors.colors.seperator};
-  /* box shadow for iOS */
-  shadow-color: #000;
-  shadow-offset: 0px 2px;
-  shadow-opacity: 0.08;
-  shadow-radius: 4px;
-  /* box shadow for Android */
-  elevation: 4;
-`;
-
-const BackButton = styled.TouchableOpacity`
-  margin-right: 17px;
-`;
-
-const HeaderTitle = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
-`;

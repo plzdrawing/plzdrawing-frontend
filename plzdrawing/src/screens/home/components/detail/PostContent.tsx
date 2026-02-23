@@ -1,5 +1,6 @@
-﻿import React from "react";
-import styled from "styled-components/native";
+﻿import tw from '@/src/lib/tailwind';
+import React from "react";
+import { View } from "react-native";
 import Txt from "@/src/components/ui/Txt";
 
 interface PostContentProps {
@@ -10,7 +11,7 @@ interface PostContentProps {
 
 const PostContent: React.FC<PostContentProps> = ({ hashtags, type="post", body }) => {
   return (
-    <PostContentContainer>
+    <View style={tw`w-full mb-[20px]`}>
       <Txt
         variant="bodySubText"
         color={type === "post" ? "dark_gray2" : "highright_orange"}
@@ -21,13 +22,8 @@ const PostContent: React.FC<PostContentProps> = ({ hashtags, type="post", body }
       <Txt variant="bodyText" style={{ marginBottom: 8 }}>
         {body}
       </Txt>
-    </PostContentContainer>
+    </View>
   );
 };
-
-const PostContentContainer = styled.View`
-  width: 100%;
-  margin-bottom: 20px;
-`;
 
 export default PostContent;

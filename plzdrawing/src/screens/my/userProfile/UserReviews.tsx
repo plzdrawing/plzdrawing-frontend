@@ -1,8 +1,9 @@
 import React from 'react';
-import styled from 'styled-components/native';
+import tw from '@/src/lib/tailwind';
 import colors from '@/src/constants/Colors';
 import Txt from '@/src/components/ui/Txt';
 import { EmptyStar, FilledStar } from '@/assets/images';
+import { View, Image } from 'react-native';
 
 interface UserReviewsProps {
   drawNum: number;
@@ -28,91 +29,35 @@ export default function UserReviews({
   reviews,
 }: UserReviewsProps) {
   return (
-    <Wrapper>
-      <NumbersContainer>
+    <View style={[tw`w-full gap-[17px] p-[17px_32px]`, { backgroundColor: colors.colors.light_gray1 }]}>
+      <View>
         <Txt variant='auxiliaryTextLight'>그림 그려준 횟수: {drawNum}회</Txt>
         <Txt variant='auxiliaryTextLight'>거절 횟수: {rejectNum}회</Txt>
-      </NumbersContainer>
-      <RatingContainer>
+      </View>
+      <View style={tw`flex-row items-center gap-[7px]`}>
         <EmptyStar />
         <Txt variant='bodyTextBold'>{rating}점</Txt>
         <Txt color='dark_gray2' variant='bodySubText'>평가 {reviewNum}개</Txt>
-      </RatingContainer>
-      <KeywordsContainer>
+      </View>
+      <View style={tw`flex-row flex-wrap`}>
         {reviewKeywords.map((keyword) => (
-          <Keyword key={keyword}>
+          <View key={keyword} style={[tw`m-[3px] py-[10px] px-[20px]`, { borderWidth: 1, borderColor: colors.colors.light_gray3, backgroundColor: colors.colors.white }]}>
             <Txt>{keyword}</Txt>
-          </Keyword>
+          </View>
         ))}
-      </KeywordsContainer>
+      </View>
       {reviews.map((review) => (
-        <ReviewItem key={review.id}>
-          <ProfileImage source={{ uri: review.userProfile }} />
-          <ReviewContainer>
-            <UserContainer>
+        <View key={review.id} style={[tw`flex-row items-center p-[12px]`, { borderBottomWidth: 1, borderBottomColor: colors.colors.light_gray2 }]}>
+          <Image source={{ uri: review.userProfile }} style={[tw`w-[60px] h-[60px] mr-[17px]`, { backgroundColor: colors.colors.light_gray3 }]} />
+          <View style={tw`flex-1 gap-[7px]`}>
+            <View style={tw`flex-row items-center gap-[7px]`}>
               <Txt variant='bodyTextBold'>{review.userName} 님</Txt>
               <Txt color='dark_gray2' variant='secondaryText'>{review.date}</Txt>
-            </UserContainer>
+            </View>
             <Txt variant='auxiliaryTextLight'>{review.content}</Txt>
-          </ReviewContainer>
-        </ReviewItem>
+          </View>
+        </View>
       ))}
-    </Wrapper>
+    </View>
   )
 }
-
-const Wrapper = styled.View`
-  width: 100%;
-  gap: 17px;
-  padding: 17px 32px;
-  background-color: ${colors.colors.light_gray1};
-`;
-
-const NumbersContainer = styled.View``;
-
-const RatingContainer = styled.View`
-  display: flex;
-  gap: 7px;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const KeywordsContainer = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-`;
-
-const Keyword = styled.View`
-  margin: 3px;
-  padding: 10px 20px;
-  border: 1px solid ${colors.colors.light_gray3};
-  background-color: ${colors.colors.white};
-`;
-
-const ReviewItem = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 12px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.colors.light_gray2};
-`;
-
-const ProfileImage = styled.Image`
-  width: 60px;
-  height: 60px;
-  margin-right: 17px;
-  background-color: ${colors.colors.light_gray3};
-`;
-
-const ReviewContainer = styled.View`
-  flex: 1;
-  gap: 7px;
-`;
-
-const UserContainer = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 7px;
-`;

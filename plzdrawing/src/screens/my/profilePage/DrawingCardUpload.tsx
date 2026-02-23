@@ -1,9 +1,8 @@
 ﻿import tw from '@/src/lib/tailwind';
 import React, { useState } from "react";
 
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, ScrollView } from "react-native";
 import Colors from "@/src/constants/Colors";
-import styled from "styled-components/native";
 import HomeDetailHeader from "@/src/screens/home/components/detail/HomeDetailHeader";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
@@ -37,13 +36,13 @@ function DrawingCardUpload({
   const [filter, setFilter] = useState<string>("");
 
   return (
-    <Container style={{ paddingBottom: 10 }}>
+    <View style={[tw`flex-1`, { paddingBottom: 10, backgroundColor: Colors.colors.white }]}>
       <HomeDetailHeader
         type="drawingCardUpload"
         onBackPress={() => navigation.goBack()}
       />
-      <StyledScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-        <ContentContainer>
+      <ScrollView style={tw`flex-1`} contentContainerStyle={{ paddingBottom: 100 }}>
+        <View style={tw`p-[30px]`}>
           <Txt
             variant="mainTitleBold"
             style={{ marginTop: 20, marginBottom: 20 }}
@@ -120,10 +119,15 @@ function DrawingCardUpload({
           </Txt>
           <View style={tw`flex-row gap-[7px] justify-start items-center`}>
             {filterList.map((item, index) => (
-              <ButtonContainer
+              <TouchableOpacity
                 key={index}
-                isSelected={filter === item}
                 onPress={() => setFilter(item)}
+                style={[tw`justify-center items-center py-[10px] px-[20px] rounded-[15px]`, {
+                  height: 41,
+                  backgroundColor: filter === item ? Colors.colors.sub_yellow : Colors.colors.white,
+                  borderWidth: filter === item ? 2 : 1,
+                  borderColor: filter === item ? Colors.colors.main_yellow : Colors.colors.seperator,
+                }]}
               >
                 <Txt
                   variant="bodyText"
@@ -131,60 +135,30 @@ function DrawingCardUpload({
                 >
                   {item}
                 </Txt>
-              </ButtonContainer>
+              </TouchableOpacity>
             ))}
           </View>
-        </ContentContainer>
-      </StyledScrollView>
+        </View>
+      </ScrollView>
 
-      <FooterContainer>
+      <View
+        style={[tw`absolute bottom-0 w-full`, {
+          height: 92,
+          paddingTop: 9,
+          paddingHorizontal: 57,
+          paddingBottom: 20,
+          backgroundColor: Colors.colors.white,
+          borderTopWidth: 1,
+          borderTopColor: '#f9f9f9',
+        }]}
+      >
         <DefaultButton title="보내기" onPress={() => {}} variant="primary" />
-      </FooterContainer>
-    </Container>
+      </View>
+    </View>
   );
 }
 
-const Container = styled.View`
-  flex: 1;
-  background-color: ${Colors.colors.white};
-`;
 
-const StyledScrollView = styled.ScrollView`
-  flex: 1;
-`;
-
-const ContentContainer = styled.View`
-  padding: 30px;
-`;
-
-const FooterContainer = styled.View`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 92px;
-  padding: 9px 57px;
-  padding-bottom: 20px;
-  background-color: ${Colors.colors.white};
-  border-top-width: 1px;
-  border-top-color: #f9f9f9;
-`;
-
-
-const ButtonContainer = styled.TouchableOpacity`
-  display: flex;
-  width: auto;
-  height: 41px;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: ${({ isSelected }: { isSelected: boolean }) =>
-    isSelected ? Colors.colors.sub_yellow : Colors.colors.white};
-  border-radius: 15px;
-  border-width: ${({ isSelected }: { isSelected: boolean }) =>
-    isSelected ? "2px" : "1px"};
-  border-color: ${({ isSelected }: { isSelected: boolean }) =>
-    isSelected ? Colors.colors.main_yellow : Colors.colors.seperator};
-`;
 
 
 export default DrawingCardUpload;

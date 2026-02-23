@@ -1,8 +1,8 @@
+import tw from '@/src/lib/tailwind';
 import React from "react";
-import styled from "styled-components/native";
 import Colors from "@/src/constants/Colors";
 import Txt from "@/src/components/ui/Txt";
-import { View } from "react-native";
+import { View, Image } from "react-native";
 
 interface TalkProcessProps {
   imageUrl: string;
@@ -28,124 +28,74 @@ export default function TalkProcess({
   const currentStepIndex = processSteps.findIndex(step => step.key === process);
 
   return (
-    <ProcessContainer>
-      <RequestImage source={{ uri: imageUrl }} />
+    <View
+      style={[
+        tw`flex-row p-[12px_32px] w-full`,
+        { backgroundColor: Colors.colors.white, borderBottomWidth: 1, borderBottomColor: Colors.colors.light_gray2 },
+      ]}
+    >
+      <Image
+        source={{ uri: imageUrl }}
+        style={[tw`w-[52px] h-[52px] rounded-[5px] mr-[7px]`, { backgroundColor: Colors.colors.light_gray2 }]}
+      />
 
-      <ContentContainer>
-        <TitlePriceRow>
+      <View style={tw`flex-1 gap-[7px]`}>
+        <View style={tw`flex-row gap-[7px] items-center pl-[4px]`}>
           <Txt variant="auxiliaryTextBold" color="black">
             {title}
           </Txt>
           <Txt variant="secondaryText" color="black">
             {price.toLocaleString()}원
           </Txt>
-        </TitlePriceRow>
+        </View>
 
-        <ProgressContainer>
-          <ProgressBarContainer>
+        <View style={tw`w-full gap-[7px]`}>
+          <View style={tw`flex-row items-center h-[8px] justify-between`}>
             {processSteps.map((step, index) => (
               <React.Fragment key={step.key}>
                 {index > 0 && (
-                  <ProgressLine 
-                    isActive={index <= currentStepIndex}
+                  <View
+                    style={[
+                      tw`flex-1 h-[2px]`,
+                      { backgroundColor: index <= currentStepIndex ? Colors.colors.main_yellow : Colors.colors.light_gray3 },
+                    ]}
                   />
                 )}
-                <ProgressDot 
-                  isActive={index <= currentStepIndex}
+                <View
+                  style={[
+                    tw`w-[8px] h-[8px] rounded-[999px]`,
+                    {
+                      backgroundColor: index <= currentStepIndex ? Colors.colors.main_yellow : Colors.colors.white,
+                      borderWidth: 1,
+                      borderColor: index <= currentStepIndex ? Colors.colors.main_yellow : Colors.colors.light_gray3,
+                    },
+                  ]}
                 />
               </React.Fragment>
             ))}
-          </ProgressBarContainer>
+          </View>
 
-          <ProgressLabelsContainer>
+          <View style={tw`flex-row items-center`}>
             {processSteps.map((step, index) => (
               <React.Fragment key={step.key}>
-                {index > 0 && <LabelSpacer />}
-                <ProgressLabel 
-                  align={index === 0 ? 'flex-start' : index === processSteps.length - 1 ? 'flex-end' : 'center'}
+                {index > 0 && <View style={tw`flex-1`} />}
+                <View
+                  style={{
+                    alignItems: index === 0 ? 'flex-start' : index === processSteps.length - 1 ? 'flex-end' : 'center',
+                  }}
                 >
-                  <Txt 
-                    variant="auxiliaryTextLight" 
+                  <Txt
+                    variant="auxiliaryTextLight"
                     color={index === currentStepIndex ? "black" : "light_gray2"}
                   >
                     {step.label}
                   </Txt>
-                </ProgressLabel>
+                </View>
               </React.Fragment>
             ))}
-          </ProgressLabelsContainer>
-        </ProgressContainer>
-      </ContentContainer>
-    </ProcessContainer>
+          </View>
+        </View>
+      </View>
+    </View>
   );
 }
-
-const ProcessContainer = styled.View`
-  flex-direction: row;
-  padding: 12px 32px;
-  width: 100%;
-  background-color: ${Colors.colors.white};
-  border-bottom-width: 1;
-  border-bottom-color: ${Colors.colors.light_gray2};
-`;
-
-const RequestImage = styled.Image`
-  width: 52px;
-  height: 52px;
-  border-radius: 5px;
-  background-color: ${Colors.colors.light_gray2};
-  margin-right: 7px;
-`;
-
-const ContentContainer = styled.View`
-  flex: 1;
-  gap: 7px;
-`;
-
-const TitlePriceRow = styled.View`
-  flex-direction: row;
-  gap: 7px;
-  align-items: center;
-  padding-left: 4px;
-`;
-
-const ProgressContainer = styled.View`
-  width: 100%;
-  gap: 7px;
-`;
-
-const ProgressBarContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  height: 8px;
-  position: relative;
-  justify-content: space-between;
-`;
-
-const ProgressLine = styled.View<{ isActive: boolean }>`
-  flex: 1;
-  height: 2px;
-  background-color: ${(props: { isActive: boolean }) => props.isActive ? Colors.colors.main_yellow : Colors.colors.light_gray3};
-`;
-
-const ProgressDot = styled.View<{ isActive: boolean }>`
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background-color: ${(props: { isActive: boolean }) => props.isActive ? Colors.colors.main_yellow : Colors.colors.white};
-  border-width: 1;
-  border-color: ${(props: { isActive: boolean }) => props.isActive ? Colors.colors.main_yellow : Colors.colors.light_gray3};
-`;
-
-const ProgressLabelsContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const LabelSpacer = styled.View`
-  flex: 1;
-`;
-
-const ProgressLabel = styled.View<{ align: 'flex-start' | 'center' | 'flex-end' }>`
-  align-items: ${(props: { align: 'flex-start' | 'center' | 'flex-end' }) => props.align};
-`;

@@ -1,7 +1,8 @@
 import React from 'react';
-import styled from 'styled-components/native';
+import tw from '@/src/lib/tailwind';
 import colors from '@/src/constants/Colors';
 import Txt from '@/src/components/ui/Txt';
+import { TouchableOpacity, View } from 'react-native';
 
 interface PaymentsItemProps {
   id: string;
@@ -29,47 +30,18 @@ export default function PaymentsItem({
     return `${yyyy}.${mm}.${dd}`;
   }
   return (
-    <PaymentsItemContainer onPress={onPress}>
-      <PainterProfile>
+    <TouchableOpacity onPress={onPress} style={tw`flex-row w-full py-[8px]`}>
+      <View style={[tw`w-[52px] h-[52px] rounded-[5px] overflow-hidden mr-[17px]`, { backgroundColor: colors.colors.light_gray1, borderWidth: 1, borderColor: colors.colors.light_gray2 }]}>
         {/* <img src={painterProfile} alt='' /> */}
-      </PainterProfile>
-      <PaymentDetail>
+      </View>
+      <View style={tw`flex-1 justify-center gap-[7px]`}>
         <Txt variant='auxiliaryTextBold'>
           - {amount.toLocaleString()} 원
         </Txt>
         <Txt variant='auxiliaryTextLight'>
           {painterName} 님 | {formatDate(date)}
         </Txt>
-      </PaymentDetail>
-    </PaymentsItemContainer>
+      </View>
+    </TouchableOpacity>
   )
 }
-
-const PaymentsItemContainer = styled.TouchableOpacity`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  padding: 8px 0;
-`;
-
-const PainterProfile = styled.View`
-  width: 52px;
-  height: 52px;
-  background-color: ${colors.colors.light_gray1};
-  border-radius: 5px;
-  border: 1px solid ${colors.colors.light_gray2};
-  overflow: hidden;
-  margin-right: 17px;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`;
-
-const PaymentDetail = styled.View`
-  flex: 1;
-  justify-content: center;
-  gap: 7px;
-`;

@@ -145,7 +145,7 @@ export default function App() {
   if (!fontsLoaded || isCheckingAuth) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#FFC311" />
+        <ActivityIndicator size={36} color="#FFC311" />
       </View>
     );
   }

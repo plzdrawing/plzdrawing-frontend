@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, TextInput } from "react-native";
-import styled from "styled-components/native";
 import Colors from "@/src/constants/Colors";
 
 interface PriceTextFieldProps {
@@ -76,15 +75,27 @@ const PriceTextField = ({
 
   return (
     <View>
-      <PriceTextInput
+      <TextInput
         placeholder={placeholder}
         placeholderTextColor={colors.dark_gray1}
         value={displayValue}
         onChangeText={handleChange}
         editable={!readOnly}
         keyboardType="numeric"
-        borderColor={getBorderColor()}
-        color={colors.black}
+        style={{
+          fontSize: 14,
+          fontWeight: '300',
+          color: colors.black,
+          backgroundColor: Colors.colors.light_gray1,
+          fontFamily: "SsurroundAir",
+          width: '100%',
+          height: 48,
+          paddingVertical: 15,
+          paddingHorizontal: 11,
+          borderRadius: 5,
+          borderWidth: 1,
+          borderColor: getBorderColor(),
+        }}
         onFocus={() => {
           if (state === "empty") {
             setState("filled");
@@ -100,20 +111,5 @@ const PriceTextField = ({
     </View>
   );
 };
-
-const PriceTextInput = styled(TextInput)`
-  font-size: 14px;
-  font-weight: 300;
-  color: ${(props: { color: string }) => props.color};
-  background-color: ${Colors.colors.light_gray1};
-  font-family: "SsurroundAir";
-  outline: none;
-  width: 100%;
-  height: 48px;
-  padding: 15px 11px;
-  border-radius: 5px;
-  border-width: 1px;
-  border-color: ${(props: { borderColor: string }) => props.borderColor};
-`;
 
 export default PriceTextField;

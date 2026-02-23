@@ -4,7 +4,6 @@ import Header from "@/src/components/layout/header/Header";
 import React, { useState } from "react";
 import Txt from "@/src/components/ui/Txt";
 import Container from "@/src/components/layout/Container";
-import styled from "styled-components/native";
 import TextField from "@/src/components/ui/input/TextField";
 import BottomFixedArea from "@/src/components/layout/BottomFixedArea";
 import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
@@ -74,19 +73,14 @@ export default function NicknameSetting() {
         </View>
       </View>
       <BottomFixedArea>
-        <ButtonContainer>
+        <View style={tw`w-full py-[10px] px-[57px]`}>
           <PrimaryButton
             title="다음"
             color="sub_yellow"
             onClick={handleNextButtonOnClick}
           />
-        </ButtonContainer>
+        </View>
       </BottomFixedArea>
     </Container>
   );
 }
-
-const ButtonContainer = styled.View`
-  width: 100%;
-  padding: 10px 57px;
-`;

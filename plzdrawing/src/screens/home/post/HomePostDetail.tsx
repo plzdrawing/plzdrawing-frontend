@@ -1,5 +1,5 @@
-﻿import React from "react";
-import styled from "styled-components/native";
+﻿import tw from '@/src/lib/tailwind';
+import React from "react";
 import Colors from "@/src/constants/Colors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
@@ -11,7 +11,7 @@ import DrawingCarousel from "@/src/screens/home/components/detail/DrawingCarouse
 import DrawingInfoCard from "@/src/screens/home/components/detail/DrawingInfoCard";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
 import Txt from "@/src/components/ui/Txt";
-import { TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { PostData } from "@/src/types/post";
 
 type HomePostDetailScreenProps = NativeStackScreenProps<
@@ -61,14 +61,14 @@ function HomePostDetail({
 
 
   return (
-    <Container style={{ paddingBottom: 10 }}>
+    <View style={[tw`flex-1`, { paddingBottom: 10, backgroundColor: Colors.colors.white }]}>
       <HomeDetailHeader
         authorName={postData.author}
         onBackPress={() => navigation.goBack()}
       />
 
-      <StyledScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-        <ContentContainer>
+      <ScrollView style={tw`flex-1`} contentContainerStyle={{ paddingBottom: 100 }}>
+        <View style={tw`p-[30px]`}>
           <UserInfo
             profileImage={postData.profileImage}
             name={postData.author}
@@ -92,15 +92,28 @@ function HomePostDetail({
             </TouchableOpacity>
           ))}
 
-          <ProfileButton onPress={() => navigation.navigate("UserProfile")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("UserProfile")}
+            style={[tw`py-[10px] px-[25px] rounded-[12px] self-center mt-[57px]`, { borderWidth: 1, borderColor: '#d9d9d9' }]}
+          >
             <Txt variant="bodyText" color="dark_gray2">
               프로필 보기
             </Txt>
-          </ProfileButton>
-        </ContentContainer>
-      </StyledScrollView>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
 
-      <FooterContainer>
+      <View
+        style={[tw`absolute bottom-0 w-full`, {
+          height: 92,
+          paddingTop: 9,
+          paddingHorizontal: 57,
+          paddingBottom: 34,
+          backgroundColor: Colors.colors.white,
+          borderTopWidth: 1,
+          borderTopColor: '#f9f9f9',
+        }]}
+      >
         <DefaultButton
           title="요청하기"
           onPress={() => {
@@ -108,42 +121,9 @@ function HomePostDetail({
           }}
           variant="primary"
         />
-      </FooterContainer>
-    </Container>
+      </View>
+    </View>
   );
 };
-
-const Container = styled.View`
-  flex: 1;
-  background-color: ${Colors.colors.white};
-`;
-
-const StyledScrollView = styled.ScrollView`
-  flex: 1;
-`;
-
-const ContentContainer = styled.View`
-  padding: 30px;
-`;
-
-const ProfileButton = styled.TouchableOpacity`
-  padding: 10px 25px;
-  border-radius: 12px;
-  border: 1px solid #d9d9d9;
-  align-self: center;
-  margin-top: 57px;
-`;
-
-const FooterContainer = styled.View`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 92px;
-  padding: 9px 57px;
-  padding-bottom: 34px;
-  background-color: ${Colors.colors.white};
-  border-top-width: 1px;
-  border-top-color: #f9f9f9;
-`;
 
 export default HomePostDetail;

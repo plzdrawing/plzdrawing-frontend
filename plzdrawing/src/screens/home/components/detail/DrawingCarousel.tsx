@@ -1,6 +1,7 @@
-﻿import { PaginationLeftIcon, PaginationRightIcon } from "@/assets/images";
+﻿import tw from '@/src/lib/tailwind';
+import { PaginationLeftIcon, PaginationRightIcon } from "@/assets/images";
 import React, { useState } from "react";
-import styled from "styled-components/native";
+import { View, Image, TouchableOpacity } from "react-native";
 
 interface DrawingCarouselProps {
   images: string[];
@@ -18,68 +19,44 @@ const DrawingCarousel: React.FC<DrawingCarouselProps> = ({ images }) => {
   };
 
   return (
-    <CarouselContainer>
-      <DrawingImage source={{ uri: images[currentIndex] }} />
+    <View style={tw`w-full aspect-[1.57] mb-[20px] items-center justify-center`}>
+      <Image
+        source={{ uri: images[currentIndex] }}
+        style={[tw`w-full h-[95%] rounded-[5px]`, { borderWidth: 0.5, borderColor: '#d9d9d9', backgroundColor: 'gray' }]}
+      />
 
       {/* Left Arrow */}
-      <ArrowButton onPress={handlePrev} style={{ left: -24 }}>
+      <TouchableOpacity
+        onPress={handlePrev}
+        style={[tw`absolute top-1/2 w-[24px] h-[24px] justify-center items-center z-10`, { left: -24, marginTop: -12 }]}
+      >
         <PaginationLeftIcon style={{ top: -2 }} />
-      </ArrowButton>
+      </TouchableOpacity>
 
       {/* Right Arrow */}
-      <ArrowButton onPress={handleNext} style={{ right: -24 }}>
+      <TouchableOpacity
+        onPress={handleNext}
+        style={[tw`absolute top-1/2 w-[24px] h-[24px] justify-center items-center z-10`, { right: -24, marginTop: -12 }]}
+      >
         <PaginationRightIcon style={{ top: -2 }} />
-      </ArrowButton>
+      </TouchableOpacity>
 
       {/* Pagination */}
-      <PaginationContainer>
+      <View style={tw`absolute bottom-[10px] flex-row gap-[8px]`}>
         {images.map((_, index) => (
-          <PaginationDot key={index} active={index === currentIndex} />
+          <View
+            key={index}
+            style={{
+              width: index === currentIndex ? 10 : 4,
+              height: 4,
+              borderRadius: 10,
+              backgroundColor: index === currentIndex ? '#333535' : '#FFFFFF',
+            }}
+          />
         ))}
-      </PaginationContainer>
-    </CarouselContainer>
+      </View>
+    </View>
   );
 };
 
-const CarouselContainer = styled.View`
-  width: 100%;
-  aspect-ratio: 1.57;
-  margin-bottom: 20px;
-  align-items: center;
-  justify-content: center;
-`;
-
-const DrawingImage = styled.Image`
-  width: 100%;
-  height: 95%;
-  border-radius: 5px;
-  border: 0.5px solid #d9d9d9;
-  background-color: gray
-`;
-
-const ArrowButton = styled.TouchableOpacity`
-  position: absolute;
-  top: 50%;
-  margin-top: -12px;
-  width: 24px;
-  height: 24px;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-`;
-
-const PaginationContainer = styled.View`
-  position: absolute;
-  bottom: 10px;
-  flex-direction: row;
-  gap: 8px;
-`;
-
-const PaginationDot = styled.View<{ active: boolean }>`
-  width: ${(props: { active: any; }) => (props.active ? "10px" : "4px")};
-  height: 4px;
-  border-radius: 10px;
-  background-color: ${(props: { active: any; }) => (props.active ? "#333535" : "#FFFFFF")};
-`;
-
-export default DrawingCarousel; 
+export default DrawingCarousel;

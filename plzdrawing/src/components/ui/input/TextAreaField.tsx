@@ -1,6 +1,6 @@
+import tw from '@/src/lib/tailwind';
 import React, { useState } from "react";
-import { TextInput } from "react-native";
-import styled from "styled-components/native";
+import { View, TextInput, Text } from "react-native";
 import Colors from "@/src/constants/Colors";
 
 interface TextAreaFieldProps {
@@ -35,8 +35,8 @@ const TextAreaField = ({
   };
 
   return (
-    <TextAreaWrapper>
-      <TextAreaInput
+    <View style={tw`relative w-full`}>
+      <TextInput
         placeholder={placeholder}
         placeholderTextColor={colors.dark_gray1}
         value={text}
@@ -44,48 +44,36 @@ const TextAreaField = ({
         editable={!readOnly}
         multiline
         textAlignVertical="top"
-        color={colors.black}
-        borderColor={isFocused ? colors.main_yellow : colors.light_gray2}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         maxLength={maxLength}
         onContentSizeChange={handleContentSizeChange}
-        style={{ height: Math.max(135, inputHeight) }}
+        style={{
+          fontSize: 14,
+          fontWeight: '300',
+          color: colors.black,
+          backgroundColor: 'white',
+          fontFamily: "SsurroundAir",
+          width: '100%',
+          padding: 15,
+          borderRadius: 10,
+          borderWidth: 1,
+          borderColor: isFocused ? colors.main_yellow : colors.light_gray2,
+          height: Math.max(135, inputHeight),
+        }}
       />
       {maxLength && (
-        <CounterText>
+        <Text
+          style={[
+            tw`absolute bottom-[15px] right-[15px]`,
+            { fontSize: 14, color: Colors.colors.dark_gray1 },
+          ]}
+        >
           {text.length}/{maxLength}
-        </CounterText>
+        </Text>
       )}
-    </TextAreaWrapper>
+    </View>
   );
 };
-
-const TextAreaWrapper = styled.View`
-  position: relative;
-  width: 100%;
-`;
-
-const TextAreaInput = styled(TextInput)<{ borderColor: string }>`
-  font-size: 14px;
-  font-weight: 300;
-  color: ${(props: { color: string }) => props.color};
-  background-color: white;
-  font-family: "SsurroundAir";
-  outline: none;
-  width: 100%;
-  padding: 15px 15px;
-  border-radius: 10px;
-  border-width: 1px;
-  border-color: ${(props: { borderColor: any; }) => props.borderColor};
-`;
-
-const CounterText = styled.Text`
-  font-size: 14px;
-  color: ${Colors.colors.dark_gray1};
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-`;
 
 export default TextAreaField;

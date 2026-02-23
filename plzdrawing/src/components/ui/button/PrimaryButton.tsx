@@ -1,5 +1,5 @@
+import tw from '@/src/lib/tailwind';
 import React from "react";
-import styled from "styled-components/native";
 import { Pressable, TouchableOpacityProps } from "react-native";
 import Txt from "../Txt"; // Txt 컴포넌트 경로에 맞게 수정
 import Colors from "@/src/constants/Colors";
@@ -32,32 +32,24 @@ const PrimaryButton = ({
   };
 
   return (
-    <ButtonContainer
+    <Pressable
       {...rest}
       onPress={onClick}
-      buttonColor={getBackgroundColor()}
-      isValid={isValid}
+      style={[
+        tw`w-full py-[10px] px-[20px] rounded-[12px] items-center`,
+        {
+          backgroundColor: getBackgroundColor(),
+          borderWidth: isValid ? 0 : 1,
+          borderColor: isValid ? undefined : Colors.colors.main_yellow,
+          zIndex: 200,
+        },
+      ]}
     >
       <Txt variant="bodyText" color="black" align="center">
         {title}
       </Txt>
-    </ButtonContainer>
+    </Pressable>
   );
 };
-
-interface ButtonContainerProps {
-  buttonColor: string;
-  isValid?: boolean;
-}
-
-const ButtonContainer = styled(Pressable)<ButtonContainerProps>`
-  width: 100%;
-  padding: 10px 20px;
-  border-radius: 12px;
-  border: ${(props: ButtonContainerProps) => props.isValid ? '0' : `1px solid ${Colors.colors.main_yellow}`};
-  align-items: center;
-  background-color: ${(props: ButtonContainerProps) => props.buttonColor};
-  z-index: 200;
-`;
 
 export default PrimaryButton;
