@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuthStore } from '@/src/stores/authStore';
 
 // const API_BASE_URL = 'http://13.124.246.36:8080';
 const API_BASE_URL = 'https://plzdrawing.o-r.kr';
@@ -13,21 +13,18 @@ const apiClient: AxiosInstance = axios.create({
 });
 
 // 요청 인터셉터 (Request Interceptor)
+// Zustand store에서 동기적으로 토큰을 읽어 헤더에 주입 (AsyncStorage await 불필요)
 apiClient.interceptors.request.use(
-  async (config: any) => { // config 타입을 any 또는 InternalAxiosRequestConfig로 설정
-    const token = await AsyncStorage.getItem('accessToken');
+  (config: any) => {
+    const { accessToken } = useAuthStore.getState();
 
-    // 토큰이 있다면 헤더에 추가
-    if (token) {
+    if (accessToken) {
       config.headers = {
         ...config.headers,
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
       };
-      console.log('🔑 Token found and added to headers:', token.substring(0, 20) + '...');
-    } else {
-      console.log('⚠️ No access token found in AsyncStorage');
     }
-    
+
     console.log('📤 API Request:', config.method?.toUpperCase(), config.url);
     return config;
   },
@@ -61,38 +58,36 @@ const processQueue = (error: any, token: string | null = null) => {
 // 응답 인터셉터 (Response Interceptor)
 apiClient.interceptors.response.use(
   async (response) => {
-    // Set-Cookie 헤더에서 토큰 추출
+    // Set-Cookie 헤더에서 토큰 추출 후 Zustand store에 저장
     const setCookieHeader = response.headers['set-cookie'];
-    
+
     if (setCookieHeader) {
-      console.log('Set-Cookie headers:', setCookieHeader);
-      
-      // Set-Cookie는 배열 또는 문자열일 수 있음
       const cookies = Array.isArray(setCookieHeader) ? setCookieHeader : [setCookieHeader];
-      
+      let newAccessToken: string | null = null;
+      let newRefreshToken: string | null = null;
+
       for (const cookie of cookies) {
-        // access_token 추출
         if (cookie.includes('access_token=')) {
           const match = cookie.match(/access_token=([^;]+)/);
-          if (match && match[1]) {
-            const token = match[1];
-            console.log('Found access_token in cookie:', token.substring(0, 20) + '...');
-            await AsyncStorage.setItem('accessToken', token);
-          }
+          if (match?.[1]) newAccessToken = match[1];
         }
-        
-        // refresh_token 추출
         if (cookie.includes('refresh_token=')) {
           const match = cookie.match(/refresh_token=([^;]+)/);
-          if (match && match[1]) {
-            const refreshToken = match[1];
-            console.log('Found refresh_token in cookie');
-            await AsyncStorage.setItem('refreshToken', refreshToken);
-          }
+          if (match?.[1]) newRefreshToken = match[1];
         }
       }
+
+      if (newAccessToken) {
+        const { setAuth, setTokens } = useAuthStore.getState();
+        if (newRefreshToken) {
+          await setAuth(newAccessToken, newRefreshToken);
+        } else {
+          await setTokens(newAccessToken);
+        }
+        console.log('🍪 Token from cookie saved to store');
+      }
     }
-    
+
     return response;
   },
   async (error) => {
@@ -103,14 +98,12 @@ apiClient.interceptors.response.use(
       // 토큰 재발급 API 자체가 실패한 경우는 처리하지 않음
       if (originalRequest.url?.includes('/api/auth/v1/token/refresh')) {
         console.log('Refresh token is invalid. Logging out...');
-        await AsyncStorage.removeItem('accessToken');
-        await AsyncStorage.removeItem('refreshToken');
+        await useAuthStore.getState().logout();
         return Promise.reject(error);
       }
 
       // 이미 토큰 갱신 중인 경우
       if (isRefreshing) {
-        // 대기열에 추가하고 토큰 갱신이 완료될 때까지 대기
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
@@ -118,65 +111,48 @@ apiClient.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${token}`;
             return apiClient(originalRequest);
           })
-          .catch((err) => {
-            return Promise.reject(err);
-          });
+          .catch((err) => Promise.reject(err));
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
 
       try {
-        console.log('Access token expired. Attempting to refresh...');
-        const refreshToken = await AsyncStorage.getItem('refreshToken');
-        
+        console.log('🔄 Access token expired. Attempting to refresh...');
+        const { refreshToken, setTokens, logout } = useAuthStore.getState();
+
         if (!refreshToken) {
           throw new Error('No refresh token available');
         }
 
-        // Refresh Token을 Header와 Body 모두에 보내서 서버 스펙에 맞춥니다.
-        const response = await apiClient.post('/api/auth/v1/token/refresh', 
-          { 
-            refreshToken: refreshToken,
-          }, 
-          {
-            headers: {
-              Authorization: `Bearer ${refreshToken}`,
-            },
-          }
+        const response = await apiClient.post(
+          '/api/auth/v1/token/refresh',
+          { refreshToken },
+          { headers: { Authorization: `Bearer ${refreshToken}` } }
         );
 
-        // 새 토큰 추출 로직
-        let newAccessToken = await AsyncStorage.getItem('accessToken');
+        // store에 이미 cookie 인터셉터에서 저장됐을 수 있으므로 store에서 최신 값 확인
+        let newAccessToken = useAuthStore.getState().accessToken;
 
-        // 2. 저장된 게 없다면 응답 Body에서 직접 추출 (서버가 JSON으로 줄 경우 대비)
+        // cookie가 없는 경우 응답 body에서 직접 추출
         if (!newAccessToken && response.data?.accessToken) {
-          await AsyncStorage.setItem('accessToken', response.data.accessToken);
-          
-          // Refresh Token도 갱신된다면 같이 저장
-          if (response.data?.refreshToken) {
-            await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
-          }
+          const newRefreshToken = response.data?.refreshToken;
+          await setTokens(response.data.accessToken, newRefreshToken);
+          newAccessToken = response.data.accessToken;
         }
 
         if (newAccessToken) {
-          console.log('Token refreshed successfully');
+          console.log('✅ Token refreshed successfully');
           processQueue(null, newAccessToken);
-
-          // 실패했던 원래 요청 재시도
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return apiClient(originalRequest);
         } else {
           throw new Error('Failed to get new access token');
         }
       } catch (refreshError) {
-        console.error('Token refresh failed:', refreshError);
+        console.error('❌ Token refresh failed:', refreshError);
         processQueue(refreshError, null);
-        
-        // 재발급 실패 시 로그아웃
-        await AsyncStorage.removeItem('accessToken');
-        await AsyncStorage.removeItem('refreshToken');
-        
+        await useAuthStore.getState().logout();
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

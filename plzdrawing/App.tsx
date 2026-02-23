@@ -7,7 +7,9 @@ import { RootStackParamList } from '@/src/types/navigation';
 import MainNavigation from '@/src/navigation/MainNavigation';
 
 import * as Font from 'expo-font';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from '@/src/lib/queryClient';
+import { useAuthStore } from '@/src/stores/authStore';
 
 import { 
   ActivityIndicator, 
@@ -109,40 +111,23 @@ function AppNavigator({ isLoggedIn }: { isLoggedIn: boolean }) {
 }
 
 export default function App() {
-  const [fontsLoaded, setFontsLoaded] = useState(false); // 폰트 로드 상태
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true); // 인증 확인 상태
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  // Zustand store에서 인증 상태 구독
+  const { isLoggedIn, isHydrated, hydrate } = useAuthStore();
 
-  // 폰트 로드 함수
-  const loadFonts = async () => {
-    await Font.loadAsync({
+  useEffect(() => {
+    // 폰트 로드
+    Font.loadAsync({
       Ssurround: require("./assets/fonts/Ssurround.ttf"),
       SsurroundAir: require("./assets/fonts/SsurroundAir.ttf"),
-    });
-    setFontsLoaded(true);
-  };
+    }).then(() => setFontsLoaded(true));
 
-  // 로그인 상태 확인 함수
-  const checkLoginStatus = async () => {
-    try {
-      const token = await AsyncStorage.getItem('accessToken');
-      setIsLoggedIn(!!token);
-    } catch (error) {
-      console.error('Failed to check login status:', error);
-      setIsLoggedIn(false);
-    } finally {
-      setIsCheckingAuth(false);
-    }
-  };
-
-  // 앱 로딩 처리
-  useEffect(() => {
-    loadFonts();
-    checkLoginStatus();
+    // AsyncStorage → Zustand store로 토큰 복원
+    hydrate();
   }, []);
 
-  // 폰트 로딩 중이거나 인증 확인 중인 경우
-  if (!fontsLoaded || isCheckingAuth) {
+  // 폰트 로드 완료 + 토큰 복원 완료 전까지 스피너
+  if (!fontsLoaded || !isHydrated) {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size={36} color="#FFC311" />
@@ -150,8 +135,11 @@ export default function App() {
     );
   }
 
-  // AppNavigator로 네비게이션 관리
-  return <AppNavigator isLoggedIn={isLoggedIn} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppNavigator isLoggedIn={isLoggedIn} />
+    </QueryClientProvider>
+  );
 }
 
 const styles = StyleSheet.create({

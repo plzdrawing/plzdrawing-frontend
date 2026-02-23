@@ -63,10 +63,7 @@ export default function PasswordChange() {
     }
 
     try {
-      await emailController.updatePassword({
-        nowPassword: currentPassword,
-        newPassword: newPassword,
-      });
+      await emailController.changePassword(currentPassword, newPassword);
 
       // 성공 처리
     } catch (error) {
