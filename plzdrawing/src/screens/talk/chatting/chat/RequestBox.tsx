@@ -13,6 +13,12 @@ interface RequestBoxProps {
   message?: string;
   date?: string;
   feedbackCount?: string;
+  /** 주 버튼(확인하기 등) 콜백 */
+  onPrimaryPress?: () => void;
+  /** 보조 버튼(취소하기 등) 콜백 */
+  onSecondaryPress?: () => void;
+  /** 버튼 비활성화 여부 */
+  disabled?: boolean;
 }
 
 const getContentByType = (type: RequestBoxProps["type"]) => {
@@ -73,6 +79,9 @@ export default function RequestBox({
   message,
   date = "24.03.20",
   feedbackCount = "1/1",
+  onPrimaryPress,
+  onSecondaryPress,
+  disabled = false,
 }: RequestBoxProps) {
   const content = getContentByType(type);
   const backgroundColor = type === "accept" || type === "check" ? Colors.colors.sub_yellow : Colors.colors.white;
@@ -154,7 +163,9 @@ export default function RequestBox({
       <View style={tw`flex-row gap-[8px] mt-[8px]`}>
         {content.secondaryButtonText && (
           <TouchableOpacity
-            style={[tw`flex-1 py-[12px] px-[24px] rounded-[8px] items-center`, { backgroundColor: Colors.colors.white }]}
+            onPress={onSecondaryPress}
+            disabled={disabled}
+            style={[tw`flex-1 py-[12px] px-[24px] rounded-[8px] items-center`, { backgroundColor: Colors.colors.white, opacity: disabled ? 0.4 : 1 }]}
           >
             <Txt variant="auxiliaryTextLight" color="black">
               {content.secondaryButtonText}
@@ -162,11 +173,13 @@ export default function RequestBox({
           </TouchableOpacity>
         )}
         <TouchableOpacity
+          onPress={onPrimaryPress}
+          disabled={disabled}
           style={[
             tw`py-[12px] px-[24px] rounded-[8px] items-center`,
             content.secondaryButtonText
-              ? { flex: 1, alignSelf: 'stretch', backgroundColor: Colors.colors.white }
-              : { alignSelf: 'flex-end', minWidth: 100, backgroundColor: Colors.colors.white },
+              ? { flex: 1, alignSelf: 'stretch', backgroundColor: Colors.colors.main_yellow, opacity: disabled ? 0.4 : 1 }
+              : { alignSelf: 'flex-end', minWidth: 100, backgroundColor: Colors.colors.main_yellow, opacity: disabled ? 0.4 : 1 },
           ]}
         >
           <Txt variant="auxiliaryTextLight" color="black">

@@ -1,10 +1,10 @@
 import tw from '@/src/lib/tailwind';
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/types/navigation';
 import { useUserStore } from '@/src/stores/userStore';
-import { chatController } from '@/src/apis/controller/chat';
+import { chatController, ChatRoomStatus } from '@/src/apis/controller/chat';
 import { mapStatusToProcess } from '@/src/utils/formatTime';
 import * as FileSystem from 'expo-file-system';
 
@@ -24,6 +24,7 @@ import ChatInput from '@/src/screens/talk/chatting/chat/ChatInput';
 import SenderBox from '@/src/screens/talk/chatting/chat/SenderBox';
 import ReceiverBox from '@/src/screens/talk/chatting/chat/ReceiverBox';
 import TalkProcess from '@/src/screens/talk/chatting/chat/TalkProcess';
+import StatusActionCard from '@/src/screens/talk/chatting/chat/StatusActionCard';
 import * as ScreenCapture from 'expo-screen-capture';
 import Colors from '@/src/constants/Colors';
 
@@ -32,6 +33,7 @@ export default function Chatting() {
   const { chatRoomId } = route.params;
 
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
   const { user } = useUserStore();
 
   const [sendMessage, setSendMessage] = useState('');
@@ -41,7 +43,7 @@ export default function Chatting() {
   // ────────────────────────────────────────────────────────────
   // 채팅방 상세 조회
   // ────────────────────────────────────────────────────────────
-  const { data: roomDetail } = useQuery({
+  const { data: roomDetail, refetch: refetchRoom } = useQuery({
     queryKey: ['chatRoom', chatRoomId],
     queryFn: () => chatController.getChatRoomDetail(chatRoomId),
     enabled: !!chatRoomId,
@@ -54,6 +56,12 @@ export default function Chatting() {
       ? roomDetail.requester.id
       : roomDetail.artist.id;
   }, [roomDetail, user]);
+
+  // 작가인지 여부
+  const isArtist = useMemo(() => {
+    if (!roomDetail || myId === null) return false;
+    return roomDetail.artist.id === myId;
+  }, [roomDetail, myId]);
 
   // 상대방 정보
   const counterpart = useMemo(() => {
@@ -90,6 +98,20 @@ export default function Chatting() {
       chatController.markAsRead(chatRoomId, { lastReadMessageId: lastMsg.id }).catch(() => {});
     }
   }, [messages, myId, chatRoomId]);
+
+  // ────────────────────────────────────────────────────────────
+  // 거래 상태 전환
+  // ────────────────────────────────────────────────────────────
+  const statusMutation = useMutation({
+    mutationFn: (next: ChatRoomStatus) =>
+      chatController.updateChatRoomStatus(chatRoomId, { status: next }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['chatRoom', chatRoomId] });
+      refetchRoom();
+      refetchMessages();
+    },
+    onError: () => Alert.alert('오류', '상태 변경에 실패했습니다. 다시 시도해 주세요.'),
+  });
 
   // ────────────────────────────────────────────────────────────
   // 텍스트 메시지 전송
@@ -198,6 +220,19 @@ export default function Chatting() {
             price={roomDetail?.paidAmount ?? roomDetail?.price ?? 0}
             process={roomDetail ? mapStatusToProcess(roomDetail.status) : 'request'}
           />
+
+          {/* 상태 전환 액션 카드 */}
+          {roomDetail && (
+            <StatusActionCard
+              status={roomDetail.status}
+              isArtist={isArtist}
+              loading={statusMutation.isPending}
+              onStatusChange={(next) => statusMutation.mutate(next)}
+              onNavigateReview={() =>
+                Alert.alert('후기 작성', '후기 작성 화면으로 이동합니다.')
+              }
+            />
+          )}
 
           {/* 메시지 목록 */}
           <ScrollView
