@@ -41,11 +41,13 @@ export interface ProfileInfoResponse {
 export interface CreateMemberDto {
   /**
    * 이메일
+   * @format email
    * @example "user@example.com"
    */
   email: string;
   /**
    * 비밀번호
+   * @minLength 4
    * @example "password123"
    */
   password: string;
@@ -99,11 +101,13 @@ export interface MemberResponseDto {
 export interface AuthCredentialsDto {
   /**
    * 이메일
+   * @format email
    * @example "user@example.com"
    */
   email: string;
   /**
    * 비밀번호
+   * @minLength 4
    * @example "password123"
    */
   password: string;
@@ -115,6 +119,317 @@ export interface LoginResponseDto {
    * @example "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
    */
   access_token: string;
+}
+
+export interface Profile {
+  id: number;
+  memberId: number;
+  profileUrl: string;
+  introduction: string;
+  member: Member;
+}
+
+export interface PostImage {
+  id: number;
+  imageUrl: string;
+  postId: number;
+  post: Post;
+}
+
+export interface Comment {
+  id: number;
+  postId: number;
+  memberId: number;
+  content: string;
+  /** @format date-time */
+  createdAt: string;
+  post: Post;
+  member: Member;
+}
+
+export interface Scrap {
+  id: number;
+  memberId: number;
+  postId: number;
+  member: Member;
+  post: Post;
+}
+
+export interface ReviewKeyword {
+  id: number;
+  keyword: string;
+  isActive: boolean;
+}
+
+export interface ReviewKeywordMap {
+  id: number;
+  reviewId: number;
+  keywordId: number;
+  review: Review;
+  keyword: ReviewKeyword;
+}
+
+export interface Review {
+  id: number;
+  content: string;
+  star: "ONE" | "TWO" | "THREE" | "FOUR" | "FIVE";
+  writerId: number;
+  receiverId: number;
+  postId: number;
+  /** @format date-time */
+  createdAt: string;
+  writer: Member;
+  receiver: Member;
+  post: Post;
+  reviewKeywordMaps: ReviewKeywordMap[];
+}
+
+export interface Message {
+  id: number;
+  content: string;
+  senderId: number;
+  chatRoomId: number;
+  imageUrl: string;
+  type: "TEXT" | "IMAGE" | "SYSTEM";
+  isRead: boolean;
+  /** @format date-time */
+  sentAt: string;
+  sender: Member;
+  chatRoom: ChatRoom;
+}
+
+export interface ChatRoom {
+  id: number;
+  status:
+    | "REQUESTED"
+    | "PAID"
+    | "IN_PROGRESS"
+    | "COMPLETED"
+    | "REVIEWED"
+    | "CANCELLED";
+  requesterId: number;
+  artistId: number;
+  postId: number;
+  description: string;
+  price: number;
+  paidAmount: number;
+  requester: Member;
+  artist: Member;
+  post: Post;
+  messages: Message[];
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface Post {
+  /**
+   * 게시글 ID
+   * @example 1
+   */
+  id: number;
+  /**
+   * 작성자 ID
+   * @example 1
+   */
+  memberId: number;
+  /**
+   * 제목
+   * @example "그림 그려주세요"
+   */
+  title: string;
+  /**
+   * 카테고리
+   * @example "REQUEST"
+   */
+  category: "REQUEST" | "DRAWING" | "ACCOUNT" | "PAYMENT" | "GUIDE" | "ETC";
+  /**
+   * 내용
+   * @example "상세 내용입니다."
+   */
+  content: string;
+  /**
+   * 썸네일 URL
+   * @example "https://example.com/image.jpg"
+   */
+  thumbnailUrl: string;
+  member: Member;
+  images: PostImage[];
+  postTags: PostTag[];
+  comments: Comment[];
+  scraps: Scrap[];
+  reviews: Review[];
+  chatRooms: ChatRoom[];
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface PostTag {
+  id: number;
+  postId: number;
+  tagId: number;
+  status: "ACTIVE" | "DORMANT" | "INACTIVE";
+  post: Post;
+  tag: Tag;
+}
+
+export interface Tag {
+  id: number;
+  name: string;
+  status: "ACTIVE" | "DORMANT" | "INACTIVE";
+  createdById: number;
+  createdBy: Member;
+  memberTags: MemberTag[];
+  postTags: PostTag[];
+}
+
+export interface MemberTag {
+  id: number;
+  memberId: number;
+  tagId: number;
+  status: "ACTIVE" | "DORMANT" | "INACTIVE";
+  member: Member;
+  tag: Tag;
+}
+
+export interface RefundHistory {
+  id: number;
+  reason: string;
+  amount: number;
+  /** @format date-time */
+  refundedAt: string;
+  paymentId: number;
+  payment: PaymentHistory;
+}
+
+export interface PaymentHistory {
+  id: number;
+  senderId: number;
+  receiverId: number;
+  amount: number;
+  method: "KAKAO_PAY" | "NAVER_PAY" | "CREDIT_CARD" | "TOSS_PAY";
+  status: "PENDING" | "COMPLETED" | "REFUNDED" | "CANCELLED";
+  type: "SEND" | "RECEIVE";
+  chatRoomId: number;
+  sender: Member;
+  receiver: Member;
+  refunds: RefundHistory[];
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface Notification {
+  id: number;
+  memberId: number;
+  senderId: number;
+  receiverId: number;
+  title: string;
+  message: string;
+  type:
+    | "REQUEST_ARRIVED"
+    | "PAYMENT_CONFIRMED"
+    | "WORK_STARTED"
+    | "WORK_COMPLETED"
+    | "NEW_MESSAGE"
+    | "REVIEW_RECEIVED";
+  link: string;
+  member: Member;
+  sender: Member;
+  receiver: Member;
+}
+
+export interface InquiryImage {
+  id: number;
+  imageUrl: string;
+  inquiryId: number;
+  inquiry: Inquiry;
+}
+
+export interface Inquiry {
+  id: number;
+  category: "DRAWING" | "ACCOUNT" | "PAYMENT" | "REVIEW" | "ETC";
+  title: string;
+  content: string;
+  status: "PENDING" | "IN_PROGRESS" | "ANSWERED" | "CLOSED";
+  answer: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  answeredAt: string;
+  /** @format date-time */
+  closedAt: string;
+  memberId: number;
+  adminId: number;
+  member: Member;
+  admin: Member;
+  images: InquiryImage[];
+}
+
+export interface Notice {
+  id: number;
+  title: string;
+  content: string;
+  adminId: number;
+  admin: Member;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface Terms {
+  id: number;
+  title: string;
+  version: string;
+  content: string;
+  adminId: number;
+  admin: Member;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface Member {
+  id: number;
+  email: string;
+  password: string;
+  nickname: string;
+  provider: "EMAIL" | "KAKAO" | "NAVER" | "GOOGLE" | "APPLE";
+  status: "ACTIVE" | "DORMANT" | "INACTIVE";
+  role: "ROLE_TEMP" | "ROLE_MEMBER" | "ROLE_ADMIN";
+  isDeleted: boolean;
+  isVerified: boolean;
+  isMarketingAgreed: boolean;
+  profile: Profile;
+  memberTags: MemberTag[];
+  createdTags: Tag[];
+  posts: Post[];
+  comments: Comment[];
+  scraps: Scrap[];
+  writtenReviews: Review[];
+  receivedReviews: Review[];
+  requestedChatRooms: ChatRoom[];
+  artistChatRooms: ChatRoom[];
+  messages: Message[];
+  sentPayments: PaymentHistory[];
+  receivedPayments: PaymentHistory[];
+  notifications: Notification[];
+  sentNotifications: Notification[];
+  receivedNotifications: Notification[];
+  inquiries: Inquiry[];
+  answeredInquiries: Inquiry[];
+  notices: Notice[];
+  terms: Terms[];
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
 }
 
 export interface UploaderDto {
@@ -239,6 +554,7 @@ export interface ContentsPageResponseDto {
 export interface SendVerificationCodeDto {
   /**
    * 이메일
+   * @format email
    * @example "user@example.com"
    */
   email: string;
@@ -247,6 +563,7 @@ export interface SendVerificationCodeDto {
 export interface CodeGenerateForPasswordRequest {
   /**
    * 이메일
+   * @format email
    * @example "user@example.com"
    */
   email: string;
@@ -255,6 +572,7 @@ export interface CodeGenerateForPasswordRequest {
 export interface PasswordResetRequest {
   /**
    * 이메일
+   * @format email
    * @example "user@example.com"
    */
   email: string;
@@ -273,6 +591,7 @@ export interface UpdatePasswordRequest {
   nowPassword: string;
   /**
    * 새 비밀번호
+   * @minLength 8
    * @example "newpassword123"
    */
   newPassword: string;
@@ -472,9 +791,10 @@ export class Api<
      * @request GET:/api
      */
     appControllerGetHello: (params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<string, any>({
         path: `/api`,
         method: "GET",
+        format: "json",
         ...params,
       }),
 
@@ -676,18 +996,18 @@ export class Api<
      * @request GET:/api/auth/google/callback
      */
     authControllerGoogleAuthRedirect: (params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<void, void>({
         path: `/api/auth/google/callback`,
         method: "GET",
         ...params,
       }),
 
     /**
-     * No description
+     * @description 사용자를 카카오 로그인 페이지로 리다이렉트합니다.
      *
      * @tags Auth
      * @name AuthControllerKakaoAuth
-     * @summary 카카오 로그인
+     * @summary 카카오 로그인 진입
      * @request GET:/api/auth/kakao
      */
     authControllerKakaoAuth: (params: RequestParams = {}) =>
@@ -698,7 +1018,7 @@ export class Api<
       }),
 
     /**
-     * No description
+     * @description 카카오 인증 완료 후, 유저 정보를 조회하여 JWT 토큰을 발급하고 프론트엔드 URL로 리다이렉트합니다.
      *
      * @tags Auth
      * @name AuthControllerKakaoAuthRedirect
@@ -706,7 +1026,7 @@ export class Api<
      * @request GET:/api/auth/kakao/callback
      */
     authControllerKakaoAuthRedirect: (params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<void, void>({
         path: `/api/auth/kakao/callback`,
         method: "GET",
         ...params,
@@ -730,12 +1050,13 @@ export class Api<
       },
       params: RequestParams = {},
     ) =>
-      this.request<void, void>({
+      this.request<Post, void>({
         path: `/api/posts`,
         method: "POST",
         body: data,
         secure: true,
         type: ContentType.FormData,
+        format: "json",
         ...params,
       }),
 
@@ -751,11 +1072,13 @@ export class Api<
       query?: {
         /**
          * 페이지 번호
+         * @min 1
          * @default 1
          */
         page?: number;
         /**
          * 페이지 당 항목 수
+         * @min 1
          * @default 10
          */
         limit?: number;
@@ -783,11 +1106,13 @@ export class Api<
       query?: {
         /**
          * 페이지 번호
+         * @min 1
          * @default 1
          */
         page?: number;
         /**
          * 페이지 당 항목 수
+         * @min 1
          * @default 10
          */
         limit?: number;

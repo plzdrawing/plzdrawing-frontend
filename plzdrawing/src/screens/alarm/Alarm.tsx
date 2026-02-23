@@ -1,7 +1,7 @@
 import tw from '@/src/lib/tailwind';
 import { useState } from 'react';
 
-import { ScrollView } from 'react-native';
+import { View } from 'react-native';
 import Container from '@/src/components/layout/Container';
 import Header from '@/src/components/layout/header/Header';
 
@@ -61,16 +61,13 @@ export default function Alarm() {
         onRightClick={() => setIsEditMode(!isEditMode)}
         className='pb-[12px]'
       />
-      <ScrollView
-        style={tw`w-full h-full bg-light-gray-1`}
-        showsVerticalScrollIndicator={false}
-      >
+      <View style={tw`w-full flex-1 bg-light-gray-1`}>
         <AlarmList 
           alarms={alarms} 
           isEditMode={isEditMode}
           onDeleteAlarm={handleDeleteAlarm}
         />
-      </ScrollView>
+      </View>
     </Container>
   );
 }
