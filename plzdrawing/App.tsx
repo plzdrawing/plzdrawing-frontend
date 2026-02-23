@@ -34,25 +34,25 @@ import HomePostDetail from "@/src/screens/home/post/HomePostDetail";
 import HomeDrawingCardDetail from "@/src/screens/home/post/HomeDrawingCardDetail";
 import HomeRequest from "@/src/screens/home/post/HomeRequest";
 
-import PasswordChange from "@/src/screens/my/myPage/PasswordChange";
+import PasswordChange from "@/src/screens/my/account/PasswordChange";
 
-import PainterProfile from "@/src/screens/my/PainterProfile";
+import PainterProfile from "@/src/screens/my/userProfile/PainterProfile";
 
-import AppManagement from "@/src/screens/my/settingPage/pages/AppManagement";
+import AppManagement from "@/src/screens/my/settings/AppManagement";
 
-import ProfileUpload from "@/src/screens/my/profilePage/ProfileUpload";
-import DrawingCardUpload from "@/src/screens/my/profilePage/DrawingCardUpload";
+import ProfileUpload from "@/src/screens/my/profile/ProfileUpload";
+import DrawingCardUpload from "@/src/screens/my/profile/DrawingCardUpload";
 import Alarm from "@/src/screens/alarm/Alarm";
-import AlarmSetting from "@/src/screens/my/settingPage/pages/AlarmSetting";
-import CustomerService from "@/src/screens/my/settingPage/pages/CustomerService";
-import Notice from "@/src/screens/my/settingPage/pages/Notice";
-import ProfileEdit from "@/src/screens/my/settingPage/pages/ProfileEdit";
-import Tos from "@/src/screens/my/settingPage/pages/Tos";
-import EditAccount from "@/src/screens/my/myPage/edit/EditAccount";
-import EditPassword from "@/src/screens/my/settingPage/pages/EditPassword";
-import EditSuccess from "@/src/screens/my/myPage/edit/components/EditSuccess";
-import Payments from "@/src/screens/my/settingPage/pages/payments/Payments";
-import UserProfile from "@/src/screens/my/profilePage/Profile";
+import AlarmSetting from "@/src/screens/my/settings/AlarmSetting";
+import CustomerService from "@/src/screens/my/settings/CustomerService";
+import Notice from "@/src/screens/my/settings/Notice";
+import ProfileEdit from "@/src/screens/my/settings/ProfileEdit";
+import Tos from "@/src/screens/my/settings/Tos";
+import EditAccount from "@/src/screens/my/account/EditAccount";
+import EditPassword from "@/src/screens/my/settings/EditPassword";
+import EditSuccess from "@/src/screens/my/account/components/EditSuccess";
+import Payments from "@/src/screens/my/settings/payments/Payments";
+import UserProfile from "@/src/screens/my/profile/Profile";
 
 const Stack = createStackNavigator<RootStackParamList>();
 

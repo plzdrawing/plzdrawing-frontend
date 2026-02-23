@@ -5,13 +5,13 @@ import { useNavigation, useIsFocused, useFocusEffect, CommonActions } from '@rea
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import UserProfile from "@/src/screens/my/profilePage/Profile";
+import UserProfile from "@/src/screens/my/profile/Profile";
 import { BaseProfile, ProfileMenuItem } from "@/src/types/profile";
 import { RootStackParamList } from "@/src/types/navigation";
 
 import Container from "@/src/components/layout/Container";
 import TabHeader from '@/src/components/layout/header/TabHeader';
-import Setting from '@/src/screens/my/settingPage/Setting';
+import Setting from '@/src/screens/my/settings/Setting';
 
 import { memberController } from '@/src/apis/controller/member';
 import { authController } from '@/src/apis/controller/auth';

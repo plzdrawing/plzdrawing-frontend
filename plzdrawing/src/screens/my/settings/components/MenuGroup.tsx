@@ -2,7 +2,7 @@
 
 import { View } from 'react-native';
 import Txt from '@/src/components/ui/Txt';
-import MenuRow from '@/src/screens/my/settingPage/components/MenuRow';
+import MenuRow from '@/src/screens/my/settings/components/MenuRow';
 
 import { ProfileMenuItem } from '@/src/types/profile';
 

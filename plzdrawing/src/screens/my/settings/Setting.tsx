@@ -6,8 +6,8 @@ import { RootStackParamList } from '@/src/types/navigation';
 import { BaseProfile } from '@/src/types/profile';
 
 import { View, ScrollView } from 'react-native';
-import MyInfoSection from '@/src/screens/my/settingPage/components/MyInfoSection';
-import MenuGroup from '@/src/screens/my/settingPage/components/MenuGroup';
+import MyInfoSection from '@/src/screens/my/settings/components/MyInfoSection';
+import MenuGroup from '@/src/screens/my/settings/components/MenuGroup';
 
 import {
   AlarmIcon,

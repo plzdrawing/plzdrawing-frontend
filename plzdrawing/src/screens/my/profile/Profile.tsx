@@ -8,7 +8,7 @@ import { RootStackParamList } from '@/src/types/navigation';
 import { ScrollView } from 'react-native';
 import Header from '@/src/components/layout/header/Header';
 
-import UserDetail from '@/src/screens/my/profilePage/components/UserDetail';
+import UserDetail from '@/src/screens/my/profile/components/UserDetail';
 import UserDrawings from '@/src/screens/my/userProfile/UserDrawings';
 import UserReviews from '@/src/screens/my/userProfile/UserReviews';
 
