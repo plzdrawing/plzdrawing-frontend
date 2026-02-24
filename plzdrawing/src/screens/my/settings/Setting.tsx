@@ -7,6 +7,7 @@ import { BaseProfile } from '@/src/types/profile';
 
 import { View, ScrollView } from 'react-native';
 import MyInfoSection from '@/src/screens/my/settings/components/MyInfoSection';
+import GreeCoinSection from '@/src/screens/my/settings/components/GreeCoinSection';
 import MenuGroup from '@/src/screens/my/settings/components/MenuGroup';
 
 import {
@@ -37,7 +38,12 @@ export default function Setting({ userProfile, onLogout }: SettingProps) {
         profile={userProfile}
         onEditClick={() => navigation.navigate('ProfileEdit')}
       />
-      <View style={tw`h-[1px] w-full bg-light-gray-3`} />
+
+      <GreeCoinSection
+        amount={20}
+        onCharge={() => navigation.navigate('Payments')}
+      />
+      <View style={tw`mt-[17px] h-[1px] w-full bg-light-gray-3`} />
 
       <MenuGroup
         title='설정'
@@ -53,14 +59,16 @@ export default function Setting({ userProfile, onLogout }: SettingProps) {
           // TODO: 1:1 문의 페이지 추가
           { text: '1:1 문의', icon: <QuestionIcon />, onPress: () => {} },
           { text: '앱 관리', icon: <MultipleFileIcon />, onPress: () => {navigation.navigate('AppManagement')} },
-          { text: '결제 내역', icon: <MenuCircleIcon />, onPress: () => {navigation.navigate('Payments')} },
         ]}
       />
       <View style={tw`h-[1px] w-full bg-light-gray-3`} />
 
       <MenuGroup
         title='계정 설정'
-        items={[{ text: '비밀번호 변경', icon: <PasswordChangeIcon />, onPress: () => {navigation.navigate('EditPassword')} }]}
+        items={[
+          { text: '비밀번호 변경', icon: <PasswordChangeIcon />, onPress: () => {navigation.navigate('EditPassword')} },
+          { text: '환전계좌 관리/등록', icon: <MenuCircleIcon />, onPress: () => {navigation.navigate('Payments')} },
+        ]}
       />
       <View style={tw`h-[1px] w-full bg-light-gray-3`} />
 

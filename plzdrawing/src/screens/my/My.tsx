@@ -15,6 +15,7 @@ import Setting from '@/src/screens/my/settings/Setting';
 
 import { memberController } from '@/src/apis/controller/member';
 import { authController } from '@/src/apis/controller/auth';
+import { useUserStore } from '@/src/stores/userStore';
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -22,6 +23,7 @@ export default function My() {
   const [selectedId, setSelectedId] = useState(0);
   const navigation = useNavigation<ProfileScreenNavigationProp>();
   const isFocused = useIsFocused();
+  const setUser = useUserStore((s) => s.setUser);
   const [userProfile, setUserProfile] = useState<BaseProfile>({
     name: "",
     imageUrl: "",
@@ -52,6 +54,8 @@ export default function My() {
               imageUrl: data.profileImageUrl || "",
               hashtag: data.hashTags || data.hashtags || [],
             });
+
+            setUser(data);
           
             console.log('✓ UserProfile set to:', {
               name: data.nickname,

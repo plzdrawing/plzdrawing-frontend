@@ -43,7 +43,7 @@ export default function PaymentsHeader({ selectedPayment, onBack }: PaymentsHead
       </TouchableOpacity>
       <View style={tw`flex-row items-center gap-[4px]`}>
         <Txt variant="mainTitleBold">
-          {selectedPayment ? `${selectedPayment.painterName} 님` : '결제내역'}
+          {selectedPayment ? `${selectedPayment.painterName} 님` : '코인상점'}
         </Txt>
         {selectedPayment && (
           <Txt variant="bodyText">

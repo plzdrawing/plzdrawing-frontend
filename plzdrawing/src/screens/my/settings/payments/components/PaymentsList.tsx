@@ -5,9 +5,10 @@ import colors from '@/src/constants/Colors';
 import Txt from '@/src/components/ui/Txt';
 import PaymentsItem from './PaymentsItem';
 import PaymentsDetail from './PaymentsDetail';
+import CoinPurchaseTab from './CoinPurchaseTab';
 import { GreeSad } from '@/assets/images';
 
-type FilterType = '보낸 내역' | '받은 내역';
+type FilterType = '코인구매' | '무료코인' | '구매내역' | '거래내역';
 
 // mock 데이터
 const paymentsData = [
@@ -82,7 +83,9 @@ interface PaymentsListProps {
 }
 
 export default function PaymentsList({ setSelectedPayment, selectedPayment }: PaymentsListProps) {
-  const [selectedFilter, setFilter] = useState<FilterType>('보낸 내역');
+  const [selectedFilter, setFilter] = useState<FilterType>('코인구매');
+
+  const FILTER_TABS: FilterType[] = ['코인구매', '무료코인', '구매내역', '거래내역'];
   const [currentDate, setCurrentDate] = useState(new Date());
 
   // 현재 월에 해당하는 payments만 필터링
@@ -90,8 +93,7 @@ export default function PaymentsList({ setSelectedPayment, selectedPayment }: Pa
     const d = new Date(p.date);
     return (
       d.getFullYear() === currentDate.getFullYear() &&
-      d.getMonth() === currentDate.getMonth() &&
-      selectedFilter === '보낸 내역'
+      d.getMonth() === currentDate.getMonth()
     );
   });
   const totalAmount = filteredPayments.reduce((sum, p) => sum + p.amount, 0);
@@ -135,23 +137,25 @@ export default function PaymentsList({ setSelectedPayment, selectedPayment }: Pa
   return (
     <View style={tw`flex-1 w-full`}>
       <View style={[tw``, { borderBottomWidth: 1, borderBottomColor: colors.colors.seperator }]}>
-        <View style={tw`flex-row justify-between px-[79px]`}>
-          <TouchableOpacity
-            onPress={() => setFilter('보낸 내역')}
-            style={[tw`py-[8px]`, { borderBottomWidth: 2, borderBottomColor: selectedFilter === '보낸 내역' ? colors.colors.black : 'transparent' }]}
-          >
-            <Txt variant={selectedFilter === '보낸 내역' ? 'subtitleBold' : 'bodyText'} align="center">보낸 내역</Txt>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setFilter('받은 내역')}
-            style={[tw`py-[8px]`, { borderBottomWidth: 2, borderBottomColor: selectedFilter === '받은 내역' ? colors.colors.black : 'transparent' }]}
-          >
-            <Txt variant={selectedFilter === '받은 내역' ? 'subtitleBold' : 'bodyText'} align="center">받은 내역</Txt>
-          </TouchableOpacity>
+        <View style={tw`flex-row justify-between px-[32px]`}>
+          {FILTER_TABS.map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              onPress={() => setFilter(tab)}
+              style={[tw`py-[8px] flex-1 items-center`, { borderBottomWidth: 2, borderBottomColor: selectedFilter === tab ? colors.colors.black : 'transparent' }]}
+            >
+              <Txt variant={selectedFilter === tab ? 'subtitleBold' : 'bodyText'} align="center">{tab}</Txt>
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
 
-      <View style={tw`p-[37px_32px_20px_32px] gap-[17px]`}>
+      {/* 코인구매 탭 전용 UI */}
+      {selectedFilter === '코인구매' ? (
+        <CoinPurchaseTab />
+      ) : (
+        <>
+          <View style={tw`p-[37px_32px_20px_32px] gap-[17px]`}>
         <View style={tw`flex-row items-center gap-[17px]`}>
           <TouchableOpacity onPress={handlePrevMonth}>
             <Txt variant="bodyText">{'<'}</Txt>
@@ -164,10 +168,10 @@ export default function PaymentsList({ setSelectedPayment, selectedPayment }: Pa
           </TouchableOpacity>
         </View>
         <Txt variant="bodyText">
-          {selectedFilter === '보낸 내역'
+          {selectedFilter === '구매내역' || selectedFilter === '거래내역'
             ? <Txt variant="mainTitleBold">- {totalAmount.toLocaleString()}원</Txt>
             : <Txt variant="mainTitleBold">+ {totalAmount.toLocaleString()}원</Txt>
-          } 
+          }
         </Txt>
       </View>
 
@@ -186,15 +190,15 @@ export default function PaymentsList({ setSelectedPayment, selectedPayment }: Pa
           <View style={tw`justify-center items-center mt-[145px]`}>
             <GreeSad width={120} height={120} />
             <Txt align="center" style={{ marginTop: 32 }}>
-              {selectedFilter === '보낸 내역'
-                ? '아직 보낸 내역이 없어요'
-                : '아직 받은 내역이 없어요'}
+              {`아직 ${selectedFilter}이 없어요`}
             </Txt>
           </View>
         }
         style={{ flex: 1, paddingHorizontal: 32 }}
         contentContainerStyle={{ paddingBottom: 32 }}
       />
+        </>
+      )}
     </View>
   );
 }
