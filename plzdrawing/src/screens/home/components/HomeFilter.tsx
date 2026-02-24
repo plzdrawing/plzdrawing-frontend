@@ -7,12 +7,14 @@ import ChipButton from '@/src/components/ui/button/ChipButton';
 interface SearchFilterProps {
   selectedId: number;
   className?: string;
+  onFilterChange?: (filter: string) => void;
 }
 
 export default function HomeFilter({ 
   selectedId, 
   className = '',
- }: SearchFilterProps) {
+  onFilterChange,
+}: SearchFilterProps) {
   // 탭에 따라 다른 필터 리스트 사용
   const filterList = selectedId === 0 
     ? ['최신순', '내가찜한']
@@ -22,10 +24,12 @@ export default function HomeFilter({
   // 탭이 변경될 때마다 필터를 "최신순"으로 초기화
   useEffect(() => {
     setFilter('최신순');
+    onFilterChange?.('최신순');
   }, [selectedId]);
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter(e.target.value);
+  const handleFilterSelect = (item: string) => {
+    setFilter(item);
+    onFilterChange?.(item);
   };
 
   return (
@@ -35,7 +39,7 @@ export default function HomeFilter({
           key={index}
           title={item}
           isSelected={filter === item}
-          onClick={() => setFilter(item)}
+          onClick={() => handleFilterSelect(item)}
         />
       ))}
     </View>

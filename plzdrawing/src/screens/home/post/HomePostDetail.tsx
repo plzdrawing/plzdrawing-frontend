@@ -3,6 +3,7 @@ import React from "react";
 import Colors from "@/src/constants/Colors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/src/types/navigation";
+import { useQuery } from "@tanstack/react-query";
 
 import HomeDetailHeader from "@/src/screens/home/components/detail/HomeDetailHeader";
 import UserInfo from "@/src/screens/home/components/detail/UserInfo";
@@ -11,8 +12,8 @@ import DrawingCarousel from "@/src/screens/home/components/detail/DrawingCarouse
 import DrawingInfoCard from "@/src/screens/home/components/detail/DrawingInfoCard";
 import DefaultButton from "@/src/components/ui/button/DefaultButton";
 import Txt from "@/src/components/ui/Txt";
-import { View, ScrollView, TouchableOpacity } from "react-native";
-import { PostData } from "@/src/types/post";
+import { View, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { postController } from "@/src/apis/controller/post";
 
 type HomePostDetailScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -23,72 +24,78 @@ function HomePostDetail({
   route,
   navigation,
 }: HomePostDetailScreenProps) {
-  // const { postId } = route.params; // You'll use this to fetch data
+  const { postId } = route.params;
 
-  // Dummy data - in a real app, this would be fetched based on postId
-  const postData: PostData = {
-    author: "홍길동",
-    authorStats: "그림 5회/후기 3개/ 별점 4.5점",
-    hashtags: "#귀여운 #낙서",
-    body: "소소한 그림 그려드려요!소소한 그림 그려드려요! 소소한 그림 그려드려요!",
-    profileImage: "https://placehold.co/38x38",
-    mainImage: "https://placehold.co/326x207",
-    drawingInfos: [
-      {
-        id: "card_abc_1",
-        image: "https://placehold.co/60x60/FFE18D/000000?text=1",
-        title: "귀여운 그림",
-        price: "1000원",
-        description: "30분 예상 / 수정 불가",
-      },
-      {
-        id: "card_abc_2",
-        image: "https://placehold.co/60x60/A9C8E8/000000?text=2",
-        title: "캐릭터 스케치",
-        price: "2500원",
-        description: "1시간 예상 / 수정 1회",
-      },
-    ],
-  };
+  const { data: post, isLoading, isError } = useQuery({
+    queryKey: ['post', postId],
+    queryFn: () => postController.getPostDetails(postId),
+  });
 
-  const handleCardPress = (cardId: string, postId: string) => {
+  // API 응답 → 컴포넌트 props 매핑
+  const profileImage: string = post?.member?.profile?.profileUrl || '';
+  const authorName: string   = post?.member?.nickname || '';
+  const hashtags: string     = (post?.postTags ?? [])
+    .map((pt: any) => `#${pt?.tag?.name}`)
+    .join(' ');
+  const body: string         = post?.content || '';
+  const images: string[]     = (post?.images ?? [])
+    .map((img: any) => img?.imageUrl)
+    .filter(Boolean);
+
+  // DrawingInfoCard 는 현재 API 에 개별 카드 데이터 없음 → 빈 배열
+  const drawingInfos: any[] = [];
+
+  const handleCardPress = (cardId: string) => {
     navigation.navigate('HomeDrawingCardDetail', { cardId, postId });
   };
 
-   const handleButtonPress = (postId: string) => {
-     navigation.navigate("HomeRequest", { postId });
-   };
+  const handleButtonPress = () => {
+    navigation.navigate("HomeRequest", { postId });
+  };
 
+  if (isLoading) {
+    return (
+      <View style={tw`flex-1 justify-center items-center bg-white`}>
+        <ActivityIndicator size="large" color="#FFC311" />
+      </View>
+    );
+  }
+
+  if (isError || !post) {
+    return (
+      <View style={tw`flex-1 justify-center items-center bg-white`}>
+        <HomeDetailHeader authorName="" onBackPress={() => navigation.goBack()} />
+        <Txt variant="bodyText" color="dark_gray1">게시글을 불러올 수 없어요</Txt>
+      </View>
+    );
+  }
 
   return (
     <View style={[tw`flex-1`, { paddingBottom: 10, backgroundColor: Colors.colors.white }]}>
       <HomeDetailHeader
-        authorName={postData.author}
+        authorName={authorName}
         onBackPress={() => navigation.goBack()}
       />
 
       <ScrollView style={tw`flex-1`} contentContainerStyle={{ paddingBottom: 100 }}>
         <View style={tw`p-[30px]`}>
           <UserInfo
-            profileImage={postData.profileImage}
-            name={postData.author}
-            stats={postData.authorStats}
+            profileImage={profileImage}
+            name={authorName}
+            stats={''}
           />
-          <PostContent hashtags={postData.hashtags} body={postData.body} />
-          <DrawingCarousel
-            images={[
-              postData.mainImage,
-              postData.mainImage,
-              postData.mainImage,
-            ]}
-          />
+          <PostContent hashtags={hashtags} body={body} />
 
-          {postData.drawingInfos.map((info) => (
+          {images.length > 0 && (
+            <DrawingCarousel images={images} />
+          )}
+
+          {drawingInfos.map((info) => (
             <TouchableOpacity
               key={info.id}
-              onPress={() => handleCardPress(info.id, route.params.postId)}
+              onPress={() => handleCardPress(info.id)}
             >
-              <DrawingInfoCard key={info.id} info={info} />
+              <DrawingInfoCard info={info} />
             </TouchableOpacity>
           ))}
 
@@ -116,9 +123,7 @@ function HomePostDetail({
       >
         <DefaultButton
           title="요청하기"
-          onPress={() => {
-            handleButtonPress(route.params.postId);
-          }}
+          onPress={handleButtonPress}
           variant="primary"
         />
       </View>

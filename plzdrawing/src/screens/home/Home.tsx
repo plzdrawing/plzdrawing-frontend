@@ -1,40 +1,45 @@
 import tw from '@/src/lib/tailwind';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { NavigationProp } from '@react-navigation/native';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { 
-  View, 
-  ScrollView,
+import {
+  View,
+  FlatList,
   TouchableOpacity,
-  BackHandler ,
+  ActivityIndicator,
+  BackHandler,
+  ListRenderItem,
 } from 'react-native';
 import Container from '@/src/components/layout/Container';
 import TabHeader from '@/src/components/layout/header/TabHeader';
 import HomeFilter from '@/src/screens/home/components/HomeFilter';
-
 import HomeCard from '@/src/screens/home/components/HomeCard';
 import ReviewCard from '@/src/screens/home/components/ReviewCard';
 
-import { PencilIcon } from '@/assets/images';
+import { PencilIcon, EmptyBox } from '@/assets/images';
+import Txt from '@/src/components/ui/Txt';
 
-type RootStackParamList = {
-  Home: undefined;
-  HomePostDetail: { postId: string };
-};
+import { postController } from '@/src/apis/controller/post';
+import { LatestContentsResponse } from '@/src/apis/api';
+import { RootStackParamList } from '@/src/types/navigation';
+import { formatRelativeTime } from '@/src/utils/formatTime';
 
-type HomeScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList, 'HomePostDetail'
-  >;
+const PAGE_LIMIT = 10;
+
+// 그림쟁이후기 더미 (API 미지원)
+const DUMMY_REVIEWS = Array.from({ length: 5 }, (_, i) => ({ id: String(i) }));
 
 export default function Home() {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
-
-  const [selectedId, setSelectedId] = useState(0);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const isFocused = useIsFocused();
 
-  // 그림홈에서 뒤로가기 버튼 처리 - 앱 종료 (그림홈이 포커스되어 있을 때만)
+  const [selectedId, setSelectedId] = useState(0);
+  const [filter, setFilter] = useState('최신순');
+
+  // 그림홈에서 뒤로가기 → 앱 종료
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       if (isFocused) {
@@ -43,13 +48,109 @@ export default function Home() {
       }
       return false;
     });
-
     return () => backHandler.remove();
   }, [isFocused]);
+
+  // ──────────────────────────────────────────────
+  // 그려드려요 탭 : 무한스크롤
+  // ──────────────────────────────────────────────
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ['posts', 'latest', filter],
+    queryFn: ({ pageParam }) =>
+      postController.getLatestPosts(pageParam as number, PAGE_LIMIT),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { page, limit, total } = lastPage as any;
+      return page * limit < total ? page + 1 : undefined;
+    },
+    enabled: selectedId === 0 && isFocused,
+  });
+
+  // 포커스 복귀 시 새로고침
+  useEffect(() => {
+    if (isFocused && selectedId === 0) refetch();
+  }, [isFocused]);
+
+  const posts: LatestContentsResponse[] =
+    data?.pages.flatMap((page: any) => page.data ?? []) ?? [];
+
+  const handleEndReached = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleCardPress = (postId: string) => {
     navigation.navigate('HomePostDetail', { postId });
   };
+
+  // ──────────────────────────────────────────────
+  // 공통 헤더 (FlatList ListHeaderComponent)
+  // ──────────────────────────────────────────────
+  const ListHeader = (
+    <HomeFilter
+      selectedId={selectedId}
+      className='my-[17px]'
+      onFilterChange={setFilter}
+    />
+  );
+
+  // ──────────────────────────────────────────────
+  // 그려드려요 탭 렌더링
+  // ──────────────────────────────────────────────
+  const renderPost: ListRenderItem<LatestContentsResponse> = ({ item }) => {
+    const { uploader, contents } = item;
+    return (
+      <View style={tw`mb-[17px]`}>
+        <HomeCard
+          profileImage={uploader.profileImageUrl || undefined}
+          userName={uploader.nickname}
+          drawingCount={uploader.drawingCount}
+          reviewCount={uploader.reviewCount}
+          starRating={uploader.star}
+          timeAgo={formatRelativeTime(contents.createdAt)}
+          hashtags={contents.tags}
+          description={contents.explanation}
+          sampleImage={contents.imageUrls?.find(Boolean) || undefined}
+          estimatedTime={contents.timeTaken}
+          estimatedPrice={contents.price}
+          likeCount={contents.likeCount}
+          onClickCard={() => handleCardPress(String(contents.contentId))}
+        />
+      </View>
+    );
+  };
+
+  const PostFooter = () =>
+    isFetchingNextPage ? (
+      <View style={tw`py-[20px] items-center`}>
+        <ActivityIndicator color='#FFC311' />
+      </View>
+    ) : null;
+
+  const PostEmpty = () =>
+    !isLoading ? (
+      <View style={tw`flex-1 items-center justify-center pt-[60px] gap-[12px]`}>
+        <EmptyBox />
+        <Txt variant='bodyText' color='dark_gray1'>
+          아직 게시글이 없어요
+        </Txt>
+      </View>
+    ) : null;
+
+  // ──────────────────────────────────────────────
+  // 그림쟁이후기 탭 렌더링
+  // ──────────────────────────────────────────────
+  const renderReview: ListRenderItem<{ id: string }> = ({ item }) => (
+    <View style={tw`mb-[17px]`}>
+      <ReviewCard />
+    </View>
+  );
 
   return (
     <Container className='w-full'>
@@ -57,69 +158,58 @@ export default function Home() {
         title1='그려드려요'
         title2='그림쟁이후기'
         selectedId={selectedId}
-        setSelectedId={setSelectedId}
+        setSelectedId={(id) => {
+          setSelectedId(id);
+          setFilter('최신순');
+        }}
       />
 
-      <ScrollView 
-        style={tw`w-full h-full px-[32px] bg-light-gray-1`}
-        showsVerticalScrollIndicator={false}
-      >
-        <HomeFilter selectedId={selectedId} className='my-[17px]' />
-
-        <View style={tw`gap-[17px] pb-[50px]`}>
-          {selectedId === 0 ? (
-            // 그려드려요
-            <>
-              <HomeCard
-                profileImage="https://example.com/profile1.jpg"
-                userName='홍길동'
-                drawingCount={5}
-                reviewCount={10}
-                starRating={4.8}
-                timeAgo='5분 전'
-                hashtags={['귀여운', '낙서']}
-                description='소소한 그림 그려드려요!소소한 그림 그려드려요! 소소한 그림 그려드려요!'
-                sampleImage="https://example.com/sample1.png"
-                estimatedTime='15분'
-                estimatedPrice={5000}
-                likeCount={42}
-                isLiked={true}
-                onClickCard={() => handleCardPress("post-id-1")}
-              />
-              <HomeCard
-                profileImage="https://example.com/profile2.jpg"
-                userName='김철수'
-                drawingCount={3}
-                reviewCount={5}
-                starRating={4.5}
-                timeAgo='10분 전'
-                hashtags={['풍경화', '디지털']}
-                description='멋진 풍경화 그려드립니다!'
-                sampleImage="https://example.com/sample2.png"
-                estimatedTime='30분'
-                estimatedPrice={10000}
-                likeCount={15}
-                isLiked={false}
-                onClickCard={() => handleCardPress("post-id-2")}
-              />
-            </>
+      {/* 그려드려요 */}
+      {selectedId === 0 && (
+        <>
+          {isLoading ? (
+            <View style={tw`flex-1 justify-center items-center`}>
+              <ActivityIndicator size='large' color='#FFC311' />
+            </View>
           ) : (
-            // 그림쟁이후기
-            <>
-              <ReviewCard />
-              <ReviewCard />
-            </>
+            <FlatList
+              data={posts}
+              keyExtractor={(item) => String(item.contents.contentId)}
+              renderItem={renderPost}
+              ListHeaderComponent={ListHeader}
+              ListFooterComponent={<PostFooter />}
+              ListEmptyComponent={<PostEmpty />}
+              contentContainerStyle={tw`px-[32px] pb-[80px]`}
+              showsVerticalScrollIndicator={false}
+              onEndReached={handleEndReached}
+              onEndReachedThreshold={0.4}
+              style={tw`w-full bg-light-gray-1`}
+            />
           )}
-        </View>
-      </ScrollView>
+        </>
+      )}
 
-      <TouchableOpacity 
+      {/* 그림쟁이후기 */}
+      {selectedId === 1 && (
+        <FlatList
+          data={DUMMY_REVIEWS}
+          keyExtractor={(item) => item.id}
+          renderItem={renderReview}
+          ListHeaderComponent={ListHeader}
+          contentContainerStyle={tw`px-[32px] pb-[80px]`}
+          showsVerticalScrollIndicator={false}
+          style={tw`w-full bg-light-gray-1`}
+        />
+      )}
+
+      {/* FAB: 게시글 작성 */}
+      <TouchableOpacity
         style={tw`
           absolute bottom-[16px] right-[32px] w-[57px] h-[57px] rounded-[28.5px]
           bg-sub-yellow border border-main-yellow justify-center items-center
         `}
-        onPress = {() => {
-          // TODO: 게시글 업로드
+        onPress={() => {
+          // TODO: 게시글 업로드 화면 연결
         }}
       >
         <PencilIcon />
