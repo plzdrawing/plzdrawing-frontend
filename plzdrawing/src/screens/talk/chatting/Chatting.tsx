@@ -1,5 +1,5 @@
 import tw from '@/src/lib/tailwind';
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/types/navigation';
@@ -17,6 +17,7 @@ import {
   View,
   SafeAreaView,
   Text,
+  ActivityIndicator,
 } from 'react-native';
 
 import Container from '@/src/components/layout/Container';
@@ -28,6 +29,25 @@ import StatusActionCard from '@/src/screens/talk/chatting/chat/StatusActionCard'
 import * as ScreenCapture from 'expo-screen-capture';
 import Colors from '@/src/constants/Colors';
 
+// ────────────────────────────────────────────────────────────
+// 메시지 타입
+// ────────────────────────────────────────────────────────────
+type MessageItem = {
+  id: number;
+  chatRoomId: number;
+  senderId: number;
+  type: 'TEXT' | 'IMAGE' | 'SYSTEM';
+  content?: string;
+  imageUrl?: string;
+  isRead: boolean;
+  sentAt: string;
+  _optimistic?: boolean; // 낙관적 UI 임시 메시지 여부
+};
+
+const POLL_INTERVAL = 3_000; // 3초 폴링
+const INITIAL_LIMIT = 30;    // 초기 로드 건수
+const LOAD_MORE_LIMIT = 20;  // 위로 스크롤 시 추가 로드 건수
+
 export default function Chatting() {
   const route = useRoute<RouteProp<RootStackParamList, 'Chatting'>>();
   const { chatRoomId } = route.params;
@@ -38,7 +58,17 @@ export default function Chatting() {
 
   const [sendMessage, setSendMessage] = useState('');
   const [isOpenedMenu, setIsOpenedMenu] = useState(false);
+  const [messages, setMessages] = useState<MessageItem[]>([]);
+  const [isLoadingOlder, setIsLoadingOlder] = useState(false);
+  const [hasOlderMessages, setHasOlderMessages] = useState(true);
+
   const scrollViewRef = useRef<ScrollView>(null);
+  // 폴링 시 afterId로 사용할 마지막 메시지 ID
+  const lastMessageIdRef = useRef<number | undefined>(undefined);
+  // 위로 스크롤 시 beforeId로 사용할 가장 오래된 메시지 ID
+  const oldestMessageIdRef = useRef<number | undefined>(undefined);
+  // 초기 로드 완료 여부
+  const initialLoadDoneRef = useRef(false);
 
   // ────────────────────────────────────────────────────────────
   // 채팅방 상세 조회
@@ -49,13 +79,35 @@ export default function Chatting() {
     enabled: !!chatRoomId,
   });
 
-  // 내 ID 판별: userStore nickname과 requester/artist nickname 비교
+  // 내 ID 판별
+  // userStore.user가 없을 때를 대비해 memberController로 fallback 조회
+  const [resolvedMyId, setResolvedMyId] = useState<number | null>(null);
+
   const myId = useMemo(() => {
-    if (!roomDetail || !user) return null;
-    return roomDetail.requester.nickname === user.nickname
-      ? roomDetail.requester.id
-      : roomDetail.artist.id;
-  }, [roomDetail, user]);
+    if (!roomDetail) return resolvedMyId;
+    if (user) {
+      return roomDetail.requester.nickname === user.nickname
+        ? roomDetail.requester.id
+        : roomDetail.artist.id;
+    }
+    return resolvedMyId;
+  }, [roomDetail, user, resolvedMyId]);
+
+  // userStore.user가 없을 때 API로 직접 내 정보 조회
+  useEffect(() => {
+    if (user || !roomDetail) return;
+    import('@/src/apis/controller/member').then(({ memberController }) => {
+      memberController.checkMyProfile().then((profile: any) => {
+        const nickname = profile?.nickname;
+        if (!nickname) return;
+        const id =
+          roomDetail.requester.nickname === nickname
+            ? roomDetail.requester.id
+            : roomDetail.artist.id;
+        setResolvedMyId(id);
+      }).catch(() => {});
+    });
+  }, [user, roomDetail]);
 
   // 작가인지 여부
   const isArtist = useMemo(() => {
@@ -79,25 +131,125 @@ export default function Chatting() {
   }, [counterpart, navigation]);
 
   // ────────────────────────────────────────────────────────────
-  // 메시지 목록 조회 (3초 폴링)
+  // 메시지 누적 헬퍼 — 중복 제거 후 정렬
   // ────────────────────────────────────────────────────────────
-  const { data: messagesData, refetch: refetchMessages } = useQuery({
-    queryKey: ['messages', chatRoomId],
-    queryFn: () => chatController.getMessages(chatRoomId, { limit: 50 }),
-    enabled: !!chatRoomId,
-    refetchInterval: 3_000,
-  });
+  const mergeMessages = useCallback((incoming: MessageItem[], prepend = false) => {
+    setMessages((prev) => {
+      // 낙관적 메시지는 서버 응답으로 대체되면 제거
+      const realIds = new Set(incoming.map((m) => m.id));
+      const filtered = prev.filter((m) => !m._optimistic || !realIds.has(m.id));
 
-  const messages = messagesData?.data ?? [];
+      const merged = prepend
+        ? [...incoming, ...filtered]
+        : [...filtered, ...incoming];
 
-  // 새 메시지 도착 시 읽음 처리
+      // id 기준 중복 제거 + 오름차순 정렬
+      const deduped = Array.from(
+        new Map(merged.map((m) => [m.id, m])).values()
+      ).sort((a, b) => a.id - b.id);
+
+      return deduped;
+    });
+  }, []);
+
+  // ────────────────────────────────────────────────────────────
+  // 읽음 처리 헬퍼
+  // ────────────────────────────────────────────────────────────
+  const markReadIfNeeded = useCallback(
+    (newMessages: MessageItem[]) => {
+      if (!myId) return;
+      const unreadFromOther = newMessages.filter(
+        (m) => !m.isRead && m.senderId !== myId,
+      );
+      if (!unreadFromOther.length) return;
+      const lastId = unreadFromOther[unreadFromOther.length - 1].id;
+      chatController.markAsRead(chatRoomId, { lastReadMessageId: lastId }).catch(() => {});
+    },
+    [chatRoomId, myId],
+  );
+
+  // ────────────────────────────────────────────────────────────
+  // 초기 메시지 로드 (마운트 시 1회)
+  // ────────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!messages.length) return;
-    const lastMsg = messages[messages.length - 1];
-    if (!lastMsg.isRead && lastMsg.senderId !== myId) {
-      chatController.markAsRead(chatRoomId, { lastReadMessageId: lastMsg.id }).catch(() => {});
+    if (initialLoadDoneRef.current || !chatRoomId) return;
+
+    chatController
+      .getMessages(chatRoomId, { limit: INITIAL_LIMIT })
+      .then((res) => {
+        const data = (res.data ?? []) as MessageItem[];
+        if (data.length > 0) {
+          setMessages(data);
+          lastMessageIdRef.current = data[data.length - 1].id;
+          oldestMessageIdRef.current = data[0].id;
+          markReadIfNeeded(data);
+          // 초기 로드 건수가 limit보다 적으면 더 이상 이전 메시지 없음
+          if (data.length < INITIAL_LIMIT) setHasOlderMessages(false);
+        } else {
+          setHasOlderMessages(false);
+        }
+        initialLoadDoneRef.current = true;
+        // 초기 로드 후 맨 아래로 스크롤
+        setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: false }), 100);
+      })
+      .catch(() => {});
+  }, [chatRoomId, markReadIfNeeded]);
+
+  // ────────────────────────────────────────────────────────────
+  // 폴링 — afterId로 새 메시지만 증분 조회
+  // ────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!chatRoomId || !initialLoadDoneRef.current) return;
+
+    const timer = setInterval(async () => {
+      try {
+        const params = lastMessageIdRef.current !== undefined
+          ? { afterId: lastMessageIdRef.current, limit: LOAD_MORE_LIMIT }
+          : { limit: INITIAL_LIMIT };
+
+        const res = await chatController.getMessages(chatRoomId, params);
+        const newMsgs = (res.data ?? []) as MessageItem[];
+
+        if (newMsgs.length > 0) {
+          mergeMessages(newMsgs);
+          lastMessageIdRef.current = newMsgs[newMsgs.length - 1].id;
+          markReadIfNeeded(newMsgs);
+          // 새 메시지 도착 시 맨 아래로 스크롤
+          setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 50);
+        }
+      } catch {
+        // 폴링 실패 시 무시 (다음 주기에 재시도)
+      }
+    }, POLL_INTERVAL);
+
+    return () => clearInterval(timer);
+  }, [chatRoomId, mergeMessages, markReadIfNeeded]);
+
+  // ────────────────────────────────────────────────────────────
+  // 위로 스크롤 시 이전 메시지 로드 (beforeId)
+  // ────────────────────────────────────────────────────────────
+  const loadOlderMessages = useCallback(async () => {
+    if (isLoadingOlder || !hasOlderMessages || !oldestMessageIdRef.current) return;
+    setIsLoadingOlder(true);
+    try {
+      const res = await chatController.getMessages(chatRoomId, {
+        beforeId: oldestMessageIdRef.current,
+        limit: LOAD_MORE_LIMIT,
+      });
+      const older = (res.data ?? []) as MessageItem[];
+      if (older.length > 0) {
+        mergeMessages(older, true);
+        oldestMessageIdRef.current = older[0].id;
+        if (older.length < LOAD_MORE_LIMIT) setHasOlderMessages(false);
+      } else {
+        setHasOlderMessages(false);
+      }
+    } catch {
+      // 무시
+    } finally {
+      setIsLoadingOlder(false);
     }
-  }, [messages, myId, chatRoomId]);
+  }, [chatRoomId, isLoadingOlder, hasOlderMessages, mergeMessages]);
 
   // ────────────────────────────────────────────────────────────
   // 거래 상태 전환
@@ -105,28 +257,58 @@ export default function Chatting() {
   const statusMutation = useMutation({
     mutationFn: (next: ChatRoomStatus) =>
       chatController.updateChatRoomStatus(chatRoomId, { status: next }),
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['chatRoom', chatRoomId] });
       refetchRoom();
-      refetchMessages();
+      // 상태 변경 시 시스템 메시지가 생기므로 강제 전체 재조회
+      const res = await chatController.getMessages(chatRoomId, {
+        afterId: lastMessageIdRef.current,
+        limit: LOAD_MORE_LIMIT,
+      });
+      const newMsgs = (res.data ?? []) as MessageItem[];
+      if (newMsgs.length > 0) {
+        mergeMessages(newMsgs);
+        lastMessageIdRef.current = newMsgs[newMsgs.length - 1].id;
+      }
     },
     onError: () => Alert.alert('오류', '상태 변경에 실패했습니다. 다시 시도해 주세요.'),
   });
 
   // ────────────────────────────────────────────────────────────
-  // 텍스트 메시지 전송
+  // 텍스트 메시지 전송 (낙관적 UI)
   // ────────────────────────────────────────────────────────────
-  const sendTextMutation = useMutation({
-    mutationFn: (content: string) => chatController.sendTextMessage(chatRoomId, content),
-    onSuccess: () => refetchMessages(),
-    onError: () => Alert.alert('전송 실패', '메시지 전송에 실패했습니다.'),
-  });
-
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     const trimmed = sendMessage.trim();
     if (!trimmed) return;
     setSendMessage('');
-    sendTextMutation.mutate(trimmed);
+
+    // 낙관적 메시지 임시 추가 (myId 없으면 -1로 처리, 폴링 시 실제 값으로 교체됨)
+    const tempId = Date.now();
+    const optimistic: MessageItem = {
+      id: tempId,
+      chatRoomId,
+      senderId: myId ?? -1,
+      type: 'TEXT',
+      content: trimmed,
+      isRead: false,
+      sentAt: new Date().toISOString(),
+      _optimistic: true,
+    };
+    setMessages((prev) => [...prev, optimistic]);
+    setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 50);
+
+    try {
+      const sent = await chatController.sendTextMessage(chatRoomId, trimmed) as unknown as MessageItem;
+      // 낙관적 메시지를 실제 응답으로 교체
+      setMessages((prev) =>
+        prev.map((m) => (m.id === tempId ? { ...sent } : m))
+      );
+      lastMessageIdRef.current = sent.id;
+    } catch {
+      // 실패 시 낙관적 메시지 제거
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
+      Alert.alert('전송 실패', '메시지 전송에 실패했습니다.');
+    }
   };
 
   // ────────────────────────────────────────────────────────────
@@ -134,6 +316,22 @@ export default function Chatting() {
   // ────────────────────────────────────────────────────────────
   const handleSendImage = async (imageUri: string) => {
     setIsOpenedMenu(false);
+
+    // 낙관적 이미지 메시지 추가
+    const tempId = Date.now();
+    const optimistic: MessageItem = {
+      id: tempId,
+      chatRoomId,
+      senderId: myId ?? -1,
+      type: 'IMAGE',
+      imageUrl: imageUri, // 로컬 URI로 미리 표시
+      isRead: false,
+      sentAt: new Date().toISOString(),
+      _optimistic: true,
+    };
+    setMessages((prev) => [...prev, optimistic]);
+    setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 50);
+
     try {
       // 1. Presigned URL 발급
       const { uploadUrl, objectKey } = await chatController.getImageUploadUrl(chatRoomId);
@@ -152,30 +350,29 @@ export default function Chatting() {
       });
       if (!uploadRes.ok) throw new Error('S3 upload failed');
 
-      // 4. 메시지 서버 전송 (width/height는 리사이즈 기준 1200px)
-      await chatController.sendImageMessage(chatRoomId, {
+      // 4. 메시지 서버 전송
+      const sent = await chatController.sendImageMessage(chatRoomId, {
         objectKey,
         size,
         mimeType: 'image/png',
         width: 1200,
         height: 1200,
-      });
-      refetchMessages();
+      }) as unknown as MessageItem;
+
+      // 낙관적 메시지를 실제 응답(S3 URL)으로 교체
+      setMessages((prev) =>
+        prev.map((m) => (m.id === tempId ? { ...sent } : m))
+      );
+      lastMessageIdRef.current = sent.id;
     } catch {
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
       Alert.alert('전송 실패', '이미지 전송에 실패했습니다.');
     }
   };
 
   // ────────────────────────────────────────────────────────────
-  // 스크롤 / 키보드 / 스크린샷 방지
+  // 키보드 / 스크린샷 방지
   // ────────────────────────────────────────────────────────────
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      scrollViewRef.current?.scrollToEnd({ animated: true });
-    }, 100);
-    return () => clearTimeout(timeout);
-  }, [messages]);
-
   useEffect(() => {
     const preventScreenCapture = async () => {
       await ScreenCapture.preventScreenCaptureAsync();
@@ -215,7 +412,7 @@ export default function Chatting() {
         <SafeAreaView style={tw`flex flex-col justify-between flex-1`}>
           {/* 진행 상태 헤더 */}
           <TalkProcess
-            imageUrl={roomDetail?.post.thumbnailUrl ?? ''}
+            imageUrl={roomDetail?.post.thumbnailUrl || undefined}
             title={roomDetail?.post.title ?? ''}
             price={roomDetail?.paidAmount ?? roomDetail?.price ?? 0}
             process={roomDetail ? mapStatusToProcess(roomDetail.status) : 'request'}
@@ -239,6 +436,13 @@ export default function Chatting() {
             ref={scrollViewRef}
             contentContainerStyle={{ flexGrow: 1 }}
             style={tw`flex-1 w-full bg-light_gray1`}
+            onScroll={({ nativeEvent }) => {
+              // 스크롤 상단 근처일 때 이전 메시지 로드
+              if (nativeEvent.contentOffset.y < 80) {
+                loadOlderMessages();
+              }
+            }}
+            scrollEventThrottle={200}
           >
             <TouchableWithoutFeedback
               onPress={() => {
@@ -247,6 +451,21 @@ export default function Chatting() {
               }}
             >
               <View style={tw`flex items-end p-[17px_32px] gap-[17px] w-full bg-light_gray1`}>
+                {/* 이전 메시지 로딩 인디케이터 */}
+                {isLoadingOlder && (
+                  <View style={tw`w-full items-center py-[8px]`}>
+                    <ActivityIndicator size="small" color={Colors.colors.dark_gray1} />
+                  </View>
+                )}
+                {/* 더 이상 이전 메시지 없음 표시 */}
+                {!hasOlderMessages && messages.length > 0 && (
+                  <View style={tw`w-full items-center py-[4px]`}>
+                    <Text style={{ fontSize: 11, color: Colors.colors.dark_gray1 }}>
+                      대화 시작
+                    </Text>
+                  </View>
+                )}
+
                 {messages.map((msg) => {
                   const isSender = msg.senderId === myId;
 

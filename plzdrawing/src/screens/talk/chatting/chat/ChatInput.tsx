@@ -1,7 +1,6 @@
 import tw from '@/src/lib/tailwind';
 
-import { TextInput } from "react-native-gesture-handler";
-import { View, Keyboard, TouchableOpacity, Alert } from "react-native";
+import { View, Keyboard, TouchableOpacity, Alert, TextInput } from "react-native";
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -112,7 +111,7 @@ const ChatInput = (props: ChatInputProps) => {
 
   return (
     <View>
-      <View style={tw`p-[12px] px-[18px] items-center justify-between gap-[6px] bg-white`}>
+      <View style={tw`flex-row p-[12px] px-[18px] items-center justify-between gap-[6px] bg-white`}>
         <TouchableOpacity onPress={handleOpenMenu}>
           <View style={iconStyle(Colors.colors.main_yellow)}>
             <CameraIcon />
@@ -129,7 +128,6 @@ const ChatInput = (props: ChatInputProps) => {
             color: Colors.colors.black,
             backgroundColor: Colors.colors.sub_yellow,
             fontFamily: 'SsurroundAir',
-            width: '100%',
             height: 45,
             borderRadius: 12,
             paddingVertical: 13.5,

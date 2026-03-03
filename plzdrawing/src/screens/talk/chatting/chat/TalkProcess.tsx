@@ -5,7 +5,7 @@ import Txt from "@/src/components/ui/Txt";
 import { View, Image } from "react-native";
 
 interface TalkProcessProps {
-  imageUrl: string;
+  imageUrl?: string;
   title: string;
   price: number;
   process: "request" | "paying" | "inProgress" | "complete" | "review";
@@ -35,7 +35,7 @@ export default function TalkProcess({
       ]}
     >
       <Image
-        source={{ uri: imageUrl }}
+        source={imageUrl ? { uri: imageUrl } : undefined}
         style={[tw`w-[52px] h-[52px] rounded-[5px] mr-[7px]`, { backgroundColor: Colors.colors.light_gray2 }]}
       />
 
