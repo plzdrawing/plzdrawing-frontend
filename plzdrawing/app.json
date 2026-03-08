@@ -3,13 +3,6 @@
     "name": "gree",
     "slug": "gree",
     "version": "1.0.0",
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/ff320edd-21e5-4b93-88ed-0329f03e8af2",
-      "fallbackToCacheTimeout": 0
-    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "gree",
@@ -54,10 +47,5 @@
         "family": "SsurroundAir"
       }
     ],
-    "extra": {
-      "eas": {
-        "projectId": "ff320edd-21e5-4b93-88ed-0329f03e8af2"
-      }
-    }
   }
 }
