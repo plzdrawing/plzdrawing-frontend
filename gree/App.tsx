@@ -27,6 +27,7 @@ import PasswordSetting from '@/src/screens/auth/signup/PasswordSetting';
 import NicknameSettingSplash from '@/src/screens/auth/signup/NicknameSettingSplash';
 import NicknameSetting from '@/src/screens/auth/signup/NicknameSetting';
 import NicknameSettingComplete from '@/src/screens/auth/signup/NicknameSettingComplete';
+import PostUpload from '@/src/screens/home/PostUpload';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -79,6 +80,7 @@ export default function App() {
             <Stack.Screen name='NicknameSettingSplash' component={NicknameSettingSplash} />
             <Stack.Screen name='NicknameSetting' component={NicknameSetting} />
             <Stack.Screen name='NicknameSettingComplete' component={NicknameSettingComplete} />
+            <Stack.Screen name='PostUpload' component={PostUpload} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar style='auto' />

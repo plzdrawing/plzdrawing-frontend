@@ -208,9 +208,7 @@ export default function Home() {
           absolute bottom-[16px] right-[32px] w-[57px] h-[57px] rounded-[28.5px]
           bg-sub-yellow border border-main-yellow justify-center items-center
         `}
-        onPress={() => {
-          // TODO: 게시글 업로드 화면 연결
-        }}
+        onPress={() => navigation.navigate('PostUpload')}
       >
         <PencilIcon />
       </TouchableOpacity>

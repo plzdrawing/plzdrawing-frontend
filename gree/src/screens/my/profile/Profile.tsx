@@ -93,7 +93,7 @@ export default function Profile({ isFromMyPage = false, userProfile }: ProfilePr
         selectedFilter={selectedFilter}
         onFilterChange={setSelectedFilter}
         isNoProfile={isNoProfile}
-        onUploadProfile={() => {}}
+        onUploadProfile={() => navigation.navigate('ProfileEdit')}
       />
       {selectedFilter === '그림' ? (
         <UserDrawings userName={user.name} drawings={user.drawings} />

@@ -24,4 +24,5 @@ export type RootStackParamList = {
     agreements: { terms: boolean; privacy: boolean; marketing: boolean };
   };
   NicknameSettingComplete: undefined;
+  PostUpload: undefined;
 };
