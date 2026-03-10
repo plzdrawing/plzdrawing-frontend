@@ -10,6 +10,18 @@ import LikeIconEmpty from '@/assets/images/ic-heart-empty.svg';
 import PencilIcon from '@/assets/images/ic-pencil.svg';
 import EmptyBox from '@/assets/images/ic-empty-box.svg';
 import AlarmIcon from '@/assets/images/ic-alarm.svg';
+import FooterTalk from '@/assets/images/ic-footer-talk.svg';
+import FooterHome from '@/assets/images/ic-footer-home.svg';
+import FooterMy from '@/assets/images/ic-footer-my.svg';
+import EmptyStar from '@/assets/images/ic-star-empty.svg';
+import FilledStar from '@/assets/images/ic-star-filled.svg';
+import GreeSad from '@/assets/images/logo-gree-sad.svg';
+import GreeProfile from '@/assets/images/logo-gree-profile.svg';
+import MegaphoneIcon from '@/assets/images/ic-megaphone.svg';
+import QuestionIcon from '@/assets/images/ic-question.svg';
+import MultipleFileIcon from '@/assets/images/ic-file-multiple.svg';
+import MenuCircleIcon from '@/assets/images/ic-menu.svg';
+import PasswordChangeIcon from '@/assets/images/ic-password.svg';
 
 export {
   BackArrowIcon,
@@ -24,4 +36,16 @@ export {
   PencilIcon,
   EmptyBox,
   AlarmIcon,
+  FooterTalk,
+  FooterHome,
+  FooterMy,
+  EmptyStar,
+  FilledStar,
+  GreeSad,
+  GreeProfile,
+  MegaphoneIcon,
+  QuestionIcon,
+  MultipleFileIcon,
+  MenuCircleIcon,
+  PasswordChangeIcon,
 };
