@@ -4,4 +4,5 @@ export type RootStackParamList = {
   EmailLogin: undefined;
   Main: undefined;
   HomePostDetail: { postId: string };
+  ProfileEdit: undefined;
 };

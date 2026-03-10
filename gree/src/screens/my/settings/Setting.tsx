@@ -33,7 +33,7 @@ export default function Setting({ userProfile, onLogout }: SettingProps) {
     >
       <MyInfoSection
         profile={userProfile}
-        onEditClick={() => {}}
+        onEditClick={() => navigation.navigate('ProfileEdit')}
       />
 
       <GreeCoinSection amount={20} onCharge={() => {}} />

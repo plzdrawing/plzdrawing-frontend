@@ -22,6 +22,7 @@ import QuestionIcon from '@/assets/images/ic-question.svg';
 import MultipleFileIcon from '@/assets/images/ic-file-multiple.svg';
 import MenuCircleIcon from '@/assets/images/ic-menu.svg';
 import PasswordChangeIcon from '@/assets/images/ic-password.svg';
+import CameraCircleIcon from '@/assets/images/ic-camera-circle.svg';
 
 export {
   BackArrowIcon,
@@ -48,4 +49,5 @@ export {
   MultipleFileIcon,
   MenuCircleIcon,
   PasswordChangeIcon,
+  CameraCircleIcon,
 };
