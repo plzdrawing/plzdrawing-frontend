@@ -13,3 +13,19 @@ export function formatRelativeTime(isoString: string): string {
   if (months < 12) return `${months}달 전`;
   return `${Math.floor(months / 12)}년 전`;
 }
+
+/**
+ * 채팅방 상태 → TalkProcess의 process 키로 변환
+ */
+export function mapStatusToProcess(
+  status: 'REQUESTED' | 'PAID' | 'IN_PROGRESS' | 'COMPLETED' | 'REVIEWED' | 'CANCELLED',
+): 'request' | 'paying' | 'inProgress' | 'complete' | 'review' {
+  switch (status) {
+    case 'REQUESTED':   return 'request';
+    case 'PAID':        return 'paying';
+    case 'IN_PROGRESS': return 'inProgress';
+    case 'COMPLETED':   return 'complete';
+    case 'REVIEWED':    return 'review';
+    case 'CANCELLED':   return 'request';
+  }
+}

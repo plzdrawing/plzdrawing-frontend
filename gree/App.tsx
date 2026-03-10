@@ -19,6 +19,7 @@ import Login from '@/src/screens/auth/login/Login';
 import EmailLogin from '@/src/screens/auth/login/EmailLogin';
 import MainNavigation from '@/src/navigation/MainNavigation';
 import ProfileEdit from '@/src/screens/my/settings/ProfileEdit';
+import Chatting from '@/src/screens/talk/chatting/Chatting';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -63,6 +64,7 @@ export default function App() {
             <Stack.Screen name='EmailLogin' component={EmailLogin} />
             <Stack.Screen name='Main' component={MainNavigation} />
             <Stack.Screen name='ProfileEdit' component={ProfileEdit} />
+            <Stack.Screen name='Chatting' component={Chatting} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar style='auto' />

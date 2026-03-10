@@ -23,6 +23,12 @@ import MultipleFileIcon from '@/assets/images/ic-file-multiple.svg';
 import MenuCircleIcon from '@/assets/images/ic-menu.svg';
 import PasswordChangeIcon from '@/assets/images/ic-password.svg';
 import CameraCircleIcon from '@/assets/images/ic-camera-circle.svg';
+import SendIcon from '@/assets/images/ic-send.svg';
+import AddIcon from '@/assets/images/ic-add.svg';
+import CameraIcon from '@/assets/images/ic-camera.svg';
+import FileIcon from '@/assets/images/ic-file.svg';
+import PictureIcon from '@/assets/images/ic-picture.svg';
+import DrawerIcon from '@/assets/images/ic-drawer.svg';
 
 export {
   BackArrowIcon,
@@ -50,4 +56,10 @@ export {
   MenuCircleIcon,
   PasswordChangeIcon,
   CameraCircleIcon,
+  SendIcon,
+  AddIcon,
+  CameraIcon,
+  FileIcon,
+  PictureIcon,
+  DrawerIcon,
 };

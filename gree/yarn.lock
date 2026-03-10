@@ -3083,7 +3083,7 @@ expo-constants@~55.0.7:
     "@expo/config" "~55.0.8"
     "@expo/env" "~2.1.1"
 
-expo-file-system@~55.0.10:
+expo-file-system@^55.0.10, expo-file-system@~55.0.10:
   version "55.0.10"
   resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-55.0.10.tgz#fae0a424f404a456522193346cf07e9e51e2df26"
   integrity sha512-ysFdVdUgtfj2ApY0Cn+pBg+yK4xp+SNwcaH8j2B91JJQ4OXJmnyCSmrNZYz7J4mdYVuv2GzxIP+N/IGlHQG3Yw==
@@ -3106,6 +3106,18 @@ expo-image-loader@~5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-5.1.0.tgz#f7d65f9b9a9714eaaf5d50a406cb34cb25262153"
   integrity sha512-sEBx3zDQIODWbB5JwzE7ZL5FJD+DK3LVLWBVJy6VzsqIA6nDEnSFnsnWyCfCTSvbGigMATs1lgkC2nz3Jpve1Q==
+
+expo-image-loader@~55.0.0:
+  version "55.0.0"
+  resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-55.0.0.tgz#56ae6631a0f43191432296a1f7f1e9737e653cfe"
+  integrity sha512-NOjp56wDrfuA5aiNAybBIjqIn1IxKeGJ8CECWZncQ/GzjZfyTYAHTCyeApYkdKkMBLHINzI4BbTGSlbCa0fXXQ==
+
+expo-image-manipulator@^55.0.9:
+  version "55.0.9"
+  resolved "https://registry.yarnpkg.com/expo-image-manipulator/-/expo-image-manipulator-55.0.9.tgz#bdb631bbc12013eaeb902627bd3bb86c2a4f7f10"
+  integrity sha512-hEponYwRHwYlmYn2KTVr57U6i7dJ4NI6gYUT6LwxxLFspiev+ntlXL0e6M7qT0VIHMkLPtBcvP/z3+vaJCNgeQ==
+  dependencies:
+    expo-image-loader "~55.0.0"
 
 expo-image-picker@~16.1.0:
   version "16.1.4"
@@ -3148,6 +3160,11 @@ expo-modules-core@55.0.14:
   integrity sha512-eAerOnnhbZitUAKbY7B61kIudiabAz/m/oMGINms2+GeY1DRhdvrm5aAkhkHHmykPrg58PPryXtmF14YAYWViw==
   dependencies:
     invariant "^2.2.4"
+
+expo-screen-capture@^55.0.8:
+  version "55.0.8"
+  resolved "https://registry.yarnpkg.com/expo-screen-capture/-/expo-screen-capture-55.0.8.tgz#f270e1b0e5b081ae9ed9bec5e8a153c5815dd30d"
+  integrity sha512-lnq1LrEJrE22LVWqZRTskQ0CX3MhomG9MrWTnRUH25fqMaHcaIf8ELy/YyCQ81IflhD7UWFQOVqG0ToOwUhvFw==
 
 expo-server@^55.0.6:
   version "55.0.6"

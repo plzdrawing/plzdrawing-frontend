@@ -5,4 +5,5 @@ export type RootStackParamList = {
   Main: undefined;
   HomePostDetail: { postId: string };
   ProfileEdit: undefined;
+  Chatting: { chatRoomId: number };
 };
