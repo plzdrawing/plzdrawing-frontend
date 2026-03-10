@@ -20,6 +20,13 @@ import EmailLogin from '@/src/screens/auth/login/EmailLogin';
 import MainNavigation from '@/src/navigation/MainNavigation';
 import ProfileEdit from '@/src/screens/my/settings/ProfileEdit';
 import Chatting from '@/src/screens/talk/chatting/Chatting';
+import EmailSignup from '@/src/screens/auth/signup/EmailSignup';
+import EmailVerification from '@/src/screens/auth/signup/EmailVerification';
+import EmailVerificationComplete from '@/src/screens/auth/signup/EmailVerificationComplete';
+import PasswordSetting from '@/src/screens/auth/signup/PasswordSetting';
+import NicknameSettingSplash from '@/src/screens/auth/signup/NicknameSettingSplash';
+import NicknameSetting from '@/src/screens/auth/signup/NicknameSetting';
+import NicknameSettingComplete from '@/src/screens/auth/signup/NicknameSettingComplete';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -65,6 +72,13 @@ export default function App() {
             <Stack.Screen name='Main' component={MainNavigation} />
             <Stack.Screen name='ProfileEdit' component={ProfileEdit} />
             <Stack.Screen name='Chatting' component={Chatting} />
+            <Stack.Screen name='EmailSignup' component={EmailSignup} />
+            <Stack.Screen name='EmailVerification' component={EmailVerification} />
+            <Stack.Screen name='EmailVerificationComplete' component={EmailVerificationComplete} />
+            <Stack.Screen name='PasswordSetting' component={PasswordSetting} />
+            <Stack.Screen name='NicknameSettingSplash' component={NicknameSettingSplash} />
+            <Stack.Screen name='NicknameSetting' component={NicknameSetting} />
+            <Stack.Screen name='NicknameSettingComplete' component={NicknameSettingComplete} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar style='auto' />

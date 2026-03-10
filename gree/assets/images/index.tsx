@@ -29,6 +29,8 @@ import CameraIcon from '@/assets/images/ic-camera.svg';
 import FileIcon from '@/assets/images/ic-file.svg';
 import PictureIcon from '@/assets/images/ic-picture.svg';
 import DrawerIcon from '@/assets/images/ic-drawer.svg';
+import FilledCheck from '@/assets/images/ic-check-filled.svg';
+import EmptyCheck from '@/assets/images/ic-check-empty.svg';
 
 export {
   BackArrowIcon,
@@ -62,4 +64,6 @@ export {
   FileIcon,
   PictureIcon,
   DrawerIcon,
+  FilledCheck,
+  EmptyCheck,
 };

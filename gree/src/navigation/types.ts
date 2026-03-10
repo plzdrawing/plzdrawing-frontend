@@ -6,4 +6,22 @@ export type RootStackParamList = {
   HomePostDetail: { postId: string };
   ProfileEdit: undefined;
   Chatting: { chatRoomId: number };
+  EmailSignup: undefined;
+  EmailVerification: { email: string };
+  EmailVerificationComplete: { email: string };
+  PasswordSetting: {
+    email: string;
+    agreements: { terms: boolean; privacy: boolean; marketing: boolean };
+  };
+  NicknameSettingSplash: {
+    email: string;
+    password: string;
+    agreements: { terms: boolean; privacy: boolean; marketing: boolean };
+  };
+  NicknameSetting: {
+    email: string;
+    password: string;
+    agreements: { terms: boolean; privacy: boolean; marketing: boolean };
+  };
+  NicknameSettingComplete: undefined;
 };

@@ -16,6 +16,9 @@ export default function Login() {
   const handleLoginEmail = () => {
     navigation.navigate('EmailLogin');
   };
+  const handleSignupEmail = () => {
+    navigation.navigate('EmailSignup');
+  };
 
   return (
     <Container className="px-[32px] pt-[71px] pb-[97px]">
@@ -36,6 +39,12 @@ export default function Login() {
           onClick={handleLoginEmail}
         />
         <View style={tw`h-[1px] w-full bg-light-gray-3`} />
+        <Button
+          variant="auth"
+          loginType="signup"
+          title="이메일 회원가입"
+          onClick={handleSignupEmail}
+        />
       </View>
     </Container>
   );
