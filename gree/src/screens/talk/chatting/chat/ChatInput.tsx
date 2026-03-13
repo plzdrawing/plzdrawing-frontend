@@ -95,6 +95,9 @@ const ChatInput = ({
           onChangeText={setMessage}
           multiline
           numberOfLines={4}
+          blurOnSubmit
+          returnKeyType='send'
+          onSubmitEditing={handleSendMessage}
           style={{
             flex: 1,
             color: Colors.colors.black,

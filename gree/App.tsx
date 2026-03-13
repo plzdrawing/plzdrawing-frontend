@@ -13,6 +13,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { RootStackParamList } from '@/src/navigation/types';
 import { queryClient } from '@/src/lib/queryClient';
 import { useAuthStore } from '@/src/stores/authStore';
+import { navigationRef } from '@/src/navigation/navigationRef';
 
 import LoginSplash from '@/src/screens/auth/login/LoginSplash';
 import Login from '@/src/screens/auth/login/Login';
@@ -62,7 +63,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <Stack.Navigator
             screenOptions={{ headerShown: false }}
             initialRouteName={isLoggedIn ? 'Main' : 'LoginSplash'}

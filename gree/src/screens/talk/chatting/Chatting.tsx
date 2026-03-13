@@ -22,6 +22,7 @@ import {
 } from 'react-native';
 
 import Container from '@/src/components/layout/Container';
+import Header from '@/src/components/layout/Header';
 import ChatInput from '@/src/screens/talk/chatting/chat/ChatInput';
 import SenderBox from '@/src/screens/talk/chatting/chat/SenderBox';
 import ReceiverBox from '@/src/screens/talk/chatting/chat/ReceiverBox';
@@ -63,6 +64,7 @@ export default function Chatting() {
   const lastMessageIdRef = useRef<number | undefined>(undefined);
   const oldestMessageIdRef = useRef<number | undefined>(undefined);
   const initialLoadDoneRef = useRef(false);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   // ── 채팅방 상세 조회
   const { data: roomDetail, refetch: refetchRoom } = useQuery({
@@ -161,14 +163,15 @@ export default function Chatting() {
           setHasOlderMessages(false);
         }
         initialLoadDoneRef.current = true;
+        setInitialLoadDone(true);
         setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: false }), 100);
       })
-      .catch(() => {});
+      .catch((e) => console.error('[Chatting] 초기 메시지 로드 실패:', e?.response?.status ?? e?.message));
   }, [chatRoomId, markReadIfNeeded]);
 
   // ── 폴링 (afterId 증분)
   useEffect(() => {
-    if (!chatRoomId || !initialLoadDoneRef.current) return;
+    if (!chatRoomId || !initialLoadDone) return;
     const timer = setInterval(async () => {
       try {
         const params =
@@ -188,7 +191,7 @@ export default function Chatting() {
       }
     }, POLL_INTERVAL);
     return () => clearInterval(timer);
-  }, [chatRoomId, mergeMessages, markReadIfNeeded]);
+  }, [chatRoomId, initialLoadDone, mergeMessages, markReadIfNeeded]);
 
   // ── 위로 스크롤 시 이전 메시지 로드
   const loadOlderMessages = useCallback(async () => {
@@ -258,9 +261,10 @@ export default function Chatting() {
       const sent = (await chatController.sendTextMessage(chatRoomId, trimmed)) as unknown as MessageItem;
       setMessages((prev) => prev.map((m) => (m.id === tempId ? { ...sent } : m)));
       lastMessageIdRef.current = sent.id;
-    } catch {
+    } catch (e: any) {
+      console.error('[Chatting] 텍스트 전송 실패:', e?.response?.status ?? e?.message);
       setMessages((prev) => prev.filter((m) => m.id !== tempId));
-      Alert.alert('전송 실패', '메시지 전송에 실패했습니다.');
+      Alert.alert('전송 실패', `메시지 전송에 실패했습니다. (${e?.response?.status ?? e?.message ?? '네트워크 오류'})`);
     }
   };
 
@@ -305,9 +309,10 @@ export default function Chatting() {
 
       setMessages((prev) => prev.map((m) => (m.id === tempId ? { ...sent } : m)));
       lastMessageIdRef.current = sent.id;
-    } catch {
+    } catch (e: any) {
+      console.error('[Chatting] 이미지 전송 실패:', e?.response?.status ?? e?.message);
       setMessages((prev) => prev.filter((m) => m.id !== tempId));
-      Alert.alert('전송 실패', '이미지 전송에 실패했습니다.');
+      Alert.alert('전송 실패', `이미지 전송에 실패했습니다. (${e?.response?.status ?? e?.message ?? '네트워크 오류'})`);
     }
   };
 
@@ -332,6 +337,9 @@ export default function Chatting() {
     <Container>
       <KeyboardAvoidingView behavior='height' style={tw`flex-1 w-full flex flex-col`}>
         <SafeAreaView style={tw`flex flex-col justify-between flex-1`}>
+          {/* 상단 헤더 */}
+          <Header title={counterpart ? `${counterpart.nickname} 님 과의 그림톡` : '그림톡'} />
+
           {/* 진행 상태 헤더 */}
           <TalkProcess
             imageUrl={roomDetail?.post.thumbnailUrl || undefined}
@@ -341,7 +349,7 @@ export default function Chatting() {
           />
 
           {/* 상태 전환 액션 카드 */}
-          {roomDetail && (
+          {/* {roomDetail && (
             <StatusActionCard
               status={roomDetail.status}
               isArtist={isArtist}
@@ -349,7 +357,7 @@ export default function Chatting() {
               onStatusChange={(next) => statusMutation.mutate(next)}
               onNavigateReview={() => Alert.alert('후기 작성', '후기 작성 화면으로 이동합니다.')}
             />
-          )}
+          )} */}
 
           {/* 메시지 목록 */}
           <ScrollView
@@ -367,7 +375,7 @@ export default function Chatting() {
                 Keyboard.dismiss();
               }}
             >
-              <View style={tw`flex items-end p-[17px_32px] gap-[17px] w-full bg-light_gray1`}>
+              <View style={tw`flex items-stretch p-[17px_32px] gap-[17px] w-full bg-light_gray1`}>
                 {isLoadingOlder && (
                   <View style={tw`w-full items-center py-[8px]`}>
                     <ActivityIndicator size='small' color={Colors.colors.dark_gray1} />

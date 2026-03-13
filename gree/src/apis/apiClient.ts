@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { useAuthStore } from '@/src/stores/authStore';
+import { resetToLogin } from '@/src/navigation/navigationRef';
 
 const API_BASE_URL = 'https://plzdrawing.o-r.kr';
 
@@ -90,7 +91,16 @@ apiClient.interceptors.response.use(
 
       try {
         const { refreshToken, setTokens, logout } = useAuthStore.getState();
-        if (!refreshToken) throw new Error('No refresh token available');
+
+        // refreshToken이 없으면 세션 만료 → 로그아웃 후 로그인 화면으로
+        if (!refreshToken) {
+          console.warn('[apiClient] 401 수신, refreshToken 없음 → 로그아웃 처리');
+          isRefreshing = false;
+          processQueue(null, null);
+          await useAuthStore.getState().logout();
+          resetToLogin();
+          return Promise.reject(error);
+        }
 
         const response = await apiClient.post(
           '/api/auth/v1/token/refresh',
