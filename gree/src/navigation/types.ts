@@ -8,6 +8,8 @@ export type RootStackParamList = {
   AlarmNotification: undefined;
   Announcement: undefined;
   AnnouncementDetail: { id: number };
+  AppManagement: undefined;
+  TermsOfService: undefined;
   Chatting: { chatRoomId: number };
   EmailSignup: undefined;
   EmailVerification: { email: string };
