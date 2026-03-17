@@ -59,7 +59,7 @@ export default function Setting({ userProfile, onLogout }: SettingProps) {
       <MenuGroup
         title='계정 설정'
         items={[
-          { text: '비밀번호 변경', icon: <PasswordChangeIcon />, onPress: () => {} },
+          { text: '비밀번호 변경', icon: <PasswordChangeIcon />, onPress: () => navigation.navigate('PasswordChange') },
           { text: '환전계좌 관리/등록', icon: <MenuCircleIcon />, onPress: () => {} },
         ]}
       />

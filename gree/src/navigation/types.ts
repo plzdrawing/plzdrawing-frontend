@@ -5,6 +5,8 @@ export type RootStackParamList = {
   Main: undefined;
   HomePostDetail: { postId: string };
   ProfileEdit: undefined;
+  PasswordChange: undefined;
+  PasswordChangeComplete: undefined;
   AlarmNotification: undefined;
   Announcement: undefined;
   AnnouncementDetail: { id: number };

@@ -20,6 +20,8 @@ import Login from '@/src/screens/auth/login/Login';
 import EmailLogin from '@/src/screens/auth/login/EmailLogin';
 import MainNavigation from '@/src/navigation/MainNavigation';
 import ProfileEdit from '@/src/screens/my/settings/ProfileEdit';
+import PasswordChange from '@/src/screens/my/settings/PasswordChange';
+import PasswordChangeComplete from '@/src/screens/my/settings/PasswordChangeComplete';
 import AlarmNotification from '@/src/screens/my/settings/AlarmNotification';
 import Announcement from '@/src/screens/my/settings/Announcement';
 import AnnouncementDetail from '@/src/screens/my/settings/AnnouncementDetail';
@@ -78,6 +80,8 @@ export default function App() {
             <Stack.Screen name='EmailLogin' component={EmailLogin} />
             <Stack.Screen name='Main' component={MainNavigation} />
             <Stack.Screen name='ProfileEdit' component={ProfileEdit} />
+            <Stack.Screen name='PasswordChange' component={PasswordChange} />
+            <Stack.Screen name='PasswordChangeComplete' component={PasswordChangeComplete} />
             <Stack.Screen name='AlarmNotification' component={AlarmNotification} />
             <Stack.Screen name='Announcement' component={Announcement} />
             <Stack.Screen name='AnnouncementDetail' component={AnnouncementDetail} />
