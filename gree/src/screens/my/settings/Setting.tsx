@@ -41,7 +41,7 @@ export default function Setting({ userProfile, onLogout }: SettingProps) {
 
       <MenuGroup
         title='설정'
-        items={[{ text: '알림 설정', icon: <AlarmIcon />, onPress: () => {} }]}
+        items={[{ text: '알림 설정', icon: <AlarmIcon />, onPress: () => navigation.navigate('AlarmNotification') }]}
       />
       <View style={tw`h-[1px] w-full bg-light-gray-3`} />
 
