@@ -6,7 +6,6 @@ import { RootStackParamList } from '@/src/navigation/types';
 import { useUserStore } from '@/src/stores/userStore';
 import { chatController, ChatRoomStatus } from '@/src/apis/controller/chat';
 import { mapStatusToProcess } from '@/src/utils/formatTime';
-import * as FileSystem from 'expo-file-system';
 import * as ScreenCapture from 'expo-screen-capture';
 
 import {
@@ -268,7 +267,7 @@ export default function Chatting() {
     }
   };
 
-  // ── 이미지 메시지 전송 (presigned URL → S3 PUT → objectKey)
+  // ── 이미지 메시지 전송
   const handleSendImage = async (imageUri: string) => {
     setIsOpenedMenu(false);
 
@@ -287,24 +286,10 @@ export default function Chatting() {
     setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 50);
 
     try {
-      const { uploadUrl, objectKey } = await chatController.getImageUploadUrl(chatRoomId);
-      const fileInfo = await FileSystem.getInfoAsync(imageUri);
-      const size = fileInfo.exists && 'size' in fileInfo ? (fileInfo.size ?? 0) : 0;
-
-      const blob = await fetch(imageUri).then((r) => r.blob());
-      const uploadRes = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: blob,
-        headers: { 'Content-Type': 'image/png' },
-      });
-      if (!uploadRes.ok) throw new Error('S3 upload failed');
-
       const sent = (await chatController.sendImageMessage(chatRoomId, {
-        objectKey,
-        size,
-        mimeType: 'image/png',
-        width: 1200,
-        height: 1200,
+        uri: imageUri,
+        name: `chat-${Date.now()}.jpg`,
+        type: 'image/jpeg',
       })) as unknown as MessageItem;
 
       setMessages((prev) => prev.map((m) => (m.id === tempId ? { ...sent } : m)));

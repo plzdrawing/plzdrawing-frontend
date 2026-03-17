@@ -8,7 +8,6 @@ import {
   MessageListResponseDto,
   MessageResponseDto,
   SendMessageDto,
-  ChatImageUploadResponseDto,
   ReadChatDto,
 } from '../api';
 
@@ -73,19 +72,15 @@ export const chatController = {
 
   sendImageMessage: async (
     chatRoomId: number,
-    imageInfo: { objectKey: string; size: number; mimeType: string; width: number; height: number },
+    image: { uri: string; name: string; type: string },
   ) => {
-    const data: SendMessageDto = { type: 'IMAGE', ...imageInfo };
-    const response = await apiClient.post<MessageResponseDto>(
-      `/api/chats/${chatRoomId}/messages`,
-      data,
-    );
-    return response.data;
-  },
+    const formData = new FormData();
+    formData.append('image', image as any);
 
-  getImageUploadUrl: async (chatRoomId: number) => {
-    const response = await apiClient.get<ChatImageUploadResponseDto>(
-      `/api/chats/${chatRoomId}/messages/image-upload-url`,
+    const response = await apiClient.post<MessageResponseDto>(
+      `/api/chats/${chatRoomId}/messages/image-upload`,
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } },
     );
     return response.data;
   },

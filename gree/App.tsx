@@ -19,6 +19,8 @@ import LoginSplash from '@/src/screens/auth/login/LoginSplash';
 import Login from '@/src/screens/auth/login/Login';
 import EmailLogin from '@/src/screens/auth/login/EmailLogin';
 import MainNavigation from '@/src/navigation/MainNavigation';
+import HomePostDetail from './src/screens/home/HomePostDetail';
+import HomeRequestComplete from './src/screens/home/HomeRequestComplete';
 import ProfileEdit from '@/src/screens/my/settings/ProfileEdit';
 import PasswordChange from '@/src/screens/my/settings/PasswordChange';
 import PasswordChangeComplete from '@/src/screens/my/settings/PasswordChangeComplete';
@@ -81,6 +83,8 @@ export default function App() {
             <Stack.Screen name='Login' component={Login} />
             <Stack.Screen name='EmailLogin' component={EmailLogin} />
             <Stack.Screen name='Main' component={MainNavigation} />
+            <Stack.Screen name='HomePostDetail' component={HomePostDetail} />
+            <Stack.Screen name='HomeRequestComplete' component={HomeRequestComplete} />
             <Stack.Screen name='ProfileEdit' component={ProfileEdit} />
             <Stack.Screen name='PasswordChange' component={PasswordChange} />
             <Stack.Screen name='PasswordChangeComplete' component={PasswordChangeComplete} />

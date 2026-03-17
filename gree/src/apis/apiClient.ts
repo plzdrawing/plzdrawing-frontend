@@ -90,15 +90,17 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { refreshToken, setTokens, logout } = useAuthStore.getState();
+        const { refreshToken, setTokens, logout, isLoggedIn } = useAuthStore.getState();
 
         // refreshToken이 없으면 세션 만료 → 로그아웃 후 로그인 화면으로
         if (!refreshToken) {
           console.warn('[apiClient] 401 수신, refreshToken 없음 → 로그아웃 처리');
           isRefreshing = false;
           processQueue(null, null);
-          await useAuthStore.getState().logout();
-          resetToLogin();
+          if (isLoggedIn) {
+            await useAuthStore.getState().logout();
+            resetToLogin();
+          }
           return Promise.reject(error);
         }
 

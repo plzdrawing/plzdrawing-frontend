@@ -3,7 +3,13 @@ export type RootStackParamList = {
   Login: undefined;
   EmailLogin: undefined;
   Main: undefined;
-  HomePostDetail: { postId: string };
+  HomePostDetail: {
+    postId: string;
+    userName?: string;
+    price?: number;
+    sampleImage?: string;
+  };
+  HomeRequestComplete: { chatRoomId: number };
   ProfileEdit: undefined;
   PasswordChange: undefined;
   PasswordChangeComplete: undefined;

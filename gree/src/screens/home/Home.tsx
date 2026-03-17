@@ -85,8 +85,13 @@ export default function Home() {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleCardPress = (postId: string) => {
-    navigation.navigate('HomePostDetail', { postId });
+  const handleCardPress = (item: LatestContentsResponse) => {
+    navigation.navigate('HomePostDetail', {
+      postId: String(item.contents.contentId),
+      userName: item.uploader.nickname,
+      price: item.contents.price,
+      sampleImage: item.contents.imageUrls?.find(Boolean) || undefined,
+    });
   };
 
   // ──────────────────────────────────────────────
@@ -120,7 +125,7 @@ export default function Home() {
           estimatedTime={contents.timeTaken}
           estimatedPrice={contents.price}
           likeCount={contents.likeCount}
-          onClickCard={() => handleCardPress(String(contents.contentId))}
+          onClickCard={() => handleCardPress(item)}
         />
       </View>
     );
