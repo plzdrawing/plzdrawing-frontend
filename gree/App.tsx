@@ -22,6 +22,8 @@ import MainNavigation from '@/src/navigation/MainNavigation';
 import ProfileEdit from '@/src/screens/my/settings/ProfileEdit';
 import PasswordChange from '@/src/screens/my/settings/PasswordChange';
 import PasswordChangeComplete from '@/src/screens/my/settings/PasswordChangeComplete';
+import LogoutComplete from '@/src/screens/my/settings/LogoutComplete';
+import WithdrawComplete from '@/src/screens/my/settings/WithdrawComplete';
 import AlarmNotification from '@/src/screens/my/settings/AlarmNotification';
 import Announcement from '@/src/screens/my/settings/Announcement';
 import AnnouncementDetail from '@/src/screens/my/settings/AnnouncementDetail';
@@ -82,6 +84,8 @@ export default function App() {
             <Stack.Screen name='ProfileEdit' component={ProfileEdit} />
             <Stack.Screen name='PasswordChange' component={PasswordChange} />
             <Stack.Screen name='PasswordChangeComplete' component={PasswordChangeComplete} />
+            <Stack.Screen name='LogoutComplete' component={LogoutComplete} />
+            <Stack.Screen name='WithdrawComplete' component={WithdrawComplete} />
             <Stack.Screen name='AlarmNotification' component={AlarmNotification} />
             <Stack.Screen name='Announcement' component={Announcement} />
             <Stack.Screen name='AnnouncementDetail' component={AnnouncementDetail} />

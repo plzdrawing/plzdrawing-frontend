@@ -21,9 +21,10 @@ import {
 interface SettingProps {
   userProfile: BaseProfile;
   onLogout: () => void;
+  onWithdraw: () => void;
 }
 
-export default function Setting({ userProfile, onLogout }: SettingProps) {
+export default function Setting({ userProfile, onLogout, onWithdraw }: SettingProps) {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   return (
@@ -69,7 +70,7 @@ export default function Setting({ userProfile, onLogout }: SettingProps) {
         title='계정'
         items={[
           { text: '로그아웃', onPress: onLogout },
-          { text: '회원탈퇴', onPress: () => {} },
+          { text: '회원탈퇴', onPress: onWithdraw },
         ]}
       />
     </ScrollView>

@@ -7,6 +7,8 @@ export type RootStackParamList = {
   ProfileEdit: undefined;
   PasswordChange: undefined;
   PasswordChangeComplete: undefined;
+  LogoutComplete: undefined;
+  WithdrawComplete: undefined;
   AlarmNotification: undefined;
   Announcement: undefined;
   AnnouncementDetail: { id: number };

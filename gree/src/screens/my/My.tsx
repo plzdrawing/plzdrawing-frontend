@@ -15,6 +15,8 @@ import Container from '@/src/components/layout/Container';
 import TabHeader from '@/src/components/layout/TabHeader';
 import Profile from '@/src/screens/my/profile/Profile';
 import Setting from '@/src/screens/my/settings/Setting';
+import ConfirmModal from '@/src/components/common/modal/ConfirmModal';
+import AlertModal from '@/src/components/common/modal/AlertModal';
 
 import { memberController } from '@/src/apis/controller/member';
 import { useUserStore } from '@/src/stores/userStore';
@@ -32,6 +34,9 @@ export default function My() {
     imageUrl: '',
     hashtag: [],
   });
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -66,11 +71,27 @@ export default function My() {
     return () => backHandler.remove();
   }, [isFocused, navigation]);
 
-  const handleLogout = async () => {
-    await logout();
-    navigation.dispatch(
-      CommonActions.reset({ index: 0, routes: [{ name: 'LoginSplash' }] })
-    );
+  const handleLogoutConfirm = async () => {
+    setShowLogoutModal(false);
+    try {
+      await logout();
+      navigation.navigate('LogoutComplete');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      setErrorModalVisible(true);
+    }
+  };
+
+  const handleWithdrawConfirm = async () => {
+    setShowWithdrawModal(false);
+    try {
+      await memberController.withdrawMember();
+      await logout();
+      navigation.navigate('WithdrawComplete');
+    } catch (error) {
+      console.error('Withdraw failed:', error);
+      setErrorModalVisible(true);
+    }
   };
 
   return (
@@ -84,7 +105,39 @@ export default function My() {
       {selectedId === 0 ? (
         <Profile isFromMyPage={true} userProfile={userProfile} />
       ) : (
-        <Setting userProfile={userProfile} onLogout={handleLogout} />
+        <Setting
+          userProfile={userProfile}
+          onLogout={() => setShowLogoutModal(true)}
+          onWithdraw={() => setShowWithdrawModal(true)}
+        />
+      )}
+
+      {showLogoutModal && (
+        <ConfirmModal
+          modalTitle='로그아웃 하시겠습니까?'
+          cancelTitle='취소'
+          confirmTitle='확인'
+          onCancel={() => setShowLogoutModal(false)}
+          onConfirm={handleLogoutConfirm}
+        />
+      )}
+
+      {showWithdrawModal && (
+        <ConfirmModal
+          modalTitle='정말 회원탈퇴를 하시겠습니까?'
+          cancelTitle='취소'
+          confirmTitle='확인'
+          onCancel={() => setShowWithdrawModal(false)}
+          onConfirm={handleWithdrawConfirm}
+        />
+      )}
+
+      {errorModalVisible && (
+        <AlertModal
+          modalTitle='요청 처리에 실패했습니다.'
+          buttonTitle='확인'
+          onClickButton={() => setErrorModalVisible(false)}
+        />
       )}
     </Container>
   );
