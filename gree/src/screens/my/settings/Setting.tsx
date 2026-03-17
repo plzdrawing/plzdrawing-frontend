@@ -48,7 +48,7 @@ export default function Setting({ userProfile, onLogout }: SettingProps) {
       <MenuGroup
         title='정보 및 지원'
         items={[
-          { text: '공지 사항', icon: <MegaphoneIcon />, onPress: () => {} },
+          { text: '공지 사항', icon: <MegaphoneIcon />, onPress: () => navigation.navigate('Announcement') },
           { text: '고객 센터', icon: <QuestionIcon />, onPress: () => {} },
           { text: '1:1 문의', icon: <QuestionIcon />, onPress: () => {} },
           { text: '앱 관리', icon: <MultipleFileIcon />, onPress: () => {} },

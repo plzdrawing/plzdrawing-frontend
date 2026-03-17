@@ -21,6 +21,8 @@ import EmailLogin from '@/src/screens/auth/login/EmailLogin';
 import MainNavigation from '@/src/navigation/MainNavigation';
 import ProfileEdit from '@/src/screens/my/settings/ProfileEdit';
 import AlarmNotification from '@/src/screens/my/settings/AlarmNotification';
+import Announcement from '@/src/screens/my/settings/Announcement';
+import AnnouncementDetail from '@/src/screens/my/settings/AnnouncementDetail';
 import Chatting from '@/src/screens/talk/chatting/Chatting';
 import EmailSignup from '@/src/screens/auth/signup/EmailSignup';
 import EmailVerification from '@/src/screens/auth/signup/EmailVerification';
@@ -75,6 +77,8 @@ export default function App() {
             <Stack.Screen name='Main' component={MainNavigation} />
             <Stack.Screen name='ProfileEdit' component={ProfileEdit} />
             <Stack.Screen name='AlarmNotification' component={AlarmNotification} />
+            <Stack.Screen name='Announcement' component={Announcement} />
+            <Stack.Screen name='AnnouncementDetail' component={AnnouncementDetail} />
             <Stack.Screen name='Chatting' component={Chatting} />
             <Stack.Screen name='EmailSignup' component={EmailSignup} />
             <Stack.Screen name='EmailVerification' component={EmailVerification} />
