@@ -42,7 +42,7 @@ export default function MyInfoSection({ profile, onEditClick }: MyInfoSectionPro
           ))}
         </View>
         <View
-          style={tw`px-[16px] py-[8px] border border-light-gray-2 rounded-[8px]`}
+          style={tw`px-[16px] py-[8px] border border-light-gray-2 rounded-[8px] self-start`}
           onTouchEnd={onEditClick}
         >
           <Txt variant='bodySubText'>프로필 편집</Txt>
