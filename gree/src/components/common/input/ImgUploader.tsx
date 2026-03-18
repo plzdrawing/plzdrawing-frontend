@@ -30,7 +30,7 @@ export default function ImgUploader({ maxImages = 3, onImagesChange }: ImgUpload
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsMultipleSelection: true,
       selectionLimit: maxImages - images.length,
       quality: 0.8,

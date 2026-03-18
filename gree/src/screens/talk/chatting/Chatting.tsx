@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/navigation/types';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { useUserStore } from '@/src/stores/userStore';
 import { chatController, ChatRoomStatus } from '@/src/apis/controller/chat';
 import { mapStatusToProcess } from '@/src/utils/formatTime';
@@ -15,7 +16,6 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   View,
-  SafeAreaView,
   Text,
   ActivityIndicator,
 } from 'react-native';
@@ -49,7 +49,7 @@ export default function Chatting() {
   const route = useRoute<RouteProp<RootStackParamList, 'Chatting'>>();
   const { chatRoomId } = route.params;
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'Chatting'>>();
   const queryClient = useQueryClient();
   const { user } = useUserStore();
 
@@ -321,7 +321,7 @@ export default function Chatting() {
   return (
     <Container>
       <KeyboardAvoidingView behavior='height' style={tw`flex-1 w-full flex flex-col`}>
-        <SafeAreaView style={tw`flex flex-col justify-between flex-1`}>
+        <View style={tw`flex flex-col justify-between flex-1`}>
           {/* 상단 헤더 */}
           <Header title={counterpart ? `${counterpart.nickname} 님 과의 그림톡` : '그림톡'} />
 
@@ -330,25 +330,14 @@ export default function Chatting() {
             imageUrl={roomDetail?.post.thumbnailUrl || undefined}
             title={roomDetail?.post.title ?? ''}
             price={roomDetail?.paidAmount ?? roomDetail?.price ?? 0}
-            process={roomDetail ? mapStatusToProcess(roomDetail.status) : 'request'}
+            process={roomDetail ? mapStatusToProcess(roomDetail.status as any) : 'request'}
           />
-
-          {/* 상태 전환 액션 카드 */}
-          {/* {roomDetail && (
-            <StatusActionCard
-              status={roomDetail.status}
-              isArtist={isArtist}
-              loading={statusMutation.isPending}
-              onStatusChange={(next) => statusMutation.mutate(next)}
-              onNavigateReview={() => Alert.alert('후기 작성', '후기 작성 화면으로 이동합니다.')}
-            />
-          )} */}
 
           {/* 메시지 목록 */}
           <ScrollView
             ref={scrollViewRef}
             contentContainerStyle={{ flexGrow: 1 }}
-            style={tw`flex-1 w-full bg-light_gray1`}
+            style={tw`flex-1 w-full bg-light-gray-1`}
             onScroll={({ nativeEvent }) => {
               if (nativeEvent.contentOffset.y < 80) loadOlderMessages();
             }}
@@ -360,7 +349,7 @@ export default function Chatting() {
                 Keyboard.dismiss();
               }}
             >
-              <View style={tw`flex items-stretch p-[17px_32px] gap-[17px] w-full bg-light_gray1`}>
+              <View style={tw`flex items-stretch p-[17px_32px] gap-[17px] w-full bg-light-gray-1`}>
                 {isLoadingOlder && (
                   <View style={tw`w-full items-center py-[8px]`}>
                     <ActivityIndicator size='small' color={Colors.colors.dark_gray1} />
@@ -409,6 +398,22 @@ export default function Chatting() {
                     />
                   );
                 })}
+
+                {roomDetail && (
+                  <StatusActionCard
+                    status={roomDetail.status as ChatRoomStatus}
+                    isArtist={isArtist}
+                    loading={statusMutation.isPending}
+                    onStatusChange={(next) => statusMutation.mutate(next)}
+                    onNavigateReview={() =>
+                      navigation.navigate('ReviewCreate', {
+                        chatRoomId,
+                        receiverNickname: counterpart?.nickname,
+                      })
+                    }
+                    counterpart={counterpart}
+                  />
+                )}
               </View>
             </TouchableWithoutFeedback>
           </ScrollView>
@@ -422,7 +427,7 @@ export default function Chatting() {
             isOpenMenu={isOpenedMenu}
             setIsOpenMenu={setIsOpenedMenu}
           />
-        </SafeAreaView>
+        </View>
       </KeyboardAvoidingView>
     </Container>
   );

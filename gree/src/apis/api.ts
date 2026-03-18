@@ -176,6 +176,8 @@ export interface Review {
   writerId: number;
   receiverId: number;
   postId: number;
+  chatRoomId: number;
+  imageObjectKeys: string[];
   /** @format date-time */
   createdAt: string;
   writer: Member;
@@ -202,8 +204,10 @@ export interface ChatRoom {
   id: number;
   status:
     | "REQUESTED"
+    | "ACCEPTED"
     | "PAID"
     | "IN_PROGRESS"
+    | "DRAFT_SENT"
     | "COMPLETED"
     | "REVIEWED"
     | "CANCELLED";
@@ -213,6 +217,10 @@ export interface ChatRoom {
   description: string;
   price: number;
   paidAmount: number;
+  /** @format date-time */
+  estimatedAt: string;
+  feedbackCount: number;
+  feedbackUsed: number;
   requester: Member;
   artist: Member;
   post: Post;
@@ -551,6 +559,82 @@ export interface ContentsPageResponseDto {
   limit: number;
 }
 
+export interface CreateReviewDto {
+  /**
+   * 채팅방 ID
+   * @example 1
+   */
+  chatRoomId: number;
+  /**
+   * 별점
+   * @example "FIVE"
+   */
+  star: "ONE" | "TWO" | "THREE" | "FOUR" | "FIVE";
+  /**
+   * 리뷰 키워드 목록 (최대 3개)
+   * @maxItems 3
+   * @example ["귀여워요","친절해요","섬세해요"]
+   */
+  keywords?: string[];
+  /**
+   * 자유 후기 (0~200자)
+   * @maxLength 200
+   * @example "요청사항을 너무 잘 들어주세요!"
+   */
+  content?: string;
+  /**
+   * 후기 이미지 object key 목록 (최대 3개)
+   * @maxItems 3
+   * @example ["review/1/2026/03/uuid1.jpg"]
+   */
+  imageObjectKeys?: string[];
+}
+
+export interface ReviewResponseDto {
+  /**
+   * 리뷰 ID
+   * @example 1
+   */
+  id: number;
+  /**
+   * 채팅방 ID
+   * @example 1
+   */
+  chatRoomId: number;
+  /**
+   * 별점
+   * @example "FIVE"
+   */
+  star: "ONE" | "TWO" | "THREE" | "FOUR" | "FIVE";
+  /**
+   * 자유 후기
+   * @example "정말 만족해요!"
+   */
+  content?: string;
+  /**
+   * 키워드 목록
+   * @example ["귀여워요","친절해요"]
+   */
+  keywords?: string[];
+  /** 이미지 object key 목록 */
+  imageObjectKeys?: string[];
+  /**
+   * 작성자 ID
+   * @example 10
+   */
+  writerId: number;
+  /**
+   * 수신자(그림쟁이) ID
+   * @example 20
+   */
+  receiverId: number;
+  /**
+   * 작성 일시
+   * @format date-time
+   */
+  createdAt: string;
+}
+
 export interface SendVerificationCodeDto {
   /**
    * 이메일
@@ -663,8 +747,10 @@ export interface ChatRoomDetailResponseDto {
   /** @example "REQUESTED" */
   status:
     | "REQUESTED"
+    | "ACCEPTED"
     | "PAID"
     | "IN_PROGRESS"
+    | "DRAFT_SENT"
     | "COMPLETED"
     | "REVIEWED"
     | "CANCELLED";
@@ -759,8 +845,10 @@ export interface ChatRoomListItemDto {
   /** @example "REQUESTED" */
   status:
     | "REQUESTED"
+    | "ACCEPTED"
     | "PAID"
     | "IN_PROGRESS"
+    | "DRAFT_SENT"
     | "COMPLETED"
     | "REVIEWED"
     | "CANCELLED";
@@ -813,8 +901,10 @@ export interface UpdateChatRoomStatusDto {
   /** @example "IN_PROGRESS" */
   status:
     | "REQUESTED"
+    | "ACCEPTED"
     | "PAID"
     | "IN_PROGRESS"
+    | "DRAFT_SENT"
     | "COMPLETED"
     | "REVIEWED"
     | "CANCELLED";
@@ -874,7 +964,7 @@ export interface SendMessageDto {
   type?: "TEXT" | "IMAGE" | "SYSTEM";
   /**
    * 텍스트 메시지 내용
-   * @maxLength 2000
+   * @maxLength 1000
    * @example "안녕하세요 :)"
    */
   content?: string;
@@ -909,14 +999,46 @@ export interface SendMessageDto {
   height?: number;
 }
 
+export interface ChatImageUploadRequestDto {
+  /**
+   * FE에서 업로드할 원본 파일명 (파일 바이너리는 전송하지 않음)
+   * @example "dog.png"
+   */
+  fileName: string;
+  /**
+   * FE에서 업로드할 파일의 MIME 타입
+   * @example "image/png"
+   */
+  contentType: string;
+  /**
+   * FE에서 업로드할 파일 크기 (bytes)
+   * @min 1
+   * @max 10485760
+   * @example 5242880
+   */
+  size: number;
+  /**
+   * 이미지 너비 (px)
+   * @min 1
+   * @example 1200
+   */
+  width?: number;
+  /**
+   * 이미지 높이 (px)
+   * @min 1
+   * @example 900
+   */
+  height?: number;
+}
+
 export interface ChatImageUploadResponseDto {
   /**
-   * S3 업로드 presigned URL
+   * FE가 직접 PUT 업로드할 S3 presigned URL
    * @example "https://s3-presigned-put-url"
    */
   uploadUrl: string;
   /**
-   * S3 object key
+   * 업로드 완료 후 POST /chats/:id/messages (type=IMAGE) 에 전달할 S3 object key
    * @example "chat/12/2026/02/uuid.png"
    */
   objectKey: string;
@@ -934,6 +1056,123 @@ export interface ReadChatDto {
    * @example 150
    */
   lastReadMessageId?: number;
+}
+
+export interface UpdateChatRequestDto {
+  /**
+   * 수정할 요청 내용 (1~1000자)
+   * @minLength 1
+   * @maxLength 1000
+   * @example "강아지 말고 고양이 그림으로 변경해주세요 :)"
+   */
+  description: string;
+}
+
+export interface AcceptChatDto {
+  /**
+   * 견적 금액 (코인)
+   * @min 1
+   * @example 500
+   */
+  price: number;
+  /**
+   * 예상 완료일 (YYYY-MM-DD)
+   * @example "2026-04-01"
+   */
+  estimatedAt: string;
+  /**
+   * 수정 허용 횟수
+   * @min 1
+   * @max 10
+   * @example 2
+   */
+  feedbackCount: number;
+}
+
+export interface RejectChatDto {
+  /**
+   * 거절 사유 키워드 목록 (최대 3개)
+   * @maxItems 3
+   * @example ["스타일이 달라요","다른 작업중이에요"]
+   */
+  reasons?: string[];
+  /**
+   * 자유 거절 사유 (0~200자)
+   * @maxLength 200
+   * @example "지금은 작업이 많아서요."
+   */
+  reasonText?: string;
+}
+
+export interface RequestPriceChangeDto {
+  /**
+   * 변경된 금액 (코인)
+   * @min 1
+   * @example 700
+   */
+  price: number;
+  /**
+   * 예상 완료일 (YYYY-MM-DD)
+   * @example "2026-04-01"
+   */
+  estimatedAt: string;
+  /**
+   * 수정 허용 횟수
+   * @min 1
+   * @max 10
+   * @example 1
+   */
+  feedbackCount: number;
+  /**
+   * 금액 변경 사유 (0~200자)
+   * @maxLength 200
+   * @example "채색 작업이 추가되어 금액이 변경되었습니다."
+   */
+  reason?: string;
+}
+
+export interface PayChatDto {
+  /**
+   * 결제 수단
+   * @example "KAKAO_PAY"
+   */
+  paymentMethod: "KAKAO_PAY" | "NAVER_PAY" | "CREDIT_CARD" | "TOSS_PAY";
+}
+
+export interface PayChatResponseDto {
+  /**
+   * 총 수정 가능 횟수
+   * @example 2
+   */
+  feedbackCount: number;
+}
+
+export interface SendDrawingDto {
+  /**
+   * 그림 이미지 object key 목록 (1~3개)
+   * @maxItems 3
+   * @minItems 1
+   * @example ["chat/1/2026/03/uuid1.jpg","chat/1/2026/03/uuid2.jpg"]
+   */
+  imageObjectKeys: string[];
+}
+
+export interface SendDrawingResponseDto {
+  /**
+   * 남은 수정 횟수
+   * @example 1
+   */
+  remainingRevisions: number;
+}
+
+export interface RevisionRequestDto {
+  /**
+   * 수정 요청 내용
+   * @minLength 1
+   * @maxLength 1000
+   * @example "고양이 눈 조금 더 키워주세요 :)!"
+   */
+  content: string;
 }
 
 import type {
@@ -1523,6 +1762,29 @@ export class Api<
       }),
 
     /**
+     * @description COMPLETED 상태의 채팅방에 대해 요청자가 후기를 작성합니다. 채팅방당 1회만 작성 가능하며, 완료 후 채팅방 상태가 REVIEWED로 전환됩니다.
+     *
+     * @tags Review
+     * @name ReviewControllerCreateReview
+     * @summary 후기 작성
+     * @request POST:/api/reviews
+     * @secure
+     */
+    reviewControllerCreateReview: (
+      data: CreateReviewDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ReviewResponseDto, void>({
+        path: `/api/reviews`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
      * No description
      *
      * @tags Email
@@ -1716,8 +1978,10 @@ export class Api<
          */
         status?:
           | "REQUESTED"
+          | "ACCEPTED"
           | "PAID"
           | "IN_PROGRESS"
+          | "DRAFT_SENT"
           | "COMPLETED"
           | "REVIEWED"
           | "CANCELLED";
@@ -1848,23 +2112,17 @@ export class Api<
       }),
 
     /**
-     * @description 이미지 파일(필수)을 업로드하여 IMAGE 타입 메시지를 전송합니다. 파일 최대 크기는 10MB입니다.
+     * @description S3 presigned 업로드 URL만 발급합니다. 실제 파일 업로드(PUT)는 FE가 uploadUrl로 직접 수행해야 하며, 업로드 완료 후 POST /chats/:id/messages에 type=IMAGE와 objectKey를 전달해 메시지를 전송합니다. 파일 최대 크기는 10MB입니다.
      *
      * @tags Chat
      * @name ChatControllerSendImageMessage
-     * @summary 이미지 메시지 전송
+     * @summary 이미지 업로드 URL 발급
      * @request POST:/api/chats/{id}/messages/image-upload
      * @secure
      */
     chatControllerSendImageMessage: (
       id: string,
-      data: {
-        /**
-         * 전송할 이미지 파일(필수), 최대 10MB
-         * @format binary
-         */
-        image: File;
-      },
+      data: ChatImageUploadRequestDto,
       params: RequestParams = {},
     ) =>
       this.request<ChatImageUploadResponseDto, void>({
@@ -1872,7 +2130,7 @@ export class Api<
         method: "POST",
         body: data,
         secure: true,
-        type: ContentType.FormData,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -1897,6 +2155,228 @@ export class Api<
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description REQUESTED 상태에서만 요청자가 요청 내용(description)을 수정합니다. 수정 시 새 REQUEST_CARD 시스템 메시지가 생성됩니다.
+     *
+     * @tags Chat
+     * @name ChatControllerUpdateChatRequest
+     * @summary 요청 내용 수정 (요청자)
+     * @request PATCH:/api/chats/{id}/request
+     * @secure
+     */
+    chatControllerUpdateChatRequest: (
+      id: string,
+      data: UpdateChatRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ChatRoomDetailResponseDto, void>({
+        path: `/api/chats/${id}/request`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description REQUESTED 상태의 채팅방을 ACCEPTED로 전환하고 PAYMENT_REQUEST 카드를 생성합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerAcceptChatRoom
+     * @summary 요청 수락 (그림쟁이)
+     * @request PATCH:/api/chats/{id}/accept
+     * @secure
+     */
+    chatControllerAcceptChatRoom: (
+      id: string,
+      data: AcceptChatDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ChatRoomDetailResponseDto, void>({
+        path: `/api/chats/${id}/accept`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description REQUESTED 상태의 채팅방을 CANCELLED로 전환합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerRejectChatRoom
+     * @summary 요청 거절 (그림쟁이)
+     * @request PATCH:/api/chats/{id}/reject
+     * @secure
+     */
+    chatControllerRejectChatRoom: (
+      id: string,
+      data: RejectChatDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ChatRoomDetailResponseDto, void>({
+        path: `/api/chats/${id}/reject`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description REQUESTED 또는 ACCEPTED 상태의 채팅방을 CANCELLED로 전환합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerCancelChatRoom
+     * @summary 요청 취소 (요청자)
+     * @request PATCH:/api/chats/{id}/cancel
+     * @secure
+     */
+    chatControllerCancelChatRoom: (id: string, params: RequestParams = {}) =>
+      this.request<ChatRoomDetailResponseDto, void>({
+        path: `/api/chats/${id}/cancel`,
+        method: "PATCH",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description REQUESTED / ACCEPTED 상태에서 금액, 예상 완료일, 수정 횟수를 변경하고 PRICE_CHANGE_REQUEST 카드를 생성합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerRequestPriceChange
+     * @summary 견적 수정 요청 (그림쟁이)
+     * @request PATCH:/api/chats/{id}/request-price-change
+     * @secure
+     */
+    chatControllerRequestPriceChange: (
+      id: string,
+      data: RequestPriceChangeDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ChatRoomDetailResponseDto, void>({
+        path: `/api/chats/${id}/request-price-change`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description ACCEPTED 상태에서 결제를 진행하고 PAID 상태로 전환합니다. PaymentHistory가 생성됩니다.
+     *
+     * @tags Chat
+     * @name ChatControllerPayChatRoom
+     * @summary 결제 (요청자)
+     * @request PATCH:/api/chats/{id}/pay
+     * @secure
+     */
+    chatControllerPayChatRoom: (
+      id: string,
+      data: PayChatDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<PayChatResponseDto, void>({
+        path: `/api/chats/${id}/pay`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description PAID 상태에서 IN_PROGRESS로 전환하고 WORK_STARTED 시스템 메시지를 생성합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerStartWork
+     * @summary 작업 시작 (그림쟁이)
+     * @request PATCH:/api/chats/{id}/start
+     * @secure
+     */
+    chatControllerStartWork: (id: string, params: RequestParams = {}) =>
+      this.request<ChatRoomDetailResponseDto, void>({
+        path: `/api/chats/${id}/start`,
+        method: "PATCH",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description IN_PROGRESS 상태에서 DRAFT_SENT로 전환하고 DRAWING_SENT 시스템 메시지를 생성합니다. 이미지 최대 3개.
+     *
+     * @tags Chat
+     * @name ChatControllerSendDrawing
+     * @summary 그림 전송 (그림쟁이)
+     * @request POST:/api/chats/{id}/send-drawing
+     * @secure
+     */
+    chatControllerSendDrawing: (
+      id: string,
+      data: SendDrawingDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<SendDrawingResponseDto, void>({
+        path: `/api/chats/${id}/send-drawing`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description DRAFT_SENT 상태에서 IN_PROGRESS로 복귀하고 REVISION_REQUESTED 시스템 메시지를 생성합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerRequestRevision
+     * @summary 수정 요청 (요청자)
+     * @request POST:/api/chats/{id}/revision
+     * @secure
+     */
+    chatControllerRequestRevision: (
+      id: string,
+      data: RevisionRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ChatRoomDetailResponseDto, void>({
+        path: `/api/chats/${id}/revision`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description DRAFT_SENT 상태에서 COMPLETED로 전환하고 WORK_COMPLETED + REVIEW_PROMPT 시스템 메시지를 생성합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerConfirmDrawing
+     * @summary 최종 확인 / 저장하기 (요청자)
+     * @request PATCH:/api/chats/{id}/confirm
+     * @secure
+     */
+    chatControllerConfirmDrawing: (id: string, params: RequestParams = {}) =>
+      this.request<ChatRoomDetailResponseDto, void>({
+        path: `/api/chats/${id}/confirm`,
+        method: "PATCH",
+        secure: true,
         format: "json",
         ...params,
       }),

@@ -39,7 +39,7 @@ const ChatInput = ({
       const resized = await ImageManipulator.manipulateAsync(
         uri,
         [{ resize: { width: 1200 } }],
-        { compress: 0.8, format: ImageManipulator.SaveFormat.PNG },
+        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG },
       );
       return resized.uri;
     } catch {
@@ -56,7 +56,7 @@ const ChatInput = ({
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'],
         allowsEditing: false,
         quality: 1,
       });

@@ -32,6 +32,7 @@ import AnnouncementDetail from '@/src/screens/my/settings/AnnouncementDetail';
 import AppManagement from '@/src/screens/my/settings/AppManagement';
 import TermsOfService from '@/src/screens/my/settings/TermsOfService';
 import Chatting from '@/src/screens/talk/chatting/Chatting';
+import ReviewCreate from '@/src/screens/talk/review/ReviewCreate';
 import EmailSignup from '@/src/screens/auth/signup/EmailSignup';
 import EmailVerification from '@/src/screens/auth/signup/EmailVerification';
 import EmailVerificationComplete from '@/src/screens/auth/signup/EmailVerificationComplete';
@@ -96,6 +97,7 @@ export default function App() {
             <Stack.Screen name='AppManagement' component={AppManagement} />
             <Stack.Screen name='TermsOfService' component={TermsOfService} />
             <Stack.Screen name='Chatting' component={Chatting} />
+            <Stack.Screen name='ReviewCreate' component={ReviewCreate} />
             <Stack.Screen name='EmailSignup' component={EmailSignup} />
             <Stack.Screen name='EmailVerification' component={EmailVerification} />
             <Stack.Screen name='EmailVerificationComplete' component={EmailVerificationComplete} />

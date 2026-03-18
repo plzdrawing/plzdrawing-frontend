@@ -21,6 +21,7 @@ export type RootStackParamList = {
   AppManagement: undefined;
   TermsOfService: undefined;
   Chatting: { chatRoomId: number };
+  ReviewCreate: { chatRoomId: number; receiverNickname?: string };
   EmailSignup: undefined;
   EmailVerification: { email: string };
   EmailVerificationComplete: { email: string };
