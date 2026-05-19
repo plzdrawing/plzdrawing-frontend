@@ -21,6 +21,7 @@ interface HomeCardProps {
   likeCount: number;
   isLiked?: boolean;
   onClickCard?: () => void;
+  onClickProfile?: () => void;
 }
 
 export default function HomeCard({
@@ -38,6 +39,7 @@ export default function HomeCard({
   likeCount = 25,
   isLiked: initialIsLiked = false,
   onClickCard,
+  onClickProfile,
 }: HomeCardProps) {
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [profileImgError, setProfileImgError] = useState(false);
@@ -51,7 +53,11 @@ export default function HomeCard({
       style={tw`flex-col w-full p-[17px] rounded-[5px] bg-white border border-light-gray-2`}
       onPress={onClickCard}
     >
-      <View style={tw`flex-row items-center gap-[10px]`}>
+      <TouchableOpacity
+        style={tw`flex-row items-center gap-[10px]`}
+        onPress={onClickProfile}
+        disabled={!onClickProfile}
+      >
         {hasProfileImg ? (
           <Image
             source={{ uri: profileImage }}
@@ -69,7 +75,7 @@ export default function HomeCard({
             그림 {drawingCount}회 / 후기 {reviewCount}개 / 별점 {Number(starRating).toFixed(1)}점
           </Txt>
         </View>
-      </View>
+      </TouchableOpacity>
 
       <Txt variant="secondaryText" color="dark_gray2" style={tw`my-[7px]`}>
         {timeAgo}

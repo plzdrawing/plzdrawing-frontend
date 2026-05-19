@@ -1,6 +1,7 @@
 import tw from '@/src/lib/tailwind';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useCallback, useState } from 'react';
 import { RootStackParamList } from '@/src/navigation/types';
 import { BaseProfile } from '@/src/types/profile';
 
@@ -17,6 +18,7 @@ import {
   MenuCircleIcon,
   PasswordChangeIcon,
 } from '@/assets/images';
+import { walletController } from '@/src/apis/controller/wallet';
 
 interface SettingProps {
   userProfile: BaseProfile;
@@ -26,6 +28,33 @@ interface SettingProps {
 
 export default function Setting({ userProfile, onLogout, onWithdraw }: SettingProps) {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const [coinBalance, setCoinBalance] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const fetchWallet = async () => {
+        try {
+          const wallet = await walletController.getMyWallet();
+          if (isActive) {
+            setCoinBalance(wallet?.balance ?? 0);
+          }
+        } catch (error) {
+          console.error('Failed to fetch wallet balance:', error);
+          if (isActive) {
+            setCoinBalance(0);
+          }
+        }
+      };
+
+      fetchWallet();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
   return (
     <ScrollView
@@ -37,7 +66,7 @@ export default function Setting({ userProfile, onLogout, onWithdraw }: SettingPr
         onEditClick={() => navigation.navigate('ProfileEdit')}
       />
 
-      <GreeCoinSection amount={20} onCharge={() => {}} />
+      <GreeCoinSection amount={coinBalance} onCharge={() => navigation.navigate('CoinShop')} />
       <View style={tw`mt-[17px] h-[1px] w-full bg-light-gray-3`} />
 
       <MenuGroup
@@ -50,7 +79,7 @@ export default function Setting({ userProfile, onLogout, onWithdraw }: SettingPr
         title='정보 및 지원'
         items={[
           { text: '공지 사항', icon: <MegaphoneIcon />, onPress: () => navigation.navigate('Announcement') },
-          { text: '고객 센터', icon: <QuestionIcon />, onPress: () => {} },
+          { text: '고객 센터', icon: <QuestionIcon />, onPress: () => navigation.navigate('CustomerService') },
           { text: '1:1 문의', icon: <QuestionIcon />, onPress: () => {} },
           { text: '앱 관리', icon: <MultipleFileIcon />, onPress: () => navigation.navigate('AppManagement') },
         ]}

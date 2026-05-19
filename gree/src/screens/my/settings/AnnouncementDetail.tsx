@@ -1,15 +1,18 @@
 import tw from '@/src/lib/tailwind';
+import { useState, useEffect } from 'react';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '@/src/navigation/types';
 
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, ActivityIndicator } from 'react-native';
 import Container from '@/src/components/layout/Container';
 import Header from '@/src/components/layout/Header';
 import Txt from '@/src/components/common/Txt';
 
 import { BackArrowIcon } from '@/assets/images';
-import { AnnouncementItem } from '@/src/screens/my/settings/Announcement';
+import { noticeController } from '@/src/apis/controller/notice';
+import { NoticeResponseDto } from '@/src/apis/api';
+import { formatRelativeTime } from '@/src/utils/formatTime';
 
 type Props = StackScreenProps<RootStackParamList, 'AnnouncementDetail'>;
 

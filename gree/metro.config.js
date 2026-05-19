@@ -12,6 +12,7 @@ module.exports = (() => {
 
   config.resolver = {
     ...resolver,
+    useWatchman: false,
     assetExts: [...resolver.assetExts.filter((ext) => ext !== 'svg'), 'ttf'],
     sourceExts: [...resolver.sourceExts, 'svg'],
     extraNodeModules: {

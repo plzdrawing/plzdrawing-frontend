@@ -20,7 +20,6 @@ import {
   SendDrawingResponseDto,
   RevisionRequestDto,
 } from '../api';
-import { File } from 'expo-file-system';
 
 export type ChatRoomStatus =
   | 'REQUESTED'
@@ -31,6 +30,115 @@ export type ChatRoomStatus =
   | 'COMPLETED'
   | 'REVIEWED'
   | 'CANCELLED';
+
+export type ChatImageSendStage =
+  | 'READ_LOCAL_FILE'
+  | 'ISSUE_UPLOAD_URL'
+  | 'UPLOAD_TO_S3'
+  | 'SEND_IMAGE_MESSAGE';
+
+export class ChatImageSendError extends Error {
+  stage: ChatImageSendStage;
+  statusCode?: number;
+  detail?: string;
+
+  constructor(stage: ChatImageSendStage, message: string, statusCode?: number, detail?: string) {
+    super(message);
+    this.name = 'ChatImageSendError';
+    this.stage = stage;
+    this.statusCode = statusCode;
+    this.detail = detail;
+  }
+}
+
+function toChatImageSendError(
+  stage: ChatImageSendStage,
+  error: any,
+  fallbackMessage: string,
+): ChatImageSendError {
+  if (error instanceof ChatImageSendError) return error;
+
+  const statusCode = error?.response?.status;
+  const detail =
+    error?.response?.data?.message ??
+    error?.response?.data?.error ??
+    error?.message;
+
+  return new ChatImageSendError(stage, fallbackMessage, statusCode, detail);
+}
+
+async function uploadChatImageObjectKey(
+  chatRoomId: number,
+  image: { uri: string; name: string; type: string; size?: number; width?: number; height?: number },
+) {
+  let localBlob: Blob;
+  let fileSize = 0;
+  let contentType = image.type || 'image/jpeg';
+
+  try {
+    const localResponse = await fetch(image.uri);
+    if (!localResponse.ok) {
+      throw new Error(`Local image read failed (${localResponse.status})`);
+    }
+
+    localBlob = await localResponse.blob();
+    fileSize = image.size ?? localBlob.size ?? 0;
+
+    if (!fileSize || fileSize <= 0) {
+      throw new Error('이미지 파일 크기를 확인할 수 없습니다.');
+    }
+    if (fileSize > 10 * 1024 * 1024) {
+      throw new Error('파일 크기가 10MB를 초과했습니다.');
+    }
+
+    contentType = image.type || localBlob.type || 'image/jpeg';
+  } catch (error: any) {
+    throw toChatImageSendError('READ_LOCAL_FILE', error, '이미지 파일 읽기 단계에서 실패했습니다.');
+  }
+
+  let uploadUrl = '';
+  let objectKey = '';
+
+  try {
+    const issueUploadResponse = await apiClient.post<ChatImageUploadResponseDto>(
+      `/api/chats/${chatRoomId}/messages/image-upload`,
+      {
+        fileName: image.name,
+        contentType,
+        size: fileSize,
+        width: image.width,
+        height: image.height,
+      },
+    );
+
+    uploadUrl = issueUploadResponse.data.uploadUrl;
+    objectKey = issueUploadResponse.data.objectKey;
+  } catch (error: any) {
+    throw toChatImageSendError('ISSUE_UPLOAD_URL', error, '업로드 URL 발급 단계에서 실패했습니다.');
+  }
+
+  try {
+    const uploadResponse = await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': contentType,
+      },
+      body: localBlob,
+    });
+
+    if (!uploadResponse.ok) {
+      throw new ChatImageSendError(
+        'UPLOAD_TO_S3',
+        `S3 업로드 실패 (${uploadResponse.status})`,
+        uploadResponse.status,
+      );
+    }
+  } catch (error: any) {
+    throw toChatImageSendError('UPLOAD_TO_S3', error, 'S3 업로드 단계에서 실패했습니다.');
+  }
+
+  return { objectKey, fileSize, contentType };
+}
 
 export const chatController = {
   createChatRoom: async (data: CreateChatRoomDto) => {
@@ -53,6 +161,10 @@ export const chatController = {
   getChatRoomDetail: async (chatRoomId: number) => {
     const response = await apiClient.get<ChatRoomDetailResponseDto>(`/api/chats/${chatRoomId}`);
     return response.data;
+  },
+
+  deleteChatRoom: async (chatRoomId: number) => {
+    await apiClient.delete<void>(`/api/chats/${chatRoomId}`);
   },
 
   updateChatRoomStatus: async (chatRoomId: number, data: UpdateChatRoomStatusDto) => {
@@ -87,52 +199,43 @@ export const chatController = {
     chatRoomId: number,
     image: { uri: string; name: string; type: string; size?: number; width?: number; height?: number },
   ) => {
-    const localFile = new File(image.uri);
-    if (!localFile.exists) {
-      throw new Error('Local image file not found');
+    if (!Number.isInteger(image.width) || !Number.isInteger(image.height) || image.width! < 1 || image.height! < 1) {
+      throw new ChatImageSendError(
+        'SEND_IMAGE_MESSAGE',
+        '이미지 가로/세로 정보(width, height)가 올바르지 않습니다.',
+      );
     }
 
-    const fileInfo = localFile.info();
-    const fileSize = image.size ?? Number(fileInfo.size ?? 0);
-
-    const issueUploadResponse = await apiClient.post<ChatImageUploadResponseDto>(
-      `/api/chats/${chatRoomId}/messages/image-upload`,
-      {
-        fileName: image.name,
-        contentType: image.type,
-        size: fileSize,
-        width: image.width,
-        height: image.height,
-      },
-    );
-
-    const { uploadUrl, objectKey } = issueUploadResponse.data;
-    const fileBytes = await localFile.bytes();
-
-    const uploadResponse = await fetch(uploadUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': image.type,
-      },
-      body: fileBytes,
-    });
-
-    if (!uploadResponse.ok) {
-      throw new Error(`S3 upload failed (${uploadResponse.status})`);
-    }
+    const { objectKey, fileSize, contentType } = await uploadChatImageObjectKey(chatRoomId, image);
 
     const messageData: SendMessageDto = {
       type: 'IMAGE',
       objectKey,
       size: fileSize,
-      mimeType: image.type,
+      mimeType: contentType,
       width: image.width,
       height: image.height,
     };
 
-    const response = await apiClient.post<MessageResponseDto>(
-      `/api/chats/${chatRoomId}/messages`,
-      messageData,
+    try {
+      const response = await apiClient.post<MessageResponseDto>(
+        `/api/chats/${chatRoomId}/messages`,
+        messageData,
+      );
+      return response.data;
+    } catch (error: any) {
+      throw toChatImageSendError('SEND_IMAGE_MESSAGE', error, '이미지 메시지 전송 단계에서 실패했습니다.');
+    }
+  },
+
+  sendDrawingImage: async (
+    chatRoomId: number,
+    image: { uri: string; name: string; type: string; size?: number; width?: number; height?: number },
+  ) => {
+    const { objectKey } = await uploadChatImageObjectKey(chatRoomId, image);
+    const response = await apiClient.post<SendDrawingResponseDto>(
+      `/api/chats/${chatRoomId}/send-drawing`,
+      { imageObjectKeys: [objectKey] },
     );
     return response.data;
   },

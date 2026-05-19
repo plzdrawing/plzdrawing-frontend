@@ -21,6 +21,7 @@ import EmailLogin from '@/src/screens/auth/login/EmailLogin';
 import MainNavigation from '@/src/navigation/MainNavigation';
 import HomePostDetail from './src/screens/home/HomePostDetail';
 import HomeRequestComplete from './src/screens/home/HomeRequestComplete';
+import UserProfile from '@/src/screens/my/userProfile/UserProfile';
 import ProfileEdit from '@/src/screens/my/settings/ProfileEdit';
 import PasswordChange from '@/src/screens/my/settings/PasswordChange';
 import PasswordChangeComplete from '@/src/screens/my/settings/PasswordChangeComplete';
@@ -29,8 +30,12 @@ import WithdrawComplete from '@/src/screens/my/settings/WithdrawComplete';
 import AlarmNotification from '@/src/screens/my/settings/AlarmNotification';
 import Announcement from '@/src/screens/my/settings/Announcement';
 import AnnouncementDetail from '@/src/screens/my/settings/AnnouncementDetail';
+import CustomerService from '@/src/screens/my/settings/CustomerService';
+import FAQDetail from '@/src/screens/my/settings/FAQDetail';
 import AppManagement from '@/src/screens/my/settings/AppManagement';
 import TermsOfService from '@/src/screens/my/settings/TermsOfService';
+import NotificationCenter from '@/src/screens/my/notifications/NotificationCenter';
+import NotificationDetail from '@/src/screens/my/notifications/NotificationDetail';
 import Chatting from '@/src/screens/talk/chatting/Chatting';
 import ReviewCreate from '@/src/screens/talk/review/ReviewCreate';
 import EmailSignup from '@/src/screens/auth/signup/EmailSignup';
@@ -40,7 +45,12 @@ import PasswordSetting from '@/src/screens/auth/signup/PasswordSetting';
 import NicknameSettingSplash from '@/src/screens/auth/signup/NicknameSettingSplash';
 import NicknameSetting from '@/src/screens/auth/signup/NicknameSetting';
 import NicknameSettingComplete from '@/src/screens/auth/signup/NicknameSettingComplete';
-import PostUpload from '@/src/screens/home/PostUpload';
+import PostEditor from '@/src/screens/home/PostEditor';
+import ForgotPassword from '@/src/screens/auth/password/ForgotPassword';
+import ResetPassword from '@/src/screens/auth/password/ResetPassword';
+import ResetPasswordComplete from '@/src/screens/auth/password/ResetPasswordComplete';
+import CoinShop from '@/src/screens/my/wallet/CoinShop';
+import CoinPurchase from '@/src/screens/my/wallet/CoinPurchase';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -86,14 +96,19 @@ export default function App() {
             <Stack.Screen name='Main' component={MainNavigation} />
             <Stack.Screen name='HomePostDetail' component={HomePostDetail} />
             <Stack.Screen name='HomeRequestComplete' component={HomeRequestComplete} />
+            <Stack.Screen name='UserProfile' component={UserProfile} />
             <Stack.Screen name='ProfileEdit' component={ProfileEdit} />
             <Stack.Screen name='PasswordChange' component={PasswordChange} />
             <Stack.Screen name='PasswordChangeComplete' component={PasswordChangeComplete} />
             <Stack.Screen name='LogoutComplete' component={LogoutComplete} />
             <Stack.Screen name='WithdrawComplete' component={WithdrawComplete} />
             <Stack.Screen name='AlarmNotification' component={AlarmNotification} />
+            <Stack.Screen name='NotificationCenter' component={NotificationCenter} />
+            <Stack.Screen name='NotificationDetail' component={NotificationDetail} />
             <Stack.Screen name='Announcement' component={Announcement} />
             <Stack.Screen name='AnnouncementDetail' component={AnnouncementDetail} />
+            <Stack.Screen name='CustomerService' component={CustomerService} />
+            <Stack.Screen name='FAQDetail' component={FAQDetail} />
             <Stack.Screen name='AppManagement' component={AppManagement} />
             <Stack.Screen name='TermsOfService' component={TermsOfService} />
             <Stack.Screen name='Chatting' component={Chatting} />
@@ -105,7 +120,12 @@ export default function App() {
             <Stack.Screen name='NicknameSettingSplash' component={NicknameSettingSplash} />
             <Stack.Screen name='NicknameSetting' component={NicknameSetting} />
             <Stack.Screen name='NicknameSettingComplete' component={NicknameSettingComplete} />
-            <Stack.Screen name='PostUpload' component={PostUpload} />
+            <Stack.Screen name='PostEditor' component={PostEditor} />
+            <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
+            <Stack.Screen name='ResetPassword' component={ResetPassword} />
+            <Stack.Screen name='ResetPasswordComplete' component={ResetPasswordComplete} />
+            <Stack.Screen name='CoinShop' component={CoinShop} />
+            <Stack.Screen name='CoinPurchase' component={CoinPurchase} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar style='auto' />

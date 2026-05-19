@@ -1,5 +1,5 @@
 import tw from '@/src/lib/tailwind';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FontStyles from '@/src/constants/Fonts';
 
 import { View, TextInput, TextInputProps, TouchableOpacity } from 'react-native';
@@ -27,12 +27,25 @@ export default function TextField(props: TextFieldProps) {
     errorMessage,
     validation,
     className = '',
+    value: externalValue,
+    onChangeText: externalOnChangeText,
     ...rest
   } = props;
 
   const [value, setValue] = useState(content || '');
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => {
+    if (typeof externalValue === 'string') {
+      setValue(externalValue);
+      return;
+    }
+
+    if (typeof content === 'string') {
+      setValue(content);
+    }
+  }, [externalValue, content]);
 
   const handleChange = (text: string) => {
     setValue(text);
@@ -43,6 +56,9 @@ export default function TextField(props: TextFieldProps) {
     }
     if (validation) {
       validation(text);
+    }
+    if (externalOnChangeText) {
+      externalOnChangeText(text);
     }
   };
 

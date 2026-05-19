@@ -11,16 +11,17 @@ import UserDrawings from '@/src/screens/my/userProfile/UserDrawings';
 import UserReviews from '@/src/screens/my/userProfile/UserReviews';
 import { BaseProfile } from '@/src/types/profile';
 import { memberController } from '@/src/apis/controller/member';
+import { postController } from '@/src/apis/controller/post';
 
 type FilterType = '그림' | '후기';
 
 interface ProfileProps {
   isFromMyPage?: boolean;
-  userId?: string;
+  userId?: number;
   userProfile?: BaseProfile;
 }
 
-export default function Profile({ isFromMyPage = false, userProfile }: ProfileProps) {
+export default function Profile({ isFromMyPage = false, userId, userProfile }: ProfileProps) {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('그림');
   const [isNoProfile, setIsNoProfile] = useState(false);
@@ -83,6 +84,58 @@ export default function Profile({ isFromMyPage = false, userProfile }: ProfilePr
     checkProfile();
   }, [isFromMyPage]);
 
+  useEffect(() => {
+    if (isFromMyPage || !userId) return;
+
+    const loadPublicProfile = async () => {
+      try {
+        const [profileData, reviewSummary, reviewList, memberPosts] = await Promise.all([
+          memberController.getPublicProfile(userId),
+          memberController.getPublicReviewSummary(userId),
+          memberController.getPublicReviews(userId, { page: 1, limit: 10 }),
+          postController.getMemberPosts(userId, 1, 12),
+        ]);
+
+        const drawings = (memberPosts?.data ?? []).map((post: any) => ({
+          id: String(post.contentId ?? post.id),
+          imageUrl: post.thumbnailUrl ?? post.imageUrls?.[0] ?? '',
+          likes: post.likeCount ?? 0,
+          comments: post.commentCount ?? 0,
+          description: post.explanation ?? post.content ?? '',
+          date: post.createdAt ?? '',
+        }));
+
+        const reviews = (reviewList?.data ?? []).map((review: any) => ({
+          id: review.id,
+          userProfile: review.writerProfileImageUrl ?? '',
+          userName: review.writerNickname ?? '사용자',
+          date: review.createdAt ? String(review.createdAt).slice(0, 10) : '',
+          content: review.content ?? '',
+        }));
+
+        setUser({
+          imageUrl: profileData.profileImageUrl ?? '',
+          name: profileData.nickname ?? '',
+          intro: profileData.introduce ?? '',
+          tags: profileData.hashTags ?? [],
+          drawings,
+          reviews: {
+            drawNum: reviewSummary.completedWorkCount ?? 0,
+            rejectNum: 0,
+            rating: reviewSummary.averageStar ?? 0,
+            reviewNum: reviewSummary.reviewCount ?? 0,
+            reviewKeywords: (reviewSummary.topKeywords ?? []).map((keyword) => keyword.keyword),
+            reviews,
+          },
+        });
+      } catch (error) {
+        console.error('Failed to load public profile:', error);
+      }
+    };
+
+    loadPublicProfile();
+  }, [isFromMyPage, userId]);
+
   return (
     <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
       <UserDetail
@@ -92,8 +145,8 @@ export default function Profile({ isFromMyPage = false, userProfile }: ProfilePr
         userTags={user.tags}
         selectedFilter={selectedFilter}
         onFilterChange={setSelectedFilter}
-        isNoProfile={isNoProfile}
-        onUploadProfile={() => navigation.navigate('ProfileEdit')}
+        isNoProfile={isFromMyPage ? isNoProfile : false}
+        onUploadProfile={isFromMyPage ? () => navigation.navigate('ProfileEdit') : undefined}
       />
       {selectedFilter === '그림' ? (
         <UserDrawings userName={user.name} drawings={user.drawings} />

@@ -1,10 +1,11 @@
 import tw from '@/src/lib/tailwind';
+import { useState } from 'react';
 import { View, Keyboard, TouchableOpacity, Alert, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import {
-  AddIcon,
   CameraIcon,
+  DrawerIcon,
   FileIcon,
   PictureIcon,
   SendIcon,
@@ -16,7 +17,21 @@ interface ChatInputProps {
   message: string;
   setMessage: (message: string) => void;
   handleSendMessage: () => void;
-  handleSendImage: (imageUri: string) => void;
+  handleSendImage: (image: {
+    uri: string;
+    name: string;
+    type: string;
+    width: number;
+    height: number;
+    size?: number;
+  }) => void;
+  canSendFinalDrawing?: boolean;
+  onSendFinalDrawing?: () => void;
+  isSendingFinalDrawing?: boolean;
+  onLeaveChatRoom?: () => void;
+  isLeavingChatRoom?: boolean;
+  onTestStatusChange?: () => void;
+  isTestStatusChanging?: boolean;
   isOpenMenu?: boolean;
   setIsOpenMenu?: (isOpenMenu: boolean) => void;
 }
@@ -26,24 +41,37 @@ const ChatInput = ({
   setMessage,
   handleSendMessage,
   handleSendImage,
+  canSendFinalDrawing = false,
+  onSendFinalDrawing,
+  isSendingFinalDrawing = false,
+  onLeaveChatRoom,
+  isLeavingChatRoom = false,
+  onTestStatusChange,
+  isTestStatusChanging = false,
   isOpenMenu = false,
   setIsOpenMenu = () => {},
 }: ChatInputProps) => {
+  const MIN_INPUT_HEIGHT = 40;
+  const MAX_INPUT_HEIGHT = 132;
+  const [inputHeight, setInputHeight] = useState(MIN_INPUT_HEIGHT);
+
   const handleOpenMenu = () => {
     Keyboard.dismiss();
     setIsOpenMenu(!isOpenMenu);
   };
 
-  const addWatermark = async (uri: string): Promise<string> => {
+  const addWatermark = async (
+    uri: string,
+  ): Promise<{ uri: string; width: number; height: number }> => {
     try {
       const resized = await ImageManipulator.manipulateAsync(
         uri,
         [{ resize: { width: 1200 } }],
         { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG },
       );
-      return resized.uri;
+      return { uri: resized.uri, width: resized.width, height: resized.height };
     } catch {
-      return uri;
+      return { uri, width: 0, height: 0 };
     }
   };
 
@@ -62,8 +90,19 @@ const ChatInput = ({
       });
 
       if (!result.canceled && result.assets?.length > 0) {
-        const watermarkedUri = await addWatermark(result.assets[0].uri);
-        handleSendImage(watermarkedUri);
+        const asset = result.assets[0];
+        const transformed = await addWatermark(asset.uri);
+        const width = transformed.width > 0 ? transformed.width : (asset.width ?? 0);
+        const height = transformed.height > 0 ? transformed.height : (asset.height ?? 0);
+
+        handleSendImage({
+          uri: transformed.uri,
+          name: asset.fileName ?? `chat-${Date.now()}.jpg`,
+          type: 'image/jpeg',
+          width,
+          height,
+          size: asset.fileSize,
+        });
       }
     } catch {
       Alert.alert('오류', '이미지를 선택하는 중 오류가 발생했습니다.');
@@ -83,7 +122,7 @@ const ChatInput = ({
 
   return (
     <View>
-      <View style={tw`flex-row p-[12px] px-[18px] items-center justify-between gap-[6px] bg-white`}>
+      <View style={tw`flex-row p-[12px] px-[18px] items-end justify-between gap-[6px] bg-white`}>
         <TouchableOpacity onPress={handleOpenMenu}>
           <View style={iconStyle(Colors.colors.main_yellow)}>
             <CameraIcon />
@@ -94,18 +133,27 @@ const ChatInput = ({
           value={message}
           onChangeText={setMessage}
           multiline
-          numberOfLines={4}
-          blurOnSubmit
+          onContentSizeChange={(e) => {
+            const next = Math.max(
+              MIN_INPUT_HEIGHT,
+              Math.min(MAX_INPUT_HEIGHT, Math.ceil(e.nativeEvent.contentSize.height + 6)),
+            );
+            setInputHeight(next);
+          }}
+          blurOnSubmit={false}
           returnKeyType='send'
-          onSubmitEditing={handleSendMessage}
+          textAlignVertical='top'
+          scrollEnabled={inputHeight >= MAX_INPUT_HEIGHT}
           style={{
             flex: 1,
             color: Colors.colors.black,
             backgroundColor: Colors.colors.sub_yellow,
             fontFamily: 'SsurroundAir',
-            height: 45,
+            minHeight: MIN_INPUT_HEIGHT,
+            maxHeight: MAX_INPUT_HEIGHT,
+            height: inputHeight,
             borderRadius: 12,
-            paddingVertical: 13.5,
+            paddingVertical: 8,
             paddingHorizontal: 16,
           }}
         />
@@ -144,6 +192,60 @@ const ChatInput = ({
               직접 촬영하기
             </Txt>
           </View>
+          {canSendFinalDrawing ? (
+            <TouchableOpacity
+              onPress={() => {
+                setIsOpenMenu(false);
+                onSendFinalDrawing?.();
+              }}
+              disabled={isSendingFinalDrawing}
+            >
+              <View style={tw`flex-row gap-[14px] items-center`}>
+                <View style={iconStyle(Colors.colors.light_gray1, 1)}>
+                  <Txt variant='auxiliaryTextLight' color='dark_gray2'>
+                    🎨
+                  </Txt>
+                </View>
+                <Txt variant='bodyText' color='black'>
+                  {isSendingFinalDrawing ? '완성그림 전송 중...' : '완성그림 보내기'}
+                </Txt>
+              </View>
+            </TouchableOpacity>
+          ) : null}
+          <TouchableOpacity
+            onPress={() => {
+              setIsOpenMenu(false);
+              onTestStatusChange?.();
+            }}
+            disabled={isTestStatusChanging}
+          >
+            <View style={tw`flex-row gap-[14px] items-center`}>
+              <View style={iconStyle(Colors.colors.light_gray1, 1)}>
+                <Txt variant='auxiliaryTextLight' color='dark_gray2'>
+                  🧪
+                </Txt>
+              </View>
+              <Txt variant='bodyText' color='dark_gray2'>
+                {isTestStatusChanging ? '상태 변경 중...' : '상태 변경 (CANCELLED)'}
+              </Txt>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setIsOpenMenu(false);
+              onLeaveChatRoom?.();
+            }}
+            disabled={isLeavingChatRoom}
+          >
+            <View style={tw`flex-row gap-[14px] items-center`}>
+              <View style={iconStyle(Colors.colors.light_gray1, 1)}>
+                <DrawerIcon />
+              </View>
+              <Txt variant='bodyText' color='error_red'>
+                {isLeavingChatRoom ? '채팅방 나가는 중...' : '채팅방 나가기'}
+              </Txt>
+            </View>
+          </TouchableOpacity>
         </View>
       )}
     </View>

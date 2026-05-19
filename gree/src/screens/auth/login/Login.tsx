@@ -12,6 +12,8 @@ import Button from '@/src/components/common/button/Button';
 import AlertModal from '@/src/components/common/modal/AlertModal';
 import { authController } from '@/src/apis/controller/auth';
 
+const SOCIAL_CALLBACK_PATH = 'oauth/callback';
+
 export default function Login() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { setAuth } = useAuthStore();
@@ -41,10 +43,8 @@ export default function Login() {
     const refreshToken =
       query.refresh_token || query.refreshToken || hashParams.get('refresh_token') || hashParams.get('refreshToken') || '';
     const code = (query.code || hashParams.get('code') || '') as string;
-    const provider = (query.provider || hashParams.get('provider') || pendingProviderRef.current || '') as
-      | 'kakao'
-      | 'google'
-      | '';
+    const providerRaw = query.provider || hashParams.get('provider') || pendingProviderRef.current || '';
+    const provider = providerRaw.toString().toLowerCase() as 'kakao' | 'google' | '';
 
     return { accessToken, refreshToken, code, provider };
   };
@@ -53,7 +53,13 @@ export default function Login() {
     if (!url) return;
 
     const lowerUrl = url.toLowerCase();
-    if (!lowerUrl.includes('auth/callback') && !lowerUrl.includes('access_token') && !lowerUrl.includes('code=')) {
+    if (
+      !lowerUrl.includes('auth/callback') &&
+      !lowerUrl.includes('oauth/callback') &&
+      !lowerUrl.includes('access_token') &&
+      !lowerUrl.includes('token=') &&
+      !lowerUrl.includes('code=')
+    ) {
       return;
     }
 
@@ -62,7 +68,7 @@ export default function Login() {
       let { accessToken, refreshToken, code, provider } = extractTokensFromUrl(url);
 
       if (!accessToken && code) {
-        const redirectUri = ExpoLinking.createURL('auth/callback');
+        const redirectUri = ExpoLinking.createURL(SOCIAL_CALLBACK_PATH);
         if (provider !== 'kakao' && provider !== 'google') {
           throw new Error('소셜 로그인 제공자 정보를 확인할 수 없습니다.');
         }
@@ -112,7 +118,7 @@ export default function Login() {
     pendingProviderRef.current = provider;
     setSocialError('');
     try {
-      const redirectUri = ExpoLinking.createURL('auth/callback');
+      const redirectUri = ExpoLinking.createURL(SOCIAL_CALLBACK_PATH);
       const loginUrl =
         provider === 'kakao'
           ? authController.getKakaoLoginUrl(redirectUri)

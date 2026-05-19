@@ -19,6 +19,12 @@ apiClient.interceptors.request.use(
     if (accessToken) {
       config.headers = { ...config.headers, Authorization: `Bearer ${accessToken}` };
     }
+    console.log('[API Client] 요청:', {
+      method: config.method,
+      url: config.url,
+      contentType: config.headers['Content-Type'],
+      hasData: !!config.data,
+    });
     return config;
   },
   (error) => Promise.reject(error)
@@ -64,10 +70,23 @@ apiClient.interceptors.response.use(
         }
       }
     }
-    return response;
+    return Promise.reject(Error);
   },
   async (error) => {
     const originalRequest = error.config;
+
+    // 400대, 500대 에러 로깅
+    if (error.response) {
+      console.error('[API Client] 에러 응답:', {
+        method: error.config?.method,
+        url: error.config?.url,
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data,
+      });
+    } else {
+      console.error('[API Client] 네트워크 에러:', error.message);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (originalRequest.url?.includes('/api/auth/v1/token/refresh')) {

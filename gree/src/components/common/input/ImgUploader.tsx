@@ -56,8 +56,8 @@ export default function ImgUploader({ maxImages = 3, onImagesChange }: ImgUpload
 
   return (
     <View style={tw`gap-[10px]`}>
-      <View style={tw`flex-row items-center gap-[4px]`}>
-        <Txt variant='subtitleBold'>이미지</Txt>
+      <View style={tw`flex-col gap-[4px]`}>
+        <Txt variant='subtitleBold'>그림을 올려 볼까요?</Txt>
         <Txt variant='auxiliaryTextLight' color='dark_gray1'>
           (최대 {maxImages}장)
         </Txt>

@@ -1,5 +1,5 @@
 import tw from '@/src/lib/tailwind';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import FontStyles from '@/src/constants/Fonts';
 
 import { StackScreenProps } from '@react-navigation/stack';
@@ -24,8 +24,9 @@ const SPECIAL_CHAR_REGEX = /[^a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\s]/;
 
 export default function ProfileEdit({ navigation }: Props) {
   const [nickname, setNickname] = useState('');
-  const [nicknameState, setNicknameState] = useState<'empty' | 'filled' | 'error' | 'failed'>('empty');
+  const [nicknameState, setNicknameState] = useState<'empty' | 'filled' | 'error' | 'failed' | 'checking'>('empty');
   const [nicknameErrors, setNicknameErrors] = useState<string[]>([]);
+  const nicknameCheckTimer = useRef<NodeJS.Timeout | null>(null);
 
   const [introduction, setIntroduction] = useState('');
   const [introductionState, setIntroductionState] = useState<'empty' | 'filled' | 'error' | 'failed'>('empty');
@@ -79,13 +80,66 @@ export default function ProfileEdit({ navigation }: Props) {
   const handleNicknameChange = (text: string) => {
     setNickname(text);
     const errors: string[] = [];
+    
+    // 로컬 검증
     if (text.length > 0) {
       if (SPECIAL_CHAR_REGEX.test(text)) errors.push('특수문자 사용금지');
       if (text.length > 20) errors.push('20자 이내로 입력해주세요');
     }
+    
     setNicknameErrors(errors);
-    setNicknameState(text.length === 0 ? 'empty' : errors.length > 0 ? 'error' : 'filled');
+    
+    // 로컬 검증 실패하면 상태 업데이트 후 반환
+    if (errors.length > 0) {
+      setNicknameState('error');
+      return;
+    }
+    
+    // 비어있으면 empty 상태
+    if (text.length === 0) {
+      setNicknameState('empty');
+      return;
+    }
+    
+    // 초기 닉네임과 동일하면 filled 상태
+    if (text === initialData.nickname) {
+      setNicknameState('filled');
+      return;
+    }
+    
+    // debounce: 중복 확인 API 호출
+    setNicknameState('checking');
+    
+    if (nicknameCheckTimer.current) {
+      clearTimeout(nicknameCheckTimer.current);
+    }
+    
+    nicknameCheckTimer.current = setTimeout(async () => {
+      try {
+        const result = await memberController.checkNicknameDuplicate(text);
+        if (result.available) {
+          setNicknameState('filled');
+          setNicknameErrors([]);
+        } else {
+          setNicknameState('failed');
+          setNicknameErrors(['중복된 닉네임입니다']);
+        }
+      } catch (error) {
+        console.error('닉네임 중복 확인 실패', error);
+        // API 오류는 일단 filled로 처리하고 저장 시 다시 확인
+        setNicknameState('filled');
+      }
+    }, 500); // 500ms debounce
   };
+
+  // cleanup: 컴포넌트 언마운트 시 타이머 정리
+  useEffect(() => {
+    return () => {
+      if (nicknameCheckTimer.current) {
+        clearTimeout(nicknameCheckTimer.current);
+      }
+    };
+  }, []);
 
   const handleIntroductionChange = (text: string) => {
     setIntroduction(text);
@@ -133,6 +187,7 @@ export default function ProfileEdit({ navigation }: Props) {
   const isFormValid = () =>
     nicknameState !== 'error' &&
     nicknameState !== 'failed' &&
+    nicknameState !== 'checking' &&
     introductionState !== 'error' &&
     introductionState !== 'failed' &&
     !hashtagInputHasError;
@@ -207,6 +262,11 @@ export default function ProfileEdit({ navigation }: Props) {
           value={nickname}
           onChangeText={handleNicknameChange}
         />
+        {nicknameState === 'checking' && (
+          <Txt variant='bodySubText' color='dark_gray1' style={tw`ml-[20px] mt-[4px]`}>
+            중복 확인 중...
+          </Txt>
+        )}
         {nicknameErrors.map((msg, i) => (
           <Txt key={i} variant='bodySubText' color='error_red' style={tw`ml-[20px] mt-[4px]`}>{msg}</Txt>
         ))}

@@ -4,6 +4,7 @@ import {
   MemberResponseDto,
   AuthCredentialsDto,
   LoginResponseDto,
+  LogoutResponseDto,
 } from '../api';
 
 const BASE_URL = 'https://plzdrawing.o-r.kr';
@@ -18,6 +19,12 @@ export const authController = {
   // 로그인
   login: async (data: AuthCredentialsDto) => {
     const response = await apiClient.post<LoginResponseDto>('/api/auth/login', data);
+    return response.data;
+  },
+
+  // 로그아웃
+  logout: async () => {
+    const response = await apiClient.post<LogoutResponseDto>('/api/auth/logout');
     return response.data;
   },
 

@@ -5,7 +5,7 @@ import { useAuthStore } from '@/src/stores/authStore';
 import { NavigationProp, useNavigation, CommonActions } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/navigation/types';
 
-import { View, Keyboard } from 'react-native';
+import { View, Keyboard, TouchableOpacity } from 'react-native';
 import Header from '@/src/components/layout/Header';
 import Container from '@/src/components/layout/Container';
 import Txt from '@/src/components/common/Txt';
@@ -111,6 +111,11 @@ export default function EmailLogin() {
             title="로그인"
             onClick={handleLoginClick}
           />
+          <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+            <Txt variant='auxiliaryTextLight' color='dark_gray1' align='center'>
+              비밀번호를 잊으셨나요?
+            </Txt>
+          </TouchableOpacity>
         </View>
       </Container>
 

@@ -10,12 +10,15 @@ export type RootStackParamList = {
     sampleImage?: string;
   };
   HomeRequestComplete: { chatRoomId: number };
+  UserProfile: { memberId: number };
   ProfileEdit: undefined;
   PasswordChange: undefined;
   PasswordChangeComplete: undefined;
   LogoutComplete: undefined;
   WithdrawComplete: undefined;
   AlarmNotification: undefined;
+  NotificationCenter: undefined;
+  NotificationDetail: { id: number };
   Announcement: undefined;
   AnnouncementDetail: { id: number };
   AppManagement: undefined;
@@ -40,5 +43,22 @@ export type RootStackParamList = {
     agreements: { terms: boolean; privacy: boolean; marketing: boolean };
   };
   NicknameSettingComplete: undefined;
-  PostUpload: undefined;
+  PostEditor:
+    | {
+        postId?: string;
+      }
+    | undefined;
+  ForgotPassword: undefined;
+  ResetPassword: { email: string };
+  ResetPasswordComplete: undefined;
+  CoinShop: undefined;
+  CoinPurchase: {
+    productId?: number;
+    coinAmount: number;
+    price: number;
+    name: string;
+    description?: string | null;
+  };
+  CustomerService: undefined;
+  FAQDetail: { id: number };
 };

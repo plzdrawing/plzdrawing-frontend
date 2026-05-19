@@ -1,8 +1,10 @@
 import tw from '@/src/lib/tailwind';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/navigation/types';
+import { authController } from '@/src/apis/controller/auth';
+import { postController } from '@/src/apis/controller/post';
 import { chatController } from '@/src/apis/controller/chat';
 
 import * as ImagePicker from 'expo-image-picker';
@@ -38,6 +40,33 @@ export default function HomePostDetail() {
   const [requestText, setRequestText] = useState('');
   const [images, setImages] = useState<string[]>([]);
   const [isSending, setIsSending] = useState(false);
+  const [canEditPost, setCanEditPost] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const checkOwnership = async () => {
+      try {
+        const [post, me] = await Promise.all([
+          postController.getPost(postId),
+          authController.checkProfile(),
+        ]);
+
+        if (!isMounted) return;
+
+        setCanEditPost(Number(post?.memberId) === Number(me?.id));
+      } catch {
+        if (!isMounted) return;
+        setCanEditPost(false);
+      }
+    };
+
+    checkOwnership();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [postId]);
 
   const pickImage = async () => {
     if (images.length >= MAX_IMAGES) {
@@ -116,7 +145,13 @@ export default function HomePostDetail() {
 
   return (
     <Container className='w-full'>
-      <Header title='요청하기' leftIcon={<BackArrowIcon />} className='pb-[12px]' />
+      <Header
+        title='요청하기'
+        leftIcon={<BackArrowIcon />}
+        rightIcon={canEditPost ? <Txt variant='bodyText' color='dark_gray2'>수정</Txt> : undefined}
+        onRightClick={canEditPost ? () => navigation.navigate('PostEditor', { postId }) : undefined}
+        className='pb-[12px]'
+      />
 
       <ScrollView
         showsVerticalScrollIndicator={false}

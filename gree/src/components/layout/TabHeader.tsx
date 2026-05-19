@@ -3,6 +3,9 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/navigation/types';
 
 import { View, TouchableOpacity } from 'react-native';
+import { useEffect } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import { useNotificationStore } from '@/src/stores/notificationStore';
 import Txt from '@/src/components/common/Txt';
 import { AlarmIcon } from '@/assets/images';
 
@@ -24,6 +27,15 @@ export default function TabHeader({
   onRightClick,
 }: TabHeaderProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const isFocused = useIsFocused();
+  const unreadCount = useNotificationStore((s) => s.unreadCount);
+  const refreshUnreadCount = useNotificationStore((s) => s.refreshUnreadCount);
+
+  useEffect(() => {
+    if (isFocused) {
+      refreshUnreadCount();
+    }
+  }, [isFocused]);
 
   const tab = (title: string, id: number) => (
     <TouchableOpacity
@@ -50,10 +62,23 @@ export default function TabHeader({
         {title2 && tab(title2, 1)}
       </View>
       <TouchableOpacity
-        onPress={onRightClick}
-        style={tw`w-[20px] h-[18px] mb-[12px]`}
+        onPress={onRightClick ?? (() => navigation.navigate('NotificationCenter'))}
+        style={tw`w-[28px] h-[28px] mb-[12px] items-center justify-center`}
       >
-        {rightIcon}
+        <View style={tw`relative`}>{rightIcon}
+          {unreadCount > 0 && (
+            <View
+              style={[
+                tw`absolute right-[-6px] top-[-6px] items-center justify-center`,
+                { width: 18, height: 18, borderRadius: 9, backgroundColor: '#FFC311' },
+              ]}
+            >
+              <Txt variant='auxiliaryTextLight' style={tw`text-white`}>
+                {unreadCount > 99 ? '99+' : String(unreadCount)}
+              </Txt>
+            </View>
+          )}
+        </View>
       </TouchableOpacity>
     </View>
   );

@@ -1,5 +1,11 @@
 import apiClient from '../apiClient';
-import { ProfileInfoResponse } from '../api';
+import {
+  ProfileInfoResponse,
+  PublicProfileResponseDto,
+  PublicReviewListResponseDto,
+  PublicReviewSummaryResponseDto,
+  NicknameAvailabilityResponseDto,
+} from '../api';
 import { useAuthStore } from '@/src/stores/authStore';
 
 const BASE_URL = 'https://plzdrawing.o-r.kr';
@@ -11,9 +17,31 @@ export const memberController = {
     return response.data;
   },
 
+  // 공개 프로필 조회: GET
+  getPublicProfile: async (memberId: number) => {
+    const response = await apiClient.get<PublicProfileResponseDto>(`/api/member/v1/profile/${memberId}`);
+    return response.data;
+  },
+
+  // 공개 리뷰 목록 조회: GET
+  getPublicReviews: async (memberId: number, params?: { page?: number; limit?: number }) => {
+    const response = await apiClient.get<PublicReviewListResponseDto>(`/api/member/v1/profile/${memberId}/reviews`, {
+      params: { page: 1, limit: 10, ...params },
+    });
+    return response.data;
+  },
+
+  // 공개 리뷰 요약 조회: GET
+  getPublicReviewSummary: async (memberId: number) => {
+    const response = await apiClient.get<PublicReviewSummaryResponseDto>(
+      `/api/member/v1/profile/${memberId}/reviews/summary`,
+    );
+    return response.data;
+  },
+
   // 닉네임 중복 확인: GET
   checkNicknameDuplicate: async (nickname: string) => {
-    const response = await apiClient.get('/api/member/check-nickname', {
+    const response = await apiClient.get<NicknameAvailabilityResponseDto>('/api/member/check-nickname', {
       params: { nickname },
     });
     return response.data;

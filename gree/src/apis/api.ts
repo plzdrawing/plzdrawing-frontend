@@ -38,6 +38,148 @@ export interface ProfileInfoResponse {
   hashTags: string[];
 }
 
+export interface PublicProfileResponseDto {
+  /**
+   * 회원 ID
+   * @example 7
+   */
+  memberId: number;
+  /**
+   * 닉네임
+   * @example "홍길동 님"
+   */
+  nickname: string;
+  /**
+   * 프로필 이미지 URL
+   * @example "https://example.com/profㄴile.png"
+   */
+  profileImageUrl: string | null;
+  /**
+   * 자기소개
+   * @example "안녕하세요. 동물 그림쟁이입니다 :)"
+   */
+  introduce: string | null;
+  /**
+   * 활성 해시태그 목록
+   * @example ["#귀여운","#누사","#동물그림"]
+   */
+  hashTags: string[];
+  /**
+   * 등록한 게시글 수
+   * @example 7
+   */
+  drawingCount: number;
+}
+
+export interface PublicReviewListItemDto {
+  /**
+   * 후기 ID
+   * @example 1
+   */
+  id: number;
+  /**
+   * 별점(1~5)
+   * @example 5
+   */
+  starScore: number;
+  /**
+   * 후기 내용
+   * @example "요청사항 반영이 빨라서 만족해요!"
+   */
+  content: string;
+  /**
+   * 후기 키워드 목록
+   * @example ["친절해요","원하는 대로 그려줘요"]
+   */
+  keywords: string[];
+  /**
+   * 후기 이미지 object key 목록
+   * @example ["review/1/2026/03/uuid1.jpg"]
+   */
+  imageObjectKeys: string[];
+  /**
+   * 후기 작성자 ID
+   * @example 4
+   */
+  writerId: number;
+  /**
+   * 후기 작성자 닉네임
+   * @example "홍길동 님"
+   */
+  writerNickname: string;
+  /**
+   * 후기 작성자 프로필 이미지 URL
+   * @example "https://example.com/profile.png"
+   */
+  writerProfileImageUrl: string | null;
+  /**
+   * 후기 작성일시
+   * @format date-time
+   */
+  createdAt: string;
+}
+
+export interface PublicReviewListResponseDto {
+  /** 데이터 목록 */
+  data: PublicReviewListItemDto[];
+  /**
+   * 총 데이터 수
+   * @example 100
+   */
+  total: number;
+  /**
+   * 현재 페이지
+   * @example 1
+   */
+  page: number;
+  /**
+   * 페이지 당 항목 수
+   * @example 10
+   */
+  limit: number;
+}
+
+export interface ReviewKeywordCountDto {
+  /**
+   * 키워드
+   * @example "친절해요"
+   */
+  keyword: string;
+  /**
+   * 키워드 등장 횟수
+   * @example 12
+   */
+  count: number;
+}
+
+export interface PublicReviewSummaryResponseDto {
+  /**
+   * 평균 별점 (소수점 둘째 자리 반올림)
+   * @example 4.5
+   */
+  averageStar: number;
+  /**
+   * 후기 개수
+   * @example 24
+   */
+  reviewCount: number;
+  /**
+   * 완료한 작업 수 (COMPLETED/REVIEWED)
+   * @example 7
+   */
+  completedWorkCount: number;
+  /** 상위 후기 키워드(최대 5개, count 내림차순) */
+  topKeywords: ReviewKeywordCountDto[];
+}
+
+export interface NicknameAvailabilityResponseDto {
+  /**
+   * 닉네임 사용 가능 여부
+   * @example true
+   */
+  available: boolean;
+}
+
 export interface CreateMemberDto {
   /**
    * 이메일
@@ -53,6 +195,8 @@ export interface CreateMemberDto {
   password: string;
   /**
    * 닉네임
+   * @maxLength 20
+   * @pattern MEMBER_NICKNAME_REGEX
    * @example "홍길동"
    */
   nickname: string;
@@ -119,6 +263,14 @@ export interface LoginResponseDto {
    * @example "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
    */
   access_token: string;
+}
+
+export interface LogoutResponseDto {
+  /**
+   * 로그아웃 처리 성공 여부
+   * @example true
+   */
+  success: boolean;
 }
 
 export interface Profile {
@@ -215,6 +367,7 @@ export interface ChatRoom {
   artistId: number;
   postId: number;
   description: string;
+  referenceImageObjectKeys: string[];
   price: number;
   paidAmount: number;
   /** @format date-time */
@@ -257,6 +410,16 @@ export interface Post {
    * @example "상세 내용입니다."
    */
   content: string;
+  /**
+   * 소요 시간
+   * @example "10분"
+   */
+  timeTaken?: string;
+  /**
+   * 가격
+   * @example 12000
+   */
+  price?: number;
   /**
    * 썸네일 URL
    * @example "https://example.com/image.jpg"
@@ -319,7 +482,7 @@ export interface PaymentHistory {
   receiverId: number;
   amount: number;
   method: "KAKAO_PAY" | "NAVER_PAY" | "CREDIT_CARD" | "TOSS_PAY";
-  status: "PENDING" | "COMPLETED" | "REFUNDED" | "CANCELLED";
+  status: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED" | "CANCELLED";
   type: "SEND" | "RECEIVE";
   chatRoomId: number;
   sender: Member;
@@ -349,6 +512,31 @@ export interface Notification {
   member: Member;
   sender: Member;
   receiver: Member;
+}
+
+export interface NotificationPreference {
+  id: number;
+  memberId: number;
+  allEnabled: boolean;
+  chatEnabled: boolean;
+  paymentEnabled: boolean;
+  marketingEnabled: boolean;
+  member: Member;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface Wallet {
+  id: number;
+  memberId: number;
+  balance: number;
+  member: Member;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
 }
 
 export interface InquiryImage {
@@ -403,6 +591,108 @@ export interface Terms {
   updatedAt: string;
 }
 
+export interface WalletTransaction {
+  id: number;
+  memberId: number;
+  type:
+    | "CHARGE"
+    | "REFUND"
+    | "USE"
+    | "EARN"
+    | "WITHDRAW_REQUEST"
+    | "WITHDRAW_CANCEL"
+    | "WITHDRAW_COMPLETE";
+  coinAmount: number;
+  cashAmount: number | null;
+  status: "PENDING" | "COMPLETED" | "FAILED" | "CANCELLED";
+  description: string | null;
+  sourceType: string | null;
+  sourceId: number | null;
+  member: Member;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface CoinProduct {
+  id: number;
+  name: string;
+  coinAmount: number;
+  price: number;
+  displayOrder: number;
+  isActive: boolean;
+  description: string | null;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface CoinOrder {
+  id: number;
+  memberId: number;
+  coinProductId: number;
+  orderCode: string;
+  coinAmount: number;
+  amount: number;
+  paymentMethod: "KAKAO_PAY" | "NAVER_PAY" | "CREDIT_CARD" | "TOSS_PAY";
+  status: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED" | "CANCELLED";
+  paymentKey: string | null;
+  /** @format date-time */
+  approvedAt: string | null;
+  cancelReason: string | null;
+  /** @format date-time */
+  cancelledAt: string | null;
+  member: Member;
+  coinProduct: CoinProduct;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface WithdrawRequest {
+  id: number;
+  memberId: number;
+  withdrawAccountId: number;
+  coinAmount: number;
+  cashAmount: number;
+  feeAmount: number;
+  status: "REQUESTED" | "APPROVED" | "REJECTED" | "COMPLETED" | "CANCELLED";
+  reason: string | null;
+  /** @format date-time */
+  processedAt: string | null;
+  adminId: number | null;
+  member: Member;
+  admin: Member | null;
+  withdrawAccount: WithdrawAccount;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface WithdrawAccount {
+  id: number;
+  memberId: number;
+  bankCode: string;
+  bankName: string;
+  accountHolder: string;
+  accountNumberMasked: string;
+  accountNumberEncrypted: string;
+  isPrimary: boolean;
+  status: "ACTIVE" | "INACTIVE";
+  /** @format date-time */
+  verifiedAt: string | null;
+  member: Member;
+  withdrawRequests: WithdrawRequest[];
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
 export interface Member {
   id: number;
   email: string;
@@ -428,12 +718,18 @@ export interface Member {
   sentPayments: PaymentHistory[];
   receivedPayments: PaymentHistory[];
   notifications: Notification[];
+  notificationPreference: NotificationPreference;
+  wallet: Wallet;
   sentNotifications: Notification[];
   receivedNotifications: Notification[];
   inquiries: Inquiry[];
   answeredInquiries: Inquiry[];
   notices: Notice[];
   terms: Terms[];
+  walletTransactions: WalletTransaction[];
+  coinOrders: CoinOrder[];
+  withdrawAccounts: WithdrawAccount[];
+  withdrawRequests: WithdrawRequest[];
   /** @format date-time */
   createdAt: string;
   /** @format date-time */
@@ -545,6 +841,84 @@ export interface ContentsPageResponseDto {
   /**
    * 총 데이터 수
    * @example 100
+   */
+  total: number;
+  /**
+   * 현재 페이지
+   * @example 1
+   */
+  page: number;
+  /**
+   * 페이지 당 항목 수
+   * @example 10
+   */
+  limit: number;
+}
+
+export interface ReviewListItemDto {
+  /**
+   * 리뷰 ID
+   * @example 1
+   */
+  reviewId: number;
+  /**
+   * 게시글 ID
+   * @example 10
+   */
+  postId: number;
+  /**
+   * 작성자 ID
+   * @example 5
+   */
+  writerId: number;
+  /**
+   * 작성자 닉네임
+   * @example "홍길동"
+   */
+  writerNickname: string;
+  /**
+   * 별점
+   * @example "FIVE"
+   */
+  star: "ONE" | "TWO" | "THREE" | "FOUR" | "FIVE";
+  /**
+   * 후기 내용
+   * @example "정말 만족했어요!"
+   */
+  content?: string;
+  /**
+   * 키워드 목록
+   * @example ["친절해요"]
+   */
+  keywords: string[];
+  /**
+   * 리뷰 이미지 object key 목록
+   * @example ["review/1/2026/03/uuid1.jpg"]
+   */
+  imageObjectKeys: string[];
+  /**
+   * 게시글 좋아요 수
+   * @example 23
+   */
+  likeCount: number;
+  /**
+   * 내가 찜한 게시글인지 여부
+   * @example true
+   */
+  isScrapped: boolean;
+  /**
+   * 작성일시
+   * @format date-time
+   */
+  createdAt: string;
+}
+
+export interface ReviewPageResponseDto {
+  /** 후기 목록 */
+  data: ReviewListItemDto[];
+  /**
+   * 총 데이터 수
+   * @example 25
    */
   total: number;
   /**
@@ -690,7 +1064,7 @@ export interface CreateChatRoomDto {
   postId: number;
   /**
    * 요청 설명
-   * @maxLength 1000
+   * @maxLength 200
    * @example "강아지 그림을 부탁드려요."
    */
   description?: string;
@@ -700,6 +1074,12 @@ export interface CreateChatRoomDto {
    * @example 5000
    */
   price?: number;
+  /**
+   * 참고 이미지 object key 목록 (최대 5개)
+   * @maxItems 5
+   * @example ["chat/request/1/2026/03/uuid1.png"]
+   */
+  referenceImageObjectKeys?: string[];
 }
 
 export interface ChatRoomPostDto {
@@ -763,6 +1143,11 @@ export interface ChatRoomDetailResponseDto {
    */
   description?: string;
   /**
+   * 참고 이미지 object key 목록
+   * @example ["chat/request/1/2026/03/uuid1.png"]
+   */
+  referenceImageObjectKeys?: string[];
+  /**
    * 요청 금액
    * @example 5000
    */
@@ -793,6 +1178,56 @@ export interface ChatRoomCreateResponseDto {
    */
   isExisting: boolean;
   chatRoom: ChatRoomDetailResponseDto;
+}
+
+export interface ChatImageUploadRequestDto {
+  /**
+   * FE에서 업로드할 원본 파일명 (파일 바이너리는 전송하지 않음)
+   * @example "dog.png"
+   */
+  fileName: string;
+  /**
+   * FE에서 업로드할 파일의 MIME 타입
+   * @example "image/png"
+   */
+  contentType: string;
+  /**
+   * FE에서 업로드할 파일 크기 (bytes)
+   * @min 1
+   * @max 10485760
+   * @example 5242880
+   */
+  size: number;
+  /**
+   * 이미지 너비 (px)
+   * @min 1
+   * @example 1200
+   */
+  width?: number;
+  /**
+   * 이미지 높이 (px)
+   * @min 1
+   * @example 900
+   */
+  height?: number;
+}
+
+export interface ChatImageUploadResponseDto {
+  /**
+   * FE가 직접 PUT 업로드할 S3 presigned URL
+   * @example "https://s3-presigned-put-url"
+   */
+  uploadUrl: string;
+  /**
+   * 업로드 완료 후 POST /chats/:id/messages (type=IMAGE) 에 전달할 S3 object key
+   * @example "chat/12/2026/02/uuid.png"
+   */
+  objectKey: string;
+  /**
+   * URL 만료 시각(ISO)
+   * @example "2026-02-01T12:00:00Z"
+   */
+  expiresAt: string;
 }
 
 export interface LastMessageDto {
@@ -999,56 +1434,6 @@ export interface SendMessageDto {
   height?: number;
 }
 
-export interface ChatImageUploadRequestDto {
-  /**
-   * FE에서 업로드할 원본 파일명 (파일 바이너리는 전송하지 않음)
-   * @example "dog.png"
-   */
-  fileName: string;
-  /**
-   * FE에서 업로드할 파일의 MIME 타입
-   * @example "image/png"
-   */
-  contentType: string;
-  /**
-   * FE에서 업로드할 파일 크기 (bytes)
-   * @min 1
-   * @max 10485760
-   * @example 5242880
-   */
-  size: number;
-  /**
-   * 이미지 너비 (px)
-   * @min 1
-   * @example 1200
-   */
-  width?: number;
-  /**
-   * 이미지 높이 (px)
-   * @min 1
-   * @example 900
-   */
-  height?: number;
-}
-
-export interface ChatImageUploadResponseDto {
-  /**
-   * FE가 직접 PUT 업로드할 S3 presigned URL
-   * @example "https://s3-presigned-put-url"
-   */
-  uploadUrl: string;
-  /**
-   * 업로드 완료 후 POST /chats/:id/messages (type=IMAGE) 에 전달할 S3 object key
-   * @example "chat/12/2026/02/uuid.png"
-   */
-  objectKey: string;
-  /**
-   * URL 만료 시각(ISO)
-   * @example "2026-02-01T12:00:00Z"
-   */
-  expiresAt: string;
-}
-
 export interface ReadChatDto {
   /**
    * 마지막으로 읽은 메시지 ID
@@ -1060,9 +1445,9 @@ export interface ReadChatDto {
 
 export interface UpdateChatRequestDto {
   /**
-   * 수정할 요청 내용 (1~1000자)
+   * 수정할 요청 내용 (1~200자)
    * @minLength 1
-   * @maxLength 1000
+   * @maxLength 200
    * @example "강아지 말고 고양이 그림으로 변경해주세요 :)"
    */
   description: string;
@@ -1173,6 +1558,601 @@ export interface RevisionRequestDto {
    * @example "고양이 눈 조금 더 키워주세요 :)!"
    */
   content: string;
+}
+
+export interface SettingsSummaryResponseDto {
+  /** @example "홍길동" */
+  nickname: string;
+  /** @example "https://example.com/profile.png" */
+  profileImageUrl: string | null;
+  /** @example ["귀여운","낚시"] */
+  hashTags: string[];
+  /**
+   * 코인 기능 도입 전까지는 null을 반환합니다.
+   * @example null
+   */
+  coinBalance: number | null;
+  /** @example false */
+  hasWithdrawAccount: boolean;
+  /** @example true */
+  notificationEnabled: boolean;
+}
+
+export interface NotificationPreferenceResponseDto {
+  /** @example true */
+  allEnabled: boolean;
+  /** @example true */
+  chatEnabled: boolean;
+  /** @example true */
+  paymentEnabled: boolean;
+  /** @example false */
+  marketingEnabled: boolean;
+}
+
+export interface UpdateNotificationPreferenceDto {
+  /** @example true */
+  allEnabled?: boolean;
+  /** @example true */
+  chatEnabled?: boolean;
+  /** @example true */
+  paymentEnabled?: boolean;
+  /** @example false */
+  marketingEnabled?: boolean;
+}
+
+export interface AppInfoResponseDto {
+  /** @example "0.0.1" */
+  appVersion: string;
+  /** @example "0.0.1" */
+  minimumSupportedVersion: string;
+  /** @example "support@plzdrawing.com" */
+  supportEmail: string;
+  /** @example "평일 10:00 - 18:00" */
+  supportHours: string;
+  /** @example "https://example.com/privacy-policy" */
+  privacyPolicyUrl: string | null;
+}
+
+export interface UpdateAppInfoDto {
+  /**
+   * @maxLength 30
+   * @example "1.0.0"
+   */
+  minimumSupportedVersion?: string;
+  /**
+   * @maxLength 100
+   * @example "support@plzdrawing.com"
+   */
+  supportEmail?: string;
+  /**
+   * @maxLength 100
+   * @example "평일 10:00 - 18:00"
+   */
+  supportHours?: string;
+  /**
+   * @format uri
+   * @example "https://example.com/privacy-policy"
+   */
+  privacyPolicyUrl?: string | null;
+}
+
+export interface TermResponseDto {
+  /** @example 1 */
+  id: number;
+  /** @example "이용약관" */
+  title: string;
+  /** @example "v1.0.0" */
+  version: string;
+  /** @example "약관 본문" */
+  content: string;
+  /** @example 10 */
+  adminId: number | null;
+  /** @example "관리자" */
+  adminNickname: string | null;
+  /** @example "admin@example.com" */
+  adminEmail: string | null;
+  /** @example "https://cdn.example.com/admin.png" */
+  adminProfileUrl: string | null;
+  /**
+   * @format date-time
+   * @example "2026-04-02 10:00:00"
+   */
+  createdAt: string;
+}
+
+export interface CreateTermDto {
+  /**
+   * @maxLength 100
+   * @example "서비스 이용약관"
+   */
+  title: string;
+  /**
+   * @maxLength 50
+   * @example "1.0.0"
+   */
+  version: string;
+  /** @example "플리즈드로잉 서비스 이용약관입니다." */
+  content: string;
+}
+
+export interface UpdateTermDto {
+  /**
+   * @maxLength 100
+   * @example "서비스 이용약관"
+   */
+  title?: string;
+  /**
+   * @maxLength 50
+   * @example "1.0.0"
+   */
+  version?: string;
+  /** @example "플리즈드로잉 서비스 이용약관입니다." */
+  content?: string;
+}
+
+export interface BankResponseDto {
+  /** @example "004" */
+  code: string;
+  /** @example "국민은행" */
+  name: string;
+}
+
+export interface WithdrawAccountResponseDto {
+  /** @example 1 */
+  id: number;
+  /** @example "004" */
+  bankCode: string;
+  /** @example "국민은행" */
+  bankName: string;
+  /** @example "홍길동" */
+  accountHolder: string;
+  /** @example "123456******34" */
+  accountNumberMasked: string;
+  /** @example 15 */
+  memberId: number | null;
+  /** @example "그림좋아" */
+  memberNickname: string | null;
+  /** @example "user@example.com" */
+  memberEmail: string | null;
+  /** @example "https://cdn.example.com/profile.png" */
+  memberProfileUrl: string | null;
+  /** @example true */
+  isPrimary: boolean;
+  /** @example "ACTIVE" */
+  status: "ACTIVE" | "INACTIVE";
+  /**
+   * @format date-time
+   * @example "2026-04-05 10:00:00"
+   */
+  verifiedAt: string | null;
+  /**
+   * @format date-time
+   * @example "2026-04-05 09:59:00"
+   */
+  createdAt: string;
+}
+
+export interface CreateWithdrawAccountDto {
+  /**
+   * @maxLength 10
+   * @example "004"
+   */
+  bankCode: string;
+  /**
+   * @maxLength 50
+   * @example "국민은행"
+   */
+  bankName: string;
+  /**
+   * @maxLength 50
+   * @example "홍길동"
+   */
+  accountHolder: string;
+  /**
+   * @maxLength 30
+   * @pattern /^[0-9-]+$/
+   * @example "12345678901234"
+   */
+  accountNumber: string;
+  /** @example true */
+  isPrimary?: boolean;
+}
+
+export interface UpdateWithdrawAccountAdminDto {
+  /**
+   * @maxLength 500
+   * @example "예금주 및 계좌번호 확인 완료"
+   */
+  note?: string;
+}
+
+export interface NoticeResponseDto {
+  /** @example 1 */
+  id: number;
+  /** @example "서비스 점검 안내" */
+  title: string;
+  /** @example "점검이 예정되어 있습니다." */
+  content: string;
+  /** @example 10 */
+  adminId: number | null;
+  /** @example "관리자" */
+  adminNickname: string | null;
+  /** @example "admin@example.com" */
+  adminEmail: string | null;
+  /** @example "https://cdn.example.com/admin.png" */
+  adminProfileUrl: string | null;
+  /**
+   * @format date-time
+   * @example "2026-04-02 10:00:00"
+   */
+  createdAt: string;
+}
+
+export interface CreateNoticeDto {
+  /**
+   * @maxLength 100
+   * @example "서비스 점검 안내"
+   */
+  title: string;
+  /**
+   * @maxLength 5000
+   * @example "점검이 예정되어 있습니다."
+   */
+  content: string;
+}
+
+export interface UpdateNoticeDto {
+  /**
+   * @maxLength 100
+   * @example "서비스 점검 안내"
+   */
+  title?: string;
+  /**
+   * @maxLength 5000
+   * @example "점검이 예정되어 있습니다."
+   */
+  content?: string;
+}
+
+export interface InquiryResponseDto {
+  /** @example 1 */
+  id: number;
+  /** @example "ACCOUNT" */
+  category: "DRAWING" | "ACCOUNT" | "PAYMENT" | "REVIEW" | "ETC";
+  /** @example "로그인이 되지 않아요" */
+  title: string;
+  /** @example "상세 문의 내용입니다." */
+  content: string;
+  /** @example "PENDING" */
+  status: "PENDING" | "IN_PROGRESS" | "ANSWERED" | "CLOSED";
+  /** @example null */
+  answer: string | null;
+  /** @example 10 */
+  memberId: number | null;
+  /** @example "그림좋아" */
+  memberNickname: string | null;
+  /** @example "user@example.com" */
+  memberEmail: string | null;
+  /** @example "https://cdn.example.com/profile.png" */
+  memberProfileUrl: string | null;
+  /**
+   * @format date-time
+   * @example "2026-04-02T10:00:00.000Z"
+   */
+  createdAt: string;
+  /**
+   * @format date-time
+   * @example null
+   */
+  answeredAt: string | null;
+  /** @example ["https://example.com/inquiry/image-1.png"] */
+  imageUrls: string[];
+}
+
+export interface UpdateInquiryAdminDto {
+  /** @example "ANSWERED" */
+  status: "PENDING" | "IN_PROGRESS" | "ANSWERED" | "CLOSED";
+  /**
+   * @maxLength 5000
+   * @example "문의주신 내용 확인 후 조치했습니다."
+   */
+  answer?: string;
+}
+
+export interface WalletSummaryResponseDto {
+  /** @example 0 */
+  balance: number;
+}
+
+export interface WalletTransactionPageResponseDto {
+  /** 데이터 목록 */
+  data: any[][];
+  /**
+   * 총 데이터 수
+   * @example 100
+   */
+  total: number;
+  /**
+   * 현재 페이지
+   * @example 1
+   */
+  page: number;
+  /**
+   * 페이지 당 항목 수
+   * @example 10
+   */
+  limit: number;
+}
+
+export interface CoinProductResponseDto {
+  /** @example 1 */
+  id: number;
+  /** @example "그리코인 10개" */
+  name: string;
+  /** @example 10 */
+  coinAmount: number;
+  /** @example 1200 */
+  price: number;
+  /** @example 1 */
+  displayOrder: number;
+  /** @example "신규 회원 추천 상품" */
+  description: string | null;
+  /** @example true */
+  isActive: boolean;
+}
+
+export interface CreateCoinProductDto {
+  /**
+   * @maxLength 50
+   * @example "그리코인 10개"
+   */
+  name: string;
+  /**
+   * @min 1
+   * @example 10
+   */
+  coinAmount: number;
+  /**
+   * @min 0
+   * @example 1200
+   */
+  price: number;
+  /**
+   * @min 0
+   * @example 1
+   */
+  displayOrder: number;
+  /**
+   * @maxLength 255
+   * @example "신규 회원 추천 상품"
+   */
+  description?: string | null;
+  /**
+   * @default true
+   * @example true
+   */
+  isActive?: boolean;
+}
+
+export interface UpdateCoinProductDto {
+  /**
+   * @maxLength 50
+   * @example "그리코인 10개"
+   */
+  name?: string;
+  /**
+   * @min 1
+   * @example 10
+   */
+  coinAmount?: number;
+  /**
+   * @min 0
+   * @example 1200
+   */
+  price?: number;
+  /**
+   * @min 0
+   * @example 1
+   */
+  displayOrder?: number;
+  /**
+   * @maxLength 255
+   * @example "신규 회원 추천 상품"
+   */
+  description?: string | null;
+  /**
+   * @default true
+   * @example true
+   */
+  isActive?: boolean;
+}
+
+export interface CreateCoinOrderDto {
+  /**
+   * @min 1
+   * @example 1
+   */
+  coinProductId: number;
+  /**
+   * @default "TOSS_PAY"
+   * @example "TOSS_PAY"
+   */
+  paymentMethod?: "KAKAO_PAY" | "NAVER_PAY" | "CREDIT_CARD" | "TOSS_PAY";
+}
+
+export interface CoinOrderResponseDto {
+  /** @example 1 */
+  id: number;
+  /** @example "coin-order-20260405-abc123" */
+  orderCode: string;
+  /** @example 1 */
+  coinProductId: number;
+  /** @example "그리코인 10개" */
+  productName: string;
+  /** @example 10 */
+  coinAmount: number;
+  /** @example 1200 */
+  amount: number;
+  /** @example "TOSS_PAY" */
+  paymentMethod: "KAKAO_PAY" | "NAVER_PAY" | "CREDIT_CARD" | "TOSS_PAY";
+  /** @example "PENDING" */
+  status: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED" | "CANCELLED";
+  /** @example "toss_payment_key_sample" */
+  paymentKey: string | null;
+  /**
+   * @format date-time
+   * @example "2026-04-05 10:00:00"
+   */
+  approvedAt: string | null;
+  /** @example "사용자 요청에 의한 결제 취소" */
+  cancelReason: string | null;
+  /** @example 15 */
+  memberId: number | null;
+  /** @example "그림좋아" */
+  memberNickname: string | null;
+  /** @example "user@example.com" */
+  memberEmail: string | null;
+  /** @example "https://cdn.example.com/profile.png" */
+  memberProfileUrl: string | null;
+  /**
+   * @format date-time
+   * @example "2026-04-05 10:10:00"
+   */
+  cancelledAt: string | null;
+  /**
+   * @format date-time
+   * @example "2026-04-05 09:59:00"
+   */
+  createdAt: string;
+}
+
+export interface ConfirmCoinOrderDto {
+  /**
+   * 토스 결제 성공 후 전달받은 paymentKey
+   * @maxLength 255
+   * @example "toss_payment_key_sample"
+   */
+  paymentKey: string;
+  /**
+   * 토스 결제 성공 후 전달받은 결제 금액
+   * @min 0
+   * @example 1200
+   */
+  amount: number;
+}
+
+export interface CoinOrderPageResponseDto {
+  /** 데이터 목록 */
+  data: any[][];
+  /**
+   * 총 데이터 수
+   * @example 100
+   */
+  total: number;
+  /**
+   * 현재 페이지
+   * @example 1
+   */
+  page: number;
+  /**
+   * 페이지 당 항목 수
+   * @example 10
+   */
+  limit: number;
+}
+
+export interface CancelCoinOrderDto {
+  /**
+   * @maxLength 200
+   * @example "사용자 요청에 의한 결제 취소"
+   */
+  cancelReason: string;
+}
+
+export interface WithdrawPolicyResponseDto {
+  /** @example 10 */
+  minimumCoinAmount: number;
+  /** @example 10 */
+  coinUnit: number;
+  /** @example 100 */
+  cashPerCoin: number;
+  /** @example 500 */
+  flatFeeAmount: number;
+}
+
+export interface CreateWithdrawRequestDto {
+  /**
+   * @min 1
+   * @example 10
+   */
+  coinAmount: number;
+  /**
+   * @min 1
+   * @example 1
+   */
+  withdrawAccountId?: number;
+}
+
+export interface WithdrawRequestResponseDto {
+  /** @example 1 */
+  id: number;
+  /** @example 1 */
+  withdrawAccountId: number;
+  /** @example "국민은행" */
+  bankName: string;
+  /** @example "123456******34" */
+  accountNumberMasked: string;
+  /** @example 15 */
+  memberId: number | null;
+  /** @example "그림좋아" */
+  memberNickname: string | null;
+  /** @example "user@example.com" */
+  memberEmail: string | null;
+  /** @example "https://cdn.example.com/profile.png" */
+  memberProfileUrl: string | null;
+  /** @example 10 */
+  coinAmount: number;
+  /** @example 10 */
+  cashAmount: number;
+  /** @example 0 */
+  feeAmount: number;
+  /** @example "REQUESTED" */
+  status: "REQUESTED" | "APPROVED" | "REJECTED" | "COMPLETED" | "CANCELLED";
+  /** @example null */
+  reason: string | null;
+  /**
+   * @format date-time
+   * @example null
+   */
+  processedAt: string | null;
+  /**
+   * @format date-time
+   * @example "2026-04-05 10:00:00"
+   */
+  createdAt: string;
+}
+
+export interface UpdateWithdrawRequestAdminDto {
+  /** @example "APPROVED" */
+  status: "REQUESTED" | "APPROVED" | "REJECTED" | "COMPLETED" | "CANCELLED";
+  /**
+   * @maxLength 1000
+   * @example "예금주 불일치로 반려"
+   */
+  reason?: string;
+}
+
+export interface ScrapStatusResponseDto {
+  /**
+   * 게시글 ID
+   * @example 1
+   */
+  postId: number;
+  /**
+   * 찜 상태
+   * @example true
+   */
+  scrapped: boolean;
 }
 
 import type {
@@ -1393,6 +2373,7 @@ export class Api<
          */
         file?: File;
         introduce?: string;
+        /** 관심 태그 목록(선택), 최대 5개. 각 태그는 #으로 시작 */
         hashTag?: string[];
       },
       params: RequestParams = {},
@@ -1425,6 +2406,7 @@ export class Api<
         file?: File;
         nickname?: string;
         introduce?: string;
+        /** 관심 태그 목록(선택), 최대 5개. 각 태그는 #으로 시작 */
         hashTag?: string[];
       },
       params: RequestParams = {},
@@ -1461,6 +2443,78 @@ export class Api<
      * No description
      *
      * @tags Member
+     * @name MemberControllerGetPublicProfile
+     * @summary 공개 프로필 조회
+     * @request GET:/api/member/v1/profile/{memberId}
+     */
+    memberControllerGetPublicProfile: (
+      memberId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<PublicProfileResponseDto, void>({
+        path: `/api/member/v1/profile/${memberId}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Member
+     * @name MemberControllerGetPublicReviews
+     * @summary 공개 프로필 후기 목록 조회
+     * @request GET:/api/member/v1/profile/{memberId}/reviews
+     */
+    memberControllerGetPublicReviews: (
+      memberId: number,
+      query?: {
+        /**
+         * 페이지 번호
+         * @min 1
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 페이지 당 항목 수
+         * @min 1
+         * @default 10
+         */
+        limit?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<PublicReviewListResponseDto, void>({
+        path: `/api/member/v1/profile/${memberId}/reviews`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Member
+     * @name MemberControllerGetPublicReviewSummary
+     * @summary 공개 프로필 후기 요약 조회
+     * @request GET:/api/member/v1/profile/{memberId}/reviews/summary
+     */
+    memberControllerGetPublicReviewSummary: (
+      memberId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<PublicReviewSummaryResponseDto, void>({
+        path: `/api/member/v1/profile/${memberId}/reviews/summary`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Member
      * @name MemberControllerCheckNickname
      * @summary 닉네임 중복 확인
      * @request GET:/api/member/check-nickname
@@ -1471,7 +2525,7 @@ export class Api<
       },
       params: RequestParams = {},
     ) =>
-      this.request<boolean, void>({
+      this.request<NicknameAvailabilityResponseDto, void>({
         path: `/api/member/check-nickname`,
         method: "GET",
         query: query,
@@ -1557,6 +2611,24 @@ export class Api<
       }),
 
     /**
+     * @description 현재는 서버 측 토큰 저장소 없이 동작하므로, 호출 성공 시 프론트에서 access token을 삭제하면 됩니다.
+     *
+     * @tags Auth
+     * @name AuthControllerLogout
+     * @summary 로그아웃
+     * @request POST:/api/auth/logout
+     * @secure
+     */
+    authControllerLogout: (params: RequestParams = {}) =>
+      this.request<LogoutResponseDto, any>({
+        path: `/api/auth/logout`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
      * No description
      *
      * @tags Auth
@@ -1587,26 +2659,26 @@ export class Api<
       }),
 
     /**
-     * @description 사용자를 카카오 로그인 페이지로 리다이렉트합니다.
+     * @description 사용자를 카카오 인증 페이지로 302 리다이렉트합니다. 네이티브 앱은 시스템 브라우저/웹뷰에서 이 엔드포인트를 열어 로그인 플로우를 시작하세요.
      *
      * @tags Auth
      * @name AuthControllerKakaoAuth
-     * @summary 카카오 로그인 진입
+     * @summary 카카오 로그인 시작 (리다이렉트)
      * @request GET:/api/auth/kakao
      */
     authControllerKakaoAuth: (params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<void, void>({
         path: `/api/auth/kakao`,
         method: "GET",
         ...params,
       }),
 
     /**
-     * @description 카카오 인증 완료 후, 유저 정보를 조회하여 JWT 토큰을 발급하고 프론트엔드 URL로 리다이렉트합니다.
+     * @description 카카오 인증 완료 후 JWT를 발급하고 OAUTH_REDIRECT_URL(예: myapp://oauth/callback)로 302 리다이렉트합니다. 최종 URL 예시: myapp://oauth/callback?token={jwt}
      *
      * @tags Auth
      * @name AuthControllerKakaoAuthRedirect
-     * @summary 카카오 로그인 콜백
+     * @summary 카카오 로그인 콜백 처리
      * @request GET:/api/auth/kakao/callback
      */
     authControllerKakaoAuthRedirect: (params: RequestParams = {}) =>
@@ -1617,7 +2689,7 @@ export class Api<
       }),
 
     /**
-     * @description 게시글과 이미지를 함께 업로드합니다. images는 선택이며 최대 5개, 파일당 최대 10MB입니다.
+     * @description 게시글과 이미지를 함께 업로드합니다. images는 선택이며 최대 3개, 파일당 최대 10MB입니다.
      *
      * @tags Post
      * @name PostControllerCreate
@@ -1627,10 +2699,14 @@ export class Api<
      */
     postControllerCreate: (
       data: {
-        /** 업로드 이미지 목록(선택), 최대 5개, 파일당 최대 10MB */
+        /** 업로드 이미지 목록(선택), 최대 3개, 파일당 최대 10MB */
         images?: File[];
         title?: string;
         content?: string;
+        /** @example "10분" */
+        timeTaken?: string;
+        /** @example 12000 */
+        price?: number;
         hashTag?: string[];
       },
       params: RequestParams = {},
@@ -1652,6 +2728,7 @@ export class Api<
      * @name PostControllerGetLatestContents
      * @summary 최신 게시글 조회
      * @request GET:/api/posts
+     * @secure
      */
     postControllerGetLatestContents: (
       query?: {
@@ -1667,6 +2744,18 @@ export class Api<
          * @default 10
          */
         limit?: number;
+        /**
+         * 검색어 (작성자 닉네임, 내용, 태그)
+         * @maxLength 50
+         * @example "고양이"
+         */
+        q?: string;
+        /**
+         * 내가 찜한 게시글만 조회
+         * @default false
+         * @example true
+         */
+        scrappedOnly?: boolean;
       },
       params: RequestParams = {},
     ) =>
@@ -1674,6 +2763,7 @@ export class Api<
         path: `/api/posts`,
         method: "GET",
         query: query,
+        secure: true,
         format: "json",
         ...params,
       }),
@@ -1736,11 +2826,25 @@ export class Api<
      * @request PATCH:/api/posts/{id}
      * @secure
      */
-    postControllerUpdate: (id: string, params: RequestParams = {}) =>
+    postControllerUpdate: (
+      id: string,
+      data: {
+        /** 추가할 이미지 목록(선택), 최대 3개, 파일당 최대 10MB */
+        newImages?: File[];
+        /** 삭제할 이미지 ID 목록(선택) */
+        deleteImageIds?: number[];
+        title?: string;
+        content?: string;
+        hashTag?: string[];
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<void, void>({
         path: `/api/posts/${id}`,
         method: "PATCH",
+        body: data,
         secure: true,
+        type: ContentType.FormData,
         ...params,
       }),
 
@@ -1754,10 +2858,57 @@ export class Api<
      * @secure
      */
     postControllerRemove: (id: string, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<void, void>({
         path: `/api/posts/${id}`,
         method: "DELETE",
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Review
+     * @name ReviewControllerGetLatestReviews
+     * @summary 후기 목록 조회
+     * @request GET:/api/reviews
+     * @secure
+     */
+    reviewControllerGetLatestReviews: (
+      query?: {
+        /**
+         * 페이지 번호
+         * @min 1
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 페이지 당 항목 수
+         * @min 1
+         * @default 10
+         */
+        limit?: number;
+        /**
+         * 검색어 (작성자 닉네임, 후기 내용, 키워드)
+         * @maxLength 50
+         * @example "친절"
+         */
+        q?: string;
+        /**
+         * 내가 찜한 게시글의 후기만 조회
+         * @default false
+         * @example true
+         */
+        scrappedOnly?: boolean;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ReviewPageResponseDto, any>({
+        path: `/api/reviews`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
         ...params,
       }),
 
@@ -2003,6 +3154,29 @@ export class Api<
       }),
 
     /**
+     * @description 요청하기 폼에서 사용할 참고 이미지 업로드용 S3 presigned URL을 발급합니다. 파일 최대 크기는 10MB이며, 생성된 objectKey는 POST /chats의 referenceImageObjectKeys로 전달해야 합니다.
+     *
+     * @tags Chat
+     * @name ChatControllerCreateRequestImageUpload
+     * @summary 요청 참고 이미지 업로드 URL 발급
+     * @request POST:/api/chats/request-images/upload-url
+     * @secure
+     */
+    chatControllerCreateRequestImageUpload: (
+      data: ChatImageUploadRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ChatImageUploadResponseDto, void>({
+        path: `/api/chats/request-images/upload-url`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
      * @description 채팅방 상세 정보(게시글/참여자/금액/상태)를 조회합니다.
      *
      * @tags Chat
@@ -2017,6 +3191,23 @@ export class Api<
         method: "GET",
         secure: true,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description 채팅방과 해당 메시지를 삭제합니다. CANCELLED 또는 REVIEWED 상태에서만 삭제할 수 있습니다.
+     *
+     * @tags Chat
+     * @name ChatControllerDeleteChatRoom
+     * @summary 채팅방 삭제
+     * @request DELETE:/api/chats/{id}
+     * @secure
+     */
+    chatControllerDeleteChatRoom: (id: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/api/chats/${id}`,
+        method: "DELETE",
+        secure: true,
         ...params,
       }),
 
@@ -2376,6 +3567,1192 @@ export class Api<
       this.request<ChatRoomDetailResponseDto, void>({
         path: `/api/chats/${id}/confirm`,
         method: "PATCH",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Settings
+     * @name SettingsControllerGetSummary
+     * @summary 설정 홈 요약 정보 조회
+     * @request GET:/api/settings/v1/summary
+     * @secure
+     */
+    settingsControllerGetSummary: (params: RequestParams = {}) =>
+      this.request<SettingsSummaryResponseDto, any>({
+        path: `/api/settings/v1/summary`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Settings
+     * @name SettingsControllerGetNotificationPreferences
+     * @summary 알림 설정 조회
+     * @request GET:/api/settings/v1/notifications
+     * @secure
+     */
+    settingsControllerGetNotificationPreferences: (
+      params: RequestParams = {},
+    ) =>
+      this.request<NotificationPreferenceResponseDto, any>({
+        path: `/api/settings/v1/notifications`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Settings
+     * @name SettingsControllerUpdateNotificationPreferences
+     * @summary 알림 설정 수정
+     * @request PATCH:/api/settings/v1/notifications
+     * @secure
+     */
+    settingsControllerUpdateNotificationPreferences: (
+      data: UpdateNotificationPreferenceDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<NotificationPreferenceResponseDto, any>({
+        path: `/api/settings/v1/notifications`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Settings
+     * @name SettingsControllerGetAppInfo
+     * @summary 앱 관리 정보 조회
+     * @request GET:/api/settings/v1/app-info
+     */
+    settingsControllerGetAppInfo: (params: RequestParams = {}) =>
+      this.request<AppInfoResponseDto, any>({
+        path: `/api/settings/v1/app-info`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Settings
+     * @name SettingsControllerUpdateAppInfo
+     * @summary 앱 관리 정보 수정 (관리자)
+     * @request PATCH:/api/settings/v1/admin/app-info
+     * @secure
+     */
+    settingsControllerUpdateAppInfo: (
+      data: UpdateAppInfoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<AppInfoResponseDto, any>({
+        path: `/api/settings/v1/admin/app-info`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Terms
+     * @name TermsControllerGetTerms
+     * @summary 약관 목록 조회
+     * @request GET:/api/terms/v1
+     */
+    termsControllerGetTerms: (params: RequestParams = {}) =>
+      this.request<TermResponseDto[], any>({
+        path: `/api/terms/v1`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Terms
+     * @name TermsControllerCreateTerm
+     * @summary 약관 등록 (관리자)
+     * @request POST:/api/terms/v1
+     * @secure
+     */
+    termsControllerCreateTerm: (
+      data: CreateTermDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<TermResponseDto, any>({
+        path: `/api/terms/v1`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Terms
+     * @name TermsControllerGetTermsForAdmin
+     * @summary 약관 목록 조회 (관리자)
+     * @request GET:/api/terms/v1/admin
+     * @secure
+     */
+    termsControllerGetTermsForAdmin: (
+      query?: {
+        /** 작성자 닉네임, 이메일, 제목, 버전 검색 */
+        keyword?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TermResponseDto[], any>({
+        path: `/api/terms/v1/admin`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Terms
+     * @name TermsControllerGetTermForAdmin
+     * @summary 약관 상세 조회 (관리자)
+     * @request GET:/api/terms/v1/admin/{id}
+     * @secure
+     */
+    termsControllerGetTermForAdmin: (id: string, params: RequestParams = {}) =>
+      this.request<TermResponseDto, any>({
+        path: `/api/terms/v1/admin/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Terms
+     * @name TermsControllerUpdateTerm
+     * @summary 약관 수정 (관리자)
+     * @request PATCH:/api/terms/v1/{id}
+     * @secure
+     */
+    termsControllerUpdateTerm: (
+      id: string,
+      data: UpdateTermDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<TermResponseDto, any>({
+        path: `/api/terms/v1/${id}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Terms
+     * @name TermsControllerRemoveTerm
+     * @summary 약관 삭제 (관리자)
+     * @request DELETE:/api/terms/v1/{id}
+     * @secure
+     */
+    termsControllerRemoveTerm: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/terms/v1/${id}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags WithdrawAccount
+     * @name WithdrawAccountControllerGetBanks
+     * @summary 은행 목록 조회
+     * @request GET:/api/banks/v1
+     */
+    withdrawAccountControllerGetBanks: (params: RequestParams = {}) =>
+      this.request<BankResponseDto[], any>({
+        path: `/api/banks/v1`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags WithdrawAccount
+     * @name WithdrawAccountControllerFindMine
+     * @summary 내 환전계좌 목록 조회
+     * @request GET:/api/withdraw-accounts/v1
+     * @secure
+     */
+    withdrawAccountControllerFindMine: (params: RequestParams = {}) =>
+      this.request<WithdrawAccountResponseDto[], any>({
+        path: `/api/withdraw-accounts/v1`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags WithdrawAccount
+     * @name WithdrawAccountControllerCreate
+     * @summary 환전계좌 등록
+     * @request POST:/api/withdraw-accounts/v1
+     * @secure
+     */
+    withdrawAccountControllerCreate: (
+      data: CreateWithdrawAccountDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<WithdrawAccountResponseDto, any>({
+        path: `/api/withdraw-accounts/v1`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags WithdrawAccount
+     * @name WithdrawAccountControllerSetPrimary
+     * @summary 대표 환전계좌 지정
+     * @request PATCH:/api/withdraw-accounts/v1/{id}/primary
+     * @secure
+     */
+    withdrawAccountControllerSetPrimary: (
+      id: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<WithdrawAccountResponseDto, any>({
+        path: `/api/withdraw-accounts/v1/${id}/primary`,
+        method: "PATCH",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags WithdrawAccount
+     * @name WithdrawAccountControllerRemove
+     * @summary 환전계좌 삭제
+     * @request DELETE:/api/withdraw-accounts/v1/{id}
+     * @secure
+     */
+    withdrawAccountControllerRemove: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/withdraw-accounts/v1/${id}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags WithdrawAccount
+     * @name WithdrawAccountControllerFindAllForAdmin
+     * @summary 환전계좌 목록 조회 (관리자)
+     * @request GET:/api/withdraw-accounts/v1/admin
+     * @secure
+     */
+    withdrawAccountControllerFindAllForAdmin: (
+      query?: {
+        status?: "ACTIVE" | "INACTIVE";
+        /** 회원 ID */
+        memberId?: number;
+        /** 은행 코드 */
+        bankCode?: string;
+        /** 계좌 인증 여부 */
+        verified?: boolean;
+        /** 닉네임, 이메일, 예금주, 마스킹 계좌번호, 은행명 검색 */
+        keyword?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<WithdrawAccountResponseDto[], any>({
+        path: `/api/withdraw-accounts/v1/admin`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags WithdrawAccount
+     * @name WithdrawAccountControllerFindOneForAdmin
+     * @summary 환전계좌 상세 조회 (관리자)
+     * @request GET:/api/withdraw-accounts/v1/admin/{id}
+     * @secure
+     */
+    withdrawAccountControllerFindOneForAdmin: (
+      id: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<WithdrawAccountResponseDto, any>({
+        path: `/api/withdraw-accounts/v1/admin/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags WithdrawAccount
+     * @name WithdrawAccountControllerVerifyByAdmin
+     * @summary 환전계좌 인증 처리 (관리자)
+     * @request PATCH:/api/withdraw-accounts/v1/admin/{id}/verify
+     * @secure
+     */
+    withdrawAccountControllerVerifyByAdmin: (
+      id: string,
+      data: UpdateWithdrawAccountAdminDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<WithdrawAccountResponseDto, any>({
+        path: `/api/withdraw-accounts/v1/admin/${id}/verify`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notice
+     * @name NoticeControllerFindAll
+     * @summary 공지사항 목록 조회
+     * @request GET:/api/notice/v1
+     */
+    noticeControllerFindAll: (params: RequestParams = {}) =>
+      this.request<NoticeResponseDto[], any>({
+        path: `/api/notice/v1`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notice
+     * @name NoticeControllerCreate
+     * @summary 공지사항 등록 (관리자)
+     * @request POST:/api/notice/v1
+     * @secure
+     */
+    noticeControllerCreate: (
+      data: CreateNoticeDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<NoticeResponseDto, void>({
+        path: `/api/notice/v1`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notice
+     * @name NoticeControllerFindOne
+     * @summary 공지사항 상세 조회
+     * @request GET:/api/notice/v1/{id}
+     */
+    noticeControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<NoticeResponseDto, void>({
+        path: `/api/notice/v1/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notice
+     * @name NoticeControllerUpdate
+     * @summary 공지사항 수정 (관리자)
+     * @request PATCH:/api/notice/v1/{id}
+     * @secure
+     */
+    noticeControllerUpdate: (
+      id: string,
+      data: UpdateNoticeDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<NoticeResponseDto, void>({
+        path: `/api/notice/v1/${id}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notice
+     * @name NoticeControllerRemove
+     * @summary 공지사항 삭제 (관리자)
+     * @request DELETE:/api/notice/v1/{id}
+     * @secure
+     */
+    noticeControllerRemove: (id: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/api/notice/v1/${id}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notice
+     * @name NoticeControllerFindAllForAdmin
+     * @summary 공지사항 목록 조회 (관리자)
+     * @request GET:/api/notice/v1/admin
+     * @secure
+     */
+    noticeControllerFindAllForAdmin: (
+      query?: {
+        /** 작성자 닉네임, 이메일, 제목, 내용 키워드 검색 */
+        keyword?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<NoticeResponseDto[], any>({
+        path: `/api/notice/v1/admin`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Inquiry
+     * @name InquiryControllerCreate
+     * @summary 1:1 문의 등록
+     * @request POST:/api/inquiry/v1
+     * @secure
+     */
+    inquiryControllerCreate: (
+      data: {
+        category?: string;
+        title?: string;
+        content?: string;
+        images?: File[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<InquiryResponseDto, any>({
+        path: `/api/inquiry/v1`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.FormData,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Inquiry
+     * @name InquiryControllerFindMine
+     * @summary 내 1:1 문의 목록 조회
+     * @request GET:/api/inquiry/v1/me
+     * @secure
+     */
+    inquiryControllerFindMine: (params: RequestParams = {}) =>
+      this.request<InquiryResponseDto[], any>({
+        path: `/api/inquiry/v1/me`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Inquiry
+     * @name InquiryControllerFindAllForAdmin
+     * @summary 문의 목록 조회 (관리자)
+     * @request GET:/api/inquiry/v1/admin
+     * @secure
+     */
+    inquiryControllerFindAllForAdmin: (
+      query?: {
+        status?: "PENDING" | "IN_PROGRESS" | "ANSWERED" | "CLOSED";
+        category?: "DRAWING" | "ACCOUNT" | "PAYMENT" | "REVIEW" | "ETC";
+        /** 닉네임, 이메일, 제목, 내용 키워드 검색 */
+        keyword?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<InquiryResponseDto[], void>({
+        path: `/api/inquiry/v1/admin`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Inquiry
+     * @name InquiryControllerFindOneForAdmin
+     * @summary 문의 상세 조회 (관리자)
+     * @request GET:/api/inquiry/v1/admin/{id}
+     * @secure
+     */
+    inquiryControllerFindOneForAdmin: (
+      id: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<InquiryResponseDto, void>({
+        path: `/api/inquiry/v1/admin/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Inquiry
+     * @name InquiryControllerUpdateByAdmin
+     * @summary 문의 답변/상태 수정 (관리자)
+     * @request PATCH:/api/inquiry/v1/admin/{id}
+     * @secure
+     */
+    inquiryControllerUpdateByAdmin: (
+      id: string,
+      data: UpdateInquiryAdminDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<InquiryResponseDto, void>({
+        path: `/api/inquiry/v1/admin/${id}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Inquiry
+     * @name InquiryControllerFindOne
+     * @summary 내 1:1 문의 상세 조회
+     * @request GET:/api/inquiry/v1/{id}
+     * @secure
+     */
+    inquiryControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<InquiryResponseDto, void>({
+        path: `/api/inquiry/v1/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerGetMyWallet
+     * @summary 내 코인 지갑 조회
+     * @request GET:/api/wallet/v1/me
+     * @secure
+     */
+    walletControllerGetMyWallet: (params: RequestParams = {}) =>
+      this.request<WalletSummaryResponseDto, any>({
+        path: `/api/wallet/v1/me`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerGetMyTransactions
+     * @summary 내 코인 거래내역 조회
+     * @request GET:/api/wallet/v1/transactions
+     * @secure
+     */
+    walletControllerGetMyTransactions: (
+      query?: {
+        /**
+         * 페이지 번호
+         * @min 1
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 페이지 당 항목 수
+         * @min 1
+         * @default 10
+         */
+        limit?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<WalletTransactionPageResponseDto, any>({
+        path: `/api/wallet/v1/transactions`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerGetCoinProducts
+     * @summary 코인 상품 목록 조회
+     * @request GET:/api/coin-shop/v1/products
+     */
+    walletControllerGetCoinProducts: (params: RequestParams = {}) =>
+      this.request<CoinProductResponseDto[], any>({
+        path: `/api/coin-shop/v1/products`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerGetCoinProductsForAdmin
+     * @summary 코인 상품 목록 조회 (관리자)
+     * @request GET:/api/coin-shop/v1/admin/products
+     * @secure
+     */
+    walletControllerGetCoinProductsForAdmin: (params: RequestParams = {}) =>
+      this.request<CoinProductResponseDto[], any>({
+        path: `/api/coin-shop/v1/admin/products`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerCreateCoinProduct
+     * @summary 코인 상품 등록 (관리자)
+     * @request POST:/api/coin-shop/v1/admin/products
+     * @secure
+     */
+    walletControllerCreateCoinProduct: (
+      data: CreateCoinProductDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<CoinProductResponseDto, any>({
+        path: `/api/coin-shop/v1/admin/products`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerGetCoinProductForAdmin
+     * @summary 코인 상품 상세 조회 (관리자)
+     * @request GET:/api/coin-shop/v1/admin/products/{id}
+     * @secure
+     */
+    walletControllerGetCoinProductForAdmin: (
+      id: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<CoinProductResponseDto, any>({
+        path: `/api/coin-shop/v1/admin/products/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerUpdateCoinProduct
+     * @summary 코인 상품 수정 (관리자)
+     * @request PATCH:/api/coin-shop/v1/admin/products/{id}
+     * @secure
+     */
+    walletControllerUpdateCoinProduct: (
+      id: string,
+      data: UpdateCoinProductDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<CoinProductResponseDto, any>({
+        path: `/api/coin-shop/v1/admin/products/${id}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerCreateCoinOrder
+     * @summary 코인 주문 생성
+     * @request POST:/api/coin-shop/v1/orders
+     * @secure
+     */
+    walletControllerCreateCoinOrder: (
+      data: CreateCoinOrderDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<CoinOrderResponseDto, any>({
+        path: `/api/coin-shop/v1/orders`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerGetCoinOrders
+     * @summary 내 코인 주문 목록 조회
+     * @request GET:/api/coin-shop/v1/orders
+     * @secure
+     */
+    walletControllerGetCoinOrders: (
+      query?: {
+        /**
+         * 페이지 번호
+         * @min 1
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 페이지 당 항목 수
+         * @min 1
+         * @default 10
+         */
+        limit?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<CoinOrderPageResponseDto, any>({
+        path: `/api/coin-shop/v1/orders`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerConfirmCoinOrder
+     * @summary 코인 주문 결제 승인
+     * @request POST:/api/coin-shop/v1/orders/{id}/confirm
+     * @secure
+     */
+    walletControllerConfirmCoinOrder: (
+      id: string,
+      data: ConfirmCoinOrderDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<CoinOrderResponseDto, any>({
+        path: `/api/coin-shop/v1/orders/${id}/confirm`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerGetCoinOrdersForAdmin
+     * @summary 코인 주문 목록 조회 (관리자)
+     * @request GET:/api/coin-shop/v1/admin/orders
+     * @secure
+     */
+    walletControllerGetCoinOrdersForAdmin: (
+      query?: {
+        /**
+         * 페이지 번호
+         * @min 1
+         * @default 1
+         */
+        page?: number;
+        /**
+         * 페이지 당 항목 수
+         * @min 1
+         * @default 10
+         */
+        limit?: number;
+        status?: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED" | "CANCELLED";
+        paymentMethod?: "KAKAO_PAY" | "NAVER_PAY" | "CREDIT_CARD" | "TOSS_PAY";
+        /** 회원 ID */
+        memberId?: number;
+        /** 닉네임, 이메일, 주문번호, 상품명 검색 */
+        keyword?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<CoinOrderPageResponseDto, any>({
+        path: `/api/coin-shop/v1/admin/orders`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerGetCoinOrderForAdmin
+     * @summary 코인 주문 상세 조회 (관리자)
+     * @request GET:/api/coin-shop/v1/admin/orders/{id}
+     * @secure
+     */
+    walletControllerGetCoinOrderForAdmin: (
+      id: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<CoinOrderResponseDto, any>({
+        path: `/api/coin-shop/v1/admin/orders/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerGetCoinOrder
+     * @summary 내 코인 주문 상세 조회
+     * @request GET:/api/coin-shop/v1/orders/{id}
+     * @secure
+     */
+    walletControllerGetCoinOrder: (id: string, params: RequestParams = {}) =>
+      this.request<CoinOrderResponseDto, any>({
+        path: `/api/coin-shop/v1/orders/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerCancelCoinOrder
+     * @summary 코인 주문 결제 취소
+     * @request POST:/api/coin-shop/v1/orders/{id}/cancel
+     * @secure
+     */
+    walletControllerCancelCoinOrder: (
+      id: string,
+      data: CancelCoinOrderDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<CoinOrderResponseDto, any>({
+        path: `/api/coin-shop/v1/orders/${id}/cancel`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Withdraw
+     * @name WithdrawControllerGetPolicy
+     * @summary 환전 정책 조회
+     * @request GET:/api/withdraw/v1/policy
+     * @secure
+     */
+    withdrawControllerGetPolicy: (params: RequestParams = {}) =>
+      this.request<WithdrawPolicyResponseDto, any>({
+        path: `/api/withdraw/v1/policy`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Withdraw
+     * @name WithdrawControllerCreate
+     * @summary 환전 신청
+     * @request POST:/api/withdraw/v1/requests
+     * @secure
+     */
+    withdrawControllerCreate: (
+      data: CreateWithdrawRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<WithdrawRequestResponseDto, any>({
+        path: `/api/withdraw/v1/requests`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Withdraw
+     * @name WithdrawControllerFindMine
+     * @summary 내 환전 신청 목록 조회
+     * @request GET:/api/withdraw/v1/requests/me
+     * @secure
+     */
+    withdrawControllerFindMine: (params: RequestParams = {}) =>
+      this.request<WithdrawRequestResponseDto[], any>({
+        path: `/api/withdraw/v1/requests/me`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Withdraw
+     * @name WithdrawControllerFindOne
+     * @summary 내 환전 신청 상세 조회
+     * @request GET:/api/withdraw/v1/requests/{id}
+     * @secure
+     */
+    withdrawControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<WithdrawRequestResponseDto, any>({
+        path: `/api/withdraw/v1/requests/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Withdraw
+     * @name WithdrawControllerFindAllForAdmin
+     * @summary 환전 신청 목록 조회 (관리자)
+     * @request GET:/api/withdraw/v1/admin/requests
+     * @secure
+     */
+    withdrawControllerFindAllForAdmin: (
+      query?: {
+        status?:
+          | "REQUESTED"
+          | "APPROVED"
+          | "REJECTED"
+          | "COMPLETED"
+          | "CANCELLED";
+        /** 회원 ID */
+        memberId?: number;
+        /** 은행 코드 */
+        bankCode?: string;
+        /** 닉네임, 이메일, 예금주, 마스킹 계좌번호, 은행명 검색 */
+        keyword?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<WithdrawRequestResponseDto[], any>({
+        path: `/api/withdraw/v1/admin/requests`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Withdraw
+     * @name WithdrawControllerFindOneForAdmin
+     * @summary 환전 신청 상세 조회 (관리자)
+     * @request GET:/api/withdraw/v1/admin/requests/{id}
+     * @secure
+     */
+    withdrawControllerFindOneForAdmin: (
+      id: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<WithdrawRequestResponseDto, any>({
+        path: `/api/withdraw/v1/admin/requests/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Withdraw
+     * @name WithdrawControllerUpdateByAdmin
+     * @summary 환전 신청 처리 (관리자)
+     * @request PATCH:/api/withdraw/v1/admin/requests/{id}
+     * @secure
+     */
+    withdrawControllerUpdateByAdmin: (
+      id: string,
+      data: UpdateWithdrawRequestAdminDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<WithdrawRequestResponseDto, any>({
+        path: `/api/withdraw/v1/admin/requests/${id}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Scrap
+     * @name ScrapControllerScrapPost
+     * @summary 게시글 찜
+     * @request POST:/api/posts/{postId}/scrap
+     * @secure
+     */
+    scrapControllerScrapPost: (postId: string, params: RequestParams = {}) =>
+      this.request<ScrapStatusResponseDto, void>({
+        path: `/api/posts/${postId}/scrap`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Scrap
+     * @name ScrapControllerUnscrapPost
+     * @summary 게시글 찜 해제
+     * @request DELETE:/api/posts/{postId}/scrap
+     * @secure
+     */
+    scrapControllerUnscrapPost: (postId: string, params: RequestParams = {}) =>
+      this.request<ScrapStatusResponseDto, void>({
+        path: `/api/posts/${postId}/scrap`,
+        method: "DELETE",
         secure: true,
         format: "json",
         ...params,
