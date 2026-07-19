@@ -1,35 +1,33 @@
+import tw from '@/src/lib/tailwind';
+
 import colors from "@/src/constants/Colors";
-import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
-import PrimaryButton from "@/src/components/common/button/PrimaryButton";
-import { Container } from "@/src/components/common/container/Container";
-import { Col, Row } from "@/src/components/common/flex/Flex";
-import Header from "@/src/components/common/header/Header";
-import Txt from "@/src/components/common/text/Txt";
+import BottomFixedArea from "@/src/components/layout/BottomFixedArea";
+import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
+import Container from "@/src/components/layout/Container";
+import Header from "@/src/components/layout/header/Header";
+import Txt from "@/src/components/ui/Txt";
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, TextInput } from "react-native";
-import styled from "styled-components/native";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { View, TextInput } from "react-native";
+import { NavigationProp, useRoute, RouteProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/types/navigation";
-import AlertModal from "@/src/components/common/modal/AlertModal";
+import AlertModal from "@/src/components/ui/modal/AlertModal";
+
+import { emailController } from '@/src/apis/controller/email';
+
+type PasswordFindVerificationRouteProp = RouteProp<RootStackParamList, 'PasswordFindVerification'>;
 
 export default function PasswordFindVerification() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const route = useRoute<PasswordFindVerificationRouteProp>();
+  const { email } = route.params;
+
   const [verificationCode, setVerificationCode] = useState([
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
+    "", "", "", "", "", "",
   ]);
   const [timeLeft, setTimeLeft] = useState(300);
   const inputRefs = useRef<Array<TextInput | null>>([
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
+    null, null, null, null, null, null,
   ]);
   const [modalVisible, setModalVisible] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
@@ -76,22 +74,14 @@ export default function PasswordFindVerification() {
     }
   };
 
-  const handleResendCode = () => {
+  const handleResendCode = async () => {
     setTimeLeft(300);
     setVerificationCode(["", "", "", "", "", ""]);
-  };
-
-  const verifyCode = async (code: string): Promise<boolean> => {
+    // [추가] 인증번호 재전송 API 호출
     try {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          //임시 "123456" 코드 유효하게함
-          resolve(code === "123456");
-        }, 500);
-      });
+      await emailController.sendPasswordResetCode(email);
     } catch (error) {
-      console.error("인증 코드 검증 중 오류 발생:", error);
-      return false;
+      console.error("Resend code failed:", error);
     }
   };
 
@@ -102,17 +92,14 @@ export default function PasswordFindVerification() {
     }
 
     try {
-      const isValid = await verifyCode(code);
+      await emailController.verifyPasswordResetCode(email, code);
 
-      if (isValid) {
-        setModalVisible(true);
-      } else {
-        setErrorModalVisible(true);
-      }
+      // API 성공
+      setModalVisible(true);
     } catch (error) {
-      console.error("인증 처리 중 오류 발생:", error);
-    } finally {
-      // setIsLoading(false);
+      // API 실패
+      console.error("Verification failed:", error);
+      setErrorModalVisible(true);
     }
   };
 
@@ -120,28 +107,36 @@ export default function PasswordFindVerification() {
 
   return (
     <Container>
-      <Header type="back" />
-      <Col gap={98} padding="43px 32px">
+      <Header />
+      <View style={tw`gap-[98px] p-[43px_32px]`}>
         <Txt variant="headLineBold" align="left">
           비밀번호 찾기
         </Txt>
-        <Col gap={8}>
-          <VerificationInputContainer>
+        <View style={{ gap: 8 }}>
+        <View style={tw`w-full flex-row justify-between w-full`}>
             {verificationCode.map((code, index) => (
-              <Input
+              <TextInput
                 key={index}
                 ref={(el: any) => (inputRefs.current[index] = el)}
                 maxLength={1}
                 keyboardType="numeric"
                 value={code}
-                hasValue={code !== ""}
                 onChangeText={(text: string) => handleInputChange(text, index)}
                 onKeyPress={(e: any) => handleKeyPress(e, index)}
+                style={{
+                  width: 48,
+                  height: 52,
+                  borderWidth: 1,
+                  borderColor: code !== '' ? colors.colors.main_yellow : colors.colors.light_gray3,
+                  borderRadius: 12,
+                  textAlign: 'center',
+                  fontSize: 20,
+                }}
               />
             ))}
-          </VerificationInputContainer>
+        </View>
 
-          <Row style={{ justifyContent: "space-between", marginTop: 8 }}>
+          <View style={{ justifyContent: "space-between", marginTop: 8 }}>
             <Txt variant="bodySubText" color="error_red">
               {formatTime(timeLeft)}
             </Txt>
@@ -153,62 +148,40 @@ export default function PasswordFindVerification() {
             >
               인증번호 재전송
             </Txt>
-          </Row>
-        </Col>
-      </Col>
+          </View>
+        </View>
+      </View>
       <BottomFixedArea>
-        <ButtonContainer>
+        <View style={tw`w-full py-[10px] px-[57px]`}>
           <PrimaryButton
             title="확인"
             color="sub_yellow"
             disabled={!isVerificationComplete}
             onClick={handleVerificationButtonClick}
+            isValid={isVerificationComplete}
           />
-        </ButtonContainer>
+        </View>
       </BottomFixedArea>
       {errorModalVisible && (
         <AlertModal
-          title="인증번호가 일치하지 않아요."
+          modalTitle="인증번호가 일치하지 않아요."
           buttonTitle="확인"
-          onClick={() => {
+          onClickButton={() => {
             setErrorModalVisible(false);
           }}
-          textVariant="thirdText"
         />
       )}
       {modalVisible && (
         <AlertModal
-          title={`인증에 성공했어요!\n임시 비밀번호가 발급되었어요 :)`}
+          modalTitle={`인증에 성공했어요!\n임시 비밀번호가 발급되었어요 :)`}
           buttonTitle="확인"
-          onClick={() => {
+          onClickButton={() => {
             setModalVisible(false);
             navigation.navigate("Login");
           }}
-          textVariant="thirdText"
         />
       )}
     </Container>
   );
 }
 
-const ButtonContainer = styled.View`
-  width: 100%;
-  padding: 10px 57px;
-`;
-
-const VerificationInputContainer = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-`;
-
-const Input = styled.TextInput<{ hasValue?: boolean }>`
-  width: 48px;
-  height: 52px;
-  border: 1px solid
-    ${(props: any) =>
-      props.hasValue ? colors.colors.main_yellow : colors.colors.light_gray3};
-  border-radius: 12px;
-  text-align: center;
-  font-size: 20px;
-`;

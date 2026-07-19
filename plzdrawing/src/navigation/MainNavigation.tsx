@@ -1,10 +1,9 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Community from "@/src/screens/Community";
-import Home from "@/src/screens/Home";
-import Talk from "@/src/screens/talk/Talk";
-import Profile from "@/src/screens/Profile";
-import Txt from "../components/common/text/Txt";
+import Home from "@/src/screens/home/Home";
+import Talk from "@/src/screens/talk/talks/Talks";
+import My from "@/src/screens/my/My";
+import Txt from "../components/ui/Txt";
 import { FooterTalk, FooterHome, FooterMy } from "@/assets/images";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -15,6 +14,7 @@ export default function MainNavigation() {
 
   return (
     <Tab.Navigator
+      initialRouteName="그림홈"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "#000",
@@ -57,10 +57,9 @@ export default function MainNavigation() {
           ),
         }}
       />
-
       <Tab.Screen
         name="마이"
-        component={Profile}
+        component={My}
         options={{
           tabBarIcon: ({ focused, color, size }) => <FooterMy />,
           tabBarLabel: ({ focused, color }) => (

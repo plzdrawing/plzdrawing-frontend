@@ -1,214 +1,151 @@
-import colors from "@/src/constants/Colors";
-import { BottomFixedArea } from "@/src/components/common/area/BottomFixedArea";
-import PrimaryButton from "@/src/components/common/button/PrimaryButton";
-import { Container } from "@/src/components/common/container/Container";
-import { Col, Row } from "@/src/components/common/flex/Flex";
-import Header from "@/src/components/common/header/Header";
-import Txt from "@/src/components/common/text/Txt";
-import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, TextInput } from "react-native";
-import styled from "styled-components/native";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import tw from '@/src/lib/tailwind';
+import { useState, useEffect } from 'react';
+
+import {
+  NavigationProp,
+  useNavigation,
+  useRoute,
+  RouteProp,
+} from '@react-navigation/native';
 import { RootStackParamList } from "@/src/types/navigation";
-import AlertModal from "@/src/components/common/modal/AlertModal";
+
+import { View } from 'react-native';
+import Header from '@/src/components/layout/header/Header';
+import Container from '@/src/components/layout/Container';
+import Txt from '@/src/components/ui/Txt';
+import CodeField from '@/src/components/ui/input/CodeField';
+import BottomFixedArea from "@/src/components/layout/BottomFixedArea";
+import PrimaryButton from "@/src/components/ui/button/PrimaryButton";
+import Button from '@/src/components/ui/button/Button';
+import AlertModal from '@/src/components/ui/modal/AlertModal';
+
+import { BackArrowIcon } from '@/assets/images';
+
+import { emailController } from '@/src/apis/controller/email';
+
+type EmailVerificationRouteProp = RouteProp<RootStackParamList, 'EmailVerification'>;
 
 export default function EmailVerification() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [verificationCode, setVerificationCode] = useState([
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-  ]);
+
+  const route = useRoute<EmailVerificationRouteProp>();
+  const { email } = route.params;
+
+  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
+  const [codeState, setCodeState] = useState<'default' | 'error'>('default');
   const [timeLeft, setTimeLeft] = useState(300);
-  const inputRefs = useRef<Array<TextInput | null>>([
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-  ]);
   const [modalVisible, setModalVisible] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 0) {
           clearInterval(timer);
+          // 시간이 0이 되면 인증 취소
+          emailController.cancelEmailVerification(email).catch(console.error);
           return 0;
         }
         return prevTime - 1;
       });
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, []);
+    return () => {
+      clearInterval(timer);
+      // 컴포넌트 언마운트시 인증 취소
+      emailController.cancelEmailVerification(email).catch(console.error);
+    };
+  }, [email]);
 
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${String(minutes).padStart(2, "0")}:${String(
-      remainingSeconds
-    ).padStart(2, "0")}`;
-  };
-
-  const handleInputChange = (text: string, index: number) => {
-    if (!/^\d*$/.test(text)) return;
-
-    const newVerificationCode = [...verificationCode];
-    newVerificationCode[index] = text;
-    setVerificationCode(newVerificationCode);
-
-    if (text.length === 1 && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyPress = (e: any, index: number) => {
-    if (e.nativeEvent.key === "Backspace") {
-      if (!verificationCode[index] && index > 0) {
-        inputRefs.current[index - 1]?.focus();
-      }
-    }
-  };
-
-  const handleResendCode = () => {
-    setTimeLeft(300);
-    setVerificationCode(["", "", "", "", "", ""]);
-  };
-
-  const verifyCode = async (code: string): Promise<boolean> => {
+  const handleResendCode = async () => {
     try {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          //임시 "123456" 코드 유효하게함
-          resolve(code === "123456");
-        }, 500);
-      });
+      // 기존 인증 취소
+      await emailController.cancelEmailVerification(email);
+      // 새 인증번호 전송
+      await emailController.sendEmailVerificationCode(email);
+      // 상태 초기화
+      setTimeLeft(300);
+      setVerificationCode(["", "", "", "", "", ""]);
+      setCodeState('default');
     } catch (error) {
-      console.error("인증 코드 검증 중 오류 발생:", error);
-      return false;
+      console.error('인증번호 재전송 실패:', error);
     }
   };
 
   const handleVerificationButtonClick = async () => {
     const code = verificationCode.join("");
-    if (!code || code.length !== 6) {
+    if (!code || code.length !== 6 || isLoading) {
       return;
     }
 
-    try {
-      const isValid = await verifyCode(code);
+    setIsLoading(true); // 로딩 시작
 
-      if (isValid) {
-        setModalVisible(true);
-      } else {
-        setErrorModalVisible(true);
-      }
+    try {
+      await emailController.verifyEmailCode(email, code);
+
+      // 성공 시
+      setCodeState('default');
+      setModalVisible(true);
     } catch (error) {
-      console.error("인증 처리 중 오류 발생:", error);
+      // 실패 시
+      console.error("인증 실패:", error);
+      setCodeState('error');
+      setErrorModalVisible(true);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false); // 로딩 종료
     }
   };
 
   const isVerificationComplete = verificationCode.every((code) => code !== "");
 
   return (
-    <Container>
-      <Header type="back" />
-      <Col gap={98} padding="43px 32px">
-        <Txt variant="headLineBold" align="left">
-          인증번호를 확인해주세요 :) {"\n"}
+    <>
+      <Header leftIcon={<BackArrowIcon />} />
+      <Container className='px-[32px]'>
+        <Txt variant='headLineBold' style={tw`mb-[133px]`}>
+          인증번호를 확인해주세요 :)
         </Txt>
-        <Col gap={8}>
-          <VerificationInputContainer>
-            {verificationCode.map((code, index) => (
-              <Input
-                key={index}
-                ref={(el: any) => (inputRefs.current[index] = el)}
-                maxLength={1}
-                keyboardType="numeric"
-                value={code}
-                hasValue={code !== ""}
-                onChangeText={(text: string) => handleInputChange(text, index)}
-                onKeyPress={(e: any) => handleKeyPress(e, index)}
-              />
-            ))}
-          </VerificationInputContainer>
+        <CodeField
+          state={codeState}
+          setState={setCodeState}
+          verificationCode={verificationCode}
+          setVerificationCode={setVerificationCode}
+          timeLeft={timeLeft}
+          onClickResend={handleResendCode}
+        />
+      </Container>
 
-          <Row style={{ justifyContent: "space-between", marginTop: 8 }}>
-            <Txt variant="bodySubText" color="error_red">
-              {formatTime(timeLeft)}
-            </Txt>
-            <Txt
-              variant="bodySubText"
-              align="right"
-              style={{ textDecorationLine: "underline" }}
-              onPress={handleResendCode}
-            >
-              인증번호 재전송
-            </Txt>
-          </Row>
-        </Col>
-      </Col>
       <BottomFixedArea>
-        <ButtonContainer>
-          <PrimaryButton
-            title="확인"
-            color="sub_yellow"
-            disabled={!isVerificationComplete}
+        <View style={tw`w-full px-[57px] py-[10px]`}>
+          <Button
+            isValid={isVerificationComplete}
+            title='확인'
             onClick={handleVerificationButtonClick}
           />
-        </ButtonContainer>
+        </View>
       </BottomFixedArea>
+
       {errorModalVisible && (
         <AlertModal
-          title="인증번호가 일치하지 않아요."
+          modalTitle='인증번호가 일치하지 않아요.'
           buttonTitle="확인"
-          onClick={() => {
+          onClickButton={() => {
             setErrorModalVisible(false);
           }}
-          textVariant="thirdText"
         />
       )}
+
       {modalVisible && (
         <AlertModal
-          title="인증번호 확인이 완료되었어요 :)!"
+          modalTitle="인증번호 확인이 완료되었어요 :)!"
           buttonTitle="확인"
-          onClick={() => {
+          onClickButton={() => {
             setModalVisible(false);
-            navigation.navigate("VerificationComplete");
+            navigation.navigate('EmailVerificationComplete', { email: email });
           }}
-          textVariant="thirdText"
         />
       )}
-    </Container>
+    </>
   );
 }
-
-const ButtonContainer = styled.View`
-  width: 100%;
-  padding: 10px 57px;
-`;
-
-const VerificationInputContainer = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-`;
-
-const Input = styled.TextInput<{ hasValue?: boolean }>`
-  width: 48px;
-  height: 52px;
-  border: 1px solid
-    ${(props: any) =>
-      props.hasValue ? colors.colors.main_yellow : colors.colors.light_gray3};
-  border-radius: 12px;
-  text-align: center;
-  font-size: 20px;
-`;
