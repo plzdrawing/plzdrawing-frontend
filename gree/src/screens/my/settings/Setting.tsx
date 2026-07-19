@@ -80,7 +80,7 @@ export default function Setting({ userProfile, onLogout, onWithdraw }: SettingPr
         items={[
           { text: '공지 사항', icon: <MegaphoneIcon />, onPress: () => navigation.navigate('Announcement') },
           { text: '고객 센터', icon: <QuestionIcon />, onPress: () => navigation.navigate('CustomerService') },
-          { text: '1:1 문의', icon: <QuestionIcon />, onPress: () => {} },
+          { text: '1:1 문의', icon: <QuestionIcon />, onPress: () => navigation.navigate('Inquiry') },
           { text: '앱 관리', icon: <MultipleFileIcon />, onPress: () => navigation.navigate('AppManagement') },
         ]}
       />

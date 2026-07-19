@@ -29,6 +29,12 @@ const FontStyles = {
     fontSize: 16,
     lineHeight: 22,
   },
+  //서브헤딩_B
+  subheading: {
+    fontFamily: 'Ssurround',
+    fontSize: 16,
+    lineHeight: 22,
+  },
   //본문
   bodyText: {
     fontFamily: 'SsurroundAir',

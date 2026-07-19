@@ -101,7 +101,7 @@ export default function FAQDetail({ navigation, route }: Props) {
           </Txt>
 
           {/* 답변 */}
-          <Txt variant='bodyText' style={tw`whitespace-pre-wrap leading-7 text-dark_gray1`}>
+          <Txt variant='bodyText' style={tw`whitespace-pre-wrap leading-7 text-dark-gray-1`}>
             {faq.answer}
           </Txt>
         </View>

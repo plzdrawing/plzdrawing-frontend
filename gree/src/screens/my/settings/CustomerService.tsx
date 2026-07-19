@@ -91,7 +91,7 @@ export default function CustomerService({ navigation }: Props) {
                 key={category}
                 onPress={() => handleCategorySelect(category)}
                 style={[
-                  tw`px-[16px] py-[10px] rounded-full border border-dark_gray1`,
+                  tw`px-[16px] py-[10px] rounded-full border border-dark-gray-1`,
                   selectedCategory === category && tw`bg-yellow-400 border-yellow-400`,
                 ]}
               >

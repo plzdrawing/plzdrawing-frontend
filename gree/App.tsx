@@ -30,6 +30,8 @@ import WithdrawComplete from '@/src/screens/my/settings/WithdrawComplete';
 import AlarmNotification from '@/src/screens/my/settings/AlarmNotification';
 import Announcement from '@/src/screens/my/settings/Announcement';
 import AnnouncementDetail from '@/src/screens/my/settings/AnnouncementDetail';
+import Inquiry from '@/src/screens/my/settings/Inquiry';
+import InquiryDetail from '@/src/screens/my/settings/InquiryDetail';
 import CustomerService from '@/src/screens/my/settings/CustomerService';
 import FAQDetail from '@/src/screens/my/settings/FAQDetail';
 import AppManagement from '@/src/screens/my/settings/AppManagement';
@@ -107,6 +109,8 @@ export default function App() {
             <Stack.Screen name='NotificationDetail' component={NotificationDetail} />
             <Stack.Screen name='Announcement' component={Announcement} />
             <Stack.Screen name='AnnouncementDetail' component={AnnouncementDetail} />
+            <Stack.Screen name='Inquiry' component={Inquiry} />
+            <Stack.Screen name='InquiryDetail' component={InquiryDetail} />
             <Stack.Screen name='CustomerService' component={CustomerService} />
             <Stack.Screen name='FAQDetail' component={FAQDetail} />
             <Stack.Screen name='AppManagement' component={AppManagement} />

@@ -59,6 +59,8 @@ export type RootStackParamList = {
     name: string;
     description?: string | null;
   };
+  Inquiry: { initialTab?: 'create' | 'history'; showDeletedModal?: boolean } | undefined;
+  InquiryDetail: { id: number };
   CustomerService: undefined;
   FAQDetail: { id: number };
 };

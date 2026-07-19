@@ -1,5 +1,8 @@
 import apiClient from '../apiClient';
-import { NotificationPreferenceResponseDto } from '../api';
+import {
+  NotificationPreferenceResponseDto,
+  UpdateNotificationPreferenceDto,
+} from '../api';
 
 export interface FcmTestResponse {
   success: boolean;
@@ -51,15 +54,15 @@ export const alarmController = {
   // 알림 설정 조회
   getNotificationPreferences: async () => {
     const response = await apiClient.get<NotificationPreferenceResponseDto>(
-      '/api/alarms/preferences',
+      '/api/settings/v1/notifications',
     );
     return response.data;
   },
 
   // 알림 설정 업데이트
-  updateNotificationPreferences: async (data: Partial<NotificationPreferenceResponseDto>) => {
+  updateNotificationPreferences: async (data: UpdateNotificationPreferenceDto) => {
     const response = await apiClient.patch<NotificationPreferenceResponseDto>(
-      '/api/alarms/preferences',
+      '/api/settings/v1/notifications',
       data,
     );
     return response.data;

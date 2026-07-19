@@ -22,6 +22,8 @@ export default function Txt({
   height,
   ...props
 }: TextProps) {
+  const fontStyle = variant && FontStyles[variant] ? FontStyles[variant] : FontStyles.default;
+
   return (
     <Text
       {...props}
@@ -29,17 +31,13 @@ export default function Txt({
       style={[
         style,
         {
-          fontSize: variant ? FontStyles[variant].fontSize : FontStyles.default.fontSize,
+          fontSize: fontStyle.fontSize,
           color:
             colors.colors[color as keyof typeof colors['colors']] ||
             colors.tab[color as keyof typeof colors['tab']],
-          fontFamily: variant ? FontStyles[variant].fontFamily : FontStyles.default.fontFamily,
+          fontFamily: fontStyle.fontFamily,
           textAlign: align,
-          lineHeight: height
-            ? height
-            : variant
-            ? FontStyles[variant].lineHeight
-            : FontStyles.default.lineHeight,
+          lineHeight: height ? height : fontStyle.lineHeight,
         },
       ]}
     >

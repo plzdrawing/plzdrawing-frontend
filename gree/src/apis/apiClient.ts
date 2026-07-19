@@ -70,7 +70,7 @@ apiClient.interceptors.response.use(
         }
       }
     }
-    return Promise.reject(Error);
+    return response;
   },
   async (error) => {
     const originalRequest = error.config;
